@@ -2,6 +2,8 @@
 
 A reproducible recommendation project that makes the accuracy–exposure tradeoff measurable. It includes a pinned upstream SAR/BPR reproduction, a separate chronological MovieLens 1M experiment, validation-selected novelty reranking, and a real FastAPI service running in Docker.
 
+Version `v0.1.0`: [verified delivery evidence](reports/release/acceptance.json), [Chinese project report](docs/project1_delivery_zh.md), and [teaching materials](teaching/README.md). The main manual has 42 pages; the separate code guide has 35 pages. All 77 rendered pages were visually reviewed. Local Word/PDF files and screenshots are distributed separately from this source repository.
+
 **Problem.** Popularity-heavy recommendations can leave much of a catalog unseen. Personalization helps relevance, but pushing less popular items can reduce ranking quality. This project quantifies that tradeoff before exposing the model through an API. It is a non-commercial research portfolio, with no claim of online revenue or click uplift.
 
 ## Measured result

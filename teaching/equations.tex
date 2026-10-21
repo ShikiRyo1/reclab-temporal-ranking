@@ -1,0 +1,131 @@
+\[
+L_u=\operatorname{TopK}_{i\in C_u}\,s(u,i)
+\]
+
+\[
+y_{ui}=\mathbb{1}[r_{ui}\geq 4]
+\]
+
+\[
+D_{train}=\{(u,i,r,t):t\leq t_1\}
+\]
+
+\[
+D_{valid}=\{(u,i,r,t):t_1<t\leq t_2\},\qquad D_{test}=\{(u,i,r,t):t>t_2\}
+\]
+
+\[
+c_i=\sum_u y_{ui},\qquad s_{pop}(u,i)=c_i
+\]
+
+\[
+P=A S,\qquad p_{uj}=\sum_i A_{ui}S_{ij}
+\]
+
+\[
+S_{ij}=\frac{|N_i\cap N_j|}{|N_i\cup N_j|}
+\]
+
+\[
+C=X^T X,\qquad S_{ij}=\frac{C_{ij}}{C_{ii}+C_{jj}-C_{ij}}
+\]
+
+\[
+w(t)=2^{-\Delta t/h}
+\]
+
+\[
+s(u,i)=p_u^T q_i+b_i
+\]
+
+\[
+\sigma(x)=\frac{1}{1+e^{-x}},\qquad \Delta_{uij}=s(u,i)-s(u,j)
+\]
+
+\[
+L_{uij}=-\log\sigma(\Delta_{uij})+\frac{\lambda}{2}(\|p_u\|^2+\|q_i\|^2+\|q_j\|^2+b_i^2+b_j^2)
+\]
+
+\[
+\frac{d\ell}{d\Delta}=\sigma(\Delta)-1=-\sigma(-\Delta)
+\]
+
+\[
+\nabla_{p_u}L_{uij}=-\sigma(-\Delta)(q_i-q_j)+\lambda p_u
+\]
+
+\[
+\nabla_{q_i}L_{uij}=-\sigma(-\Delta)p_u+\lambda q_i
+\]
+
+\[
+\nabla_{q_j}L_{uij}=\sigma(-\Delta)p_u+\lambda q_j
+\]
+
+\[
+f'(x)\approx\frac{f(x+h)-f(x-h)}{2h}
+\]
+
+\[
+\operatorname{Recall@K}(u)=\frac{|L_u\cap R_u|}{|R_u|}
+\]
+
+\[
+\operatorname{DCG@K}(u)=\sum_{r=1}^{K}\frac{\operatorname{rel}_{u,r}}{\log_2(r+1)}
+\]
+
+\[
+\operatorname{NDCG@K}(u)=\frac{\operatorname{DCG@K}(u)}{\operatorname{IDCG@K}(u)}
+\]
+
+\[
+\operatorname{Coverage@K}=\frac{|\bigcup_u L_u|}{|C|}
+\]
+
+\[
+\operatorname{TailShare@K}=\frac{1}{N}\sum_u\frac{\sum_{i\in L_u}\mathbb{1}[i\in T]}{|L_u|}
+\]
+
+\[
+v_i=1-\frac{\log(1+c_i)}{\max_j\log(1+c_j)}
+\]
+
+\[
+\widetilde{s}_i=\frac{s_i-s_{min}}{s_{max}-s_{min}}
+\]
+
+\[
+r_{ui}=(1-w)\widetilde{s}_{ui}+wv_i,\qquad 0\leq w\leq 1
+\]
+
+\[
+\operatorname{NDCG}_{rerank}\geq(1-\delta)\operatorname{NDCG}_{base}
+\]
+
+\[
+d_u=m_u^{new}-m_u^{base},\qquad \overline{d}=\frac{1}{N}\sum_{u=1}^{N}d_u
+\]
+
+\[
+S_{ij}=\frac{|U_i\cap U_j|}{|U_i\cup U_j|}.
+\]
+
+\[
+a_{ui}=r_{ui}\,2^{-(t_{\max}-t_{ui})/(30\times86400)}.
+\]
+
+\[
+x=p^\top(q_i-q_j)+b_i-b_j.
+\]
+
+\[
+J=\log\sigma(x)-\frac{\lambda}{2}\|\Theta\|_2^2.
+\]
+
+\[
+z=1-\sigma(x)=\sigma(-x),\qquad \Theta_{\mathrm{new}}=\Theta+\eta\bigl(z\nabla_\Theta x-\lambda\Theta\bigr).
+\]
+
+\[
+g_i^{\mathrm{numeric}} =\frac{J(\Theta+h e_i)-J(\Theta-h e_i)}{2h}.
+\]

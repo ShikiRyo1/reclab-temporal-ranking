@@ -1,0 +1,17 @@
+{
+  "project": "P1",
+  "status": "PASS_LOCAL_DELIVERY",
+  "release": "v0.1.0",
+  "updated_at_utc": "2026-10-21T04:17:50.118916+00:00",
+  "stages": {
+    "upstream_reproduction": "PASS",
+    "temporal_extension": "PASS_WITH_MEASURED_TRADEOFF",
+    "api_and_docker": "PASS_LOCAL",
+    "independent_review": "PASS_AFTER_FIXES",
+    "teaching_and_visual_qa": "PASS",
+    "career_materials": "DELIVERED",
+    "github_release": "SOURCE_IDENTIFIED_BY_V0_1_0_TAG"
+  },
+  "next_project": "P2 Evidence-backed Analytics Agent; not started",
+  "acceptance": "reports/release/acceptance.json"
+}
