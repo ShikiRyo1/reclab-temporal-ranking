@@ -1,0 +1,27 @@
+{
+  "dataset": "ml-1m",
+  "source_hashes": {
+    "ratings.dat": "506d64ca44484487c11dc2d9a28de5c54948213e6b96285e298afe28d6ea4e0f",
+    "movies.dat": "0140fc2356357c1a851d0f52e893a1e4d3696df632c4141cea8d5bc3d621f0b9",
+    "README": "2d5ddce86ccbd247207456165827b4b9ddf27282bca93807d4c763e28414f133"
+  },
+  "ratings": 1000209,
+  "users": 6040,
+  "rated_items": 3706,
+  "split": {
+    "train_cutoff": 974862386,
+    "validation_cutoff": 976422042,
+    "train_rows": 700148,
+    "validation_rows": 150029,
+    "test_rows": 150032,
+    "train_cutoff_utc": "2000-11-22T03:06:26+00:00",
+    "validation_cutoff_utc": "2000-12-10T04:20:42+00:00",
+    "row_hashes": {
+      "train": "193b6ce0e624cc4ab28db4ae16c39196f9bb1485aee0340b0a7ca879eb22e783",
+      "validation": "41643f3d3a8f99a062fe7a7f858d23fe840faad2207c102232c76b94af9dbf5b",
+      "test": "50bbde9ef9aba7369d9c8d93ee07164e84436e8cb442dd1603a0667988406bd4"
+    }
+  },
+  "all_training_before_validation": true,
+  "all_validation_before_test": true
+}

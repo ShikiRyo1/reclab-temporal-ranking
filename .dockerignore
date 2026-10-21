@@ -1,0 +1,11 @@
+**
+!Dockerfile
+!pyproject.toml
+!requirements-api.txt
+!LICENSE
+!THIRD_PARTY_NOTICES.md
+!src/
+!src/reclab/
+!src/reclab/*.py
+!src/reclab/web/
+!src/reclab/web/index.html

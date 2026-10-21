@@ -1,0 +1,8 @@
+{
+  "test_summaries_exactly_equal": true,
+  "selection_hash_equal": true,
+  "paired_intervals_equal": true,
+  "first_training_seconds": 18.82756409997819,
+  "second_training_seconds": 19.1182091999799,
+  "reason_for_repeat": "Artifact version/protocol metadata and validation corrected; experiment configuration unchanged."
+}

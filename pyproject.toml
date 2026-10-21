@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "reclab-portfolio"
+version = "0.1.0"
+description = "Reproducible temporal ranking experiments and a versioned serving API"
+requires-python = ">=3.12,<3.13"
+dependencies = ["numpy", "pandas", "scipy", "joblib", "fastapi", "uvicorn"]
+
+[project.optional-dependencies]
+train = ["cornac", "scikit-learn", "matplotlib", "requests", "psutil"]
+test = ["pytest", "httpx"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+reclab = ["web/*.html"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

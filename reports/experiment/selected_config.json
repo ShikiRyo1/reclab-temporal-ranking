@@ -1,0 +1,54 @@
+{
+  "selected_weight": 0.2,
+  "minimum_validation_ndcg": 0.1788538724788103,
+  "maximum_relative_ndcg_loss": 0.02,
+  "selection_objective": "maximum validation long-tail exposure, then NDCG, then smaller weight",
+  "source_config_sha256": "30794fbd42d9b83ef8cfc3b9ab461f9dcf6718505c014b4616cf0900678e8852",
+  "selected_before_test_evaluation": true,
+  "validation_selected_metrics": {
+    "weight": 0.2,
+    "denominators": {
+      "future_rows": 150029,
+      "future_users": 1352,
+      "positive_rows": 84250,
+      "positive_users": 1319,
+      "out_of_training_catalog_positive_rows": 36,
+      "already_seen_positive_rows": 0,
+      "eligible_positive_rows": 84214,
+      "eligible_positive_users": 1319,
+      "positive_users_without_eligible_target": 0
+    },
+    "catalog_size": 3444,
+    "training_user_activity_median": 52.0,
+    "warm": {
+      "users": 473,
+      "ndcg_at_10": 0.1810178337216723,
+      "recall_at_10": 0.07017634884652707,
+      "long_tail_exposure": 0.026004228329809725,
+      "catalog_coverage": 0.1721835075493612,
+      "unique_recommended_items": 593,
+      "mean_log_novelty": 9.01765762978326
+    },
+    "cold": {
+      "users": 846,
+      "ndcg_at_10": 0.3650207469473097,
+      "recall_at_10": 0.06517292931140718,
+      "long_tail_exposure": 0.0,
+      "catalog_coverage": 0.0029036004645760743,
+      "unique_recommended_items": 10,
+      "mean_log_novelty": 7.887580871582031
+    },
+    "warm_activity_slices": {
+      "high_activity": {
+        "users": 302,
+        "ndcg_at_10": 0.14973726795880157,
+        "recall_at_10": 0.0669399632445191
+      },
+      "low_activity": {
+        "users": 171,
+        "ndcg_at_10": 0.23626187384089428,
+        "recall_at_10": 0.07589207078691541
+      }
+    }
+  }
+}

@@ -1,0 +1,10 @@
+services:
+  recommender:
+    build: .
+    image: career-reclab:0.1.0
+    ports:
+      - "127.0.0.1:8011:8011"
+    volumes:
+      - ./artifacts/model.joblib:/models/model.joblib:ro
+      - ./reports/experiment:/app/reports/experiment:ro
+    restart: unless-stopped

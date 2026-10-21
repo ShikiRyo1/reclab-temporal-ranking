@@ -1,0 +1,25 @@
+{
+  "requests": 500,
+  "concurrency": 8,
+  "wall_seconds": 1.5433108999859542,
+  "throughput_requests_per_second": 323.9787913145372,
+  "p50_ms": 23.699100012890995,
+  "p95_ms": 30.99357500323094,
+  "p99_ms": 68.78006199840455,
+  "max_ms": 72.7449000114575,
+  "errors": 0,
+  "error_samples": [],
+  "model": {
+    "status": "ready",
+    "model_version": "ml1m-bpr-506d64ca-30794fbd-w0.2",
+    "artifact_sha256": "14874e07e00af8f4d9b4e94f51ebb0b368a6fdc5b98391697a4f6c846fb8b5ad",
+    "schema_version": 1,
+    "n_users": 4865,
+    "n_items": 3444
+  },
+  "known_requests": 375,
+  "cold_requests": 125,
+  "workload": "3 of each 4 requests use known user_id=1161; others cold; k=10; 10 warmups excluded",
+  "scope": "Localhost closed-loop client; not production SLO or maximum capacity",
+  "client_platform": "Windows-10-10.0.19045-SP0"
+}

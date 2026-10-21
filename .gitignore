@@ -15,6 +15,7 @@ baseline/private/
 baseline/.jupyter/
 reports/baseline/MovieLens_100K_TERMS.txt
 *.log
+reports/**/*.xml
 teaching/qa/
 teaching/*.docx
 teaching/*.pdf

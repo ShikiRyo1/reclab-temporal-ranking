@@ -1,0 +1,324 @@
+[
+  {
+    "weight": 0,
+    "denominators": {
+      "future_rows": 150029,
+      "future_users": 1352,
+      "positive_rows": 84250,
+      "positive_users": 1319,
+      "out_of_training_catalog_positive_rows": 36,
+      "already_seen_positive_rows": 0,
+      "eligible_positive_rows": 84214,
+      "eligible_positive_users": 1319,
+      "positive_users_without_eligible_target": 0
+    },
+    "catalog_size": 3444,
+    "training_user_activity_median": 52.0,
+    "warm": {
+      "users": 473,
+      "ndcg_at_10": 0.1825039515089901,
+      "recall_at_10": 0.06796804356394452,
+      "long_tail_exposure": 0.019450317124735727,
+      "catalog_coverage": 0.16347270615563297,
+      "unique_recommended_items": 563,
+      "mean_log_novelty": 8.958212225432124
+    },
+    "cold": {
+      "users": 846,
+      "ndcg_at_10": 0.3650207469473097,
+      "recall_at_10": 0.06517292931140718,
+      "long_tail_exposure": 0.0,
+      "catalog_coverage": 0.0029036004645760743,
+      "unique_recommended_items": 10,
+      "mean_log_novelty": 7.887580871582031
+    },
+    "warm_activity_slices": {
+      "high_activity": {
+        "users": 302,
+        "ndcg_at_10": 0.15196978176973866,
+        "recall_at_10": 0.06286066220414115
+      },
+      "low_activity": {
+        "users": 171,
+        "ndcg_at_10": 0.23642979514205403,
+        "recall_at_10": 0.07698809719353876
+      }
+    }
+  },
+  {
+    "weight": 0.02,
+    "denominators": {
+      "future_rows": 150029,
+      "future_users": 1352,
+      "positive_rows": 84250,
+      "positive_users": 1319,
+      "out_of_training_catalog_positive_rows": 36,
+      "already_seen_positive_rows": 0,
+      "eligible_positive_rows": 84214,
+      "eligible_positive_users": 1319,
+      "positive_users_without_eligible_target": 0
+    },
+    "catalog_size": 3444,
+    "training_user_activity_median": 52.0,
+    "warm": {
+      "users": 473,
+      "ndcg_at_10": 0.18261085641249342,
+      "recall_at_10": 0.06797620636280499,
+      "long_tail_exposure": 0.019450317124735727,
+      "catalog_coverage": 0.16376306620209058,
+      "unique_recommended_items": 564,
+      "mean_log_novelty": 8.96209729499091
+    },
+    "cold": {
+      "users": 846,
+      "ndcg_at_10": 0.3650207469473097,
+      "recall_at_10": 0.06517292931140718,
+      "long_tail_exposure": 0.0,
+      "catalog_coverage": 0.0029036004645760743,
+      "unique_recommended_items": 10,
+      "mean_log_novelty": 7.887580871582031
+    },
+    "warm_activity_slices": {
+      "high_activity": {
+        "users": 302,
+        "ndcg_at_10": 0.15192879975266632,
+        "recall_at_10": 0.06286066220414115
+      },
+      "low_activity": {
+        "users": 171,
+        "ndcg_at_10": 0.2367978804549951,
+        "recall_at_10": 0.07701067616348614
+      }
+    }
+  },
+  {
+    "weight": 0.05,
+    "denominators": {
+      "future_rows": 150029,
+      "future_users": 1352,
+      "positive_rows": 84250,
+      "positive_users": 1319,
+      "out_of_training_catalog_positive_rows": 36,
+      "already_seen_positive_rows": 0,
+      "eligible_positive_rows": 84214,
+      "eligible_positive_users": 1319,
+      "positive_users_without_eligible_target": 0
+    },
+    "catalog_size": 3444,
+    "training_user_activity_median": 52.0,
+    "warm": {
+      "users": 473,
+      "ndcg_at_10": 0.1822545899841607,
+      "recall_at_10": 0.06972971810990133,
+      "long_tail_exposure": 0.02050739957716702,
+      "catalog_coverage": 0.16463414634146342,
+      "unique_recommended_items": 567,
+      "mean_log_novelty": 8.972349512652665
+    },
+    "cold": {
+      "users": 846,
+      "ndcg_at_10": 0.3650207469473097,
+      "recall_at_10": 0.06517292931140718,
+      "long_tail_exposure": 0.0,
+      "catalog_coverage": 0.0029036004645760743,
+      "unique_recommended_items": 10,
+      "mean_log_novelty": 7.887580871582031
+    },
+    "warm_activity_slices": {
+      "high_activity": {
+        "users": 302,
+        "ndcg_at_10": 0.15165799379620507,
+        "recall_at_10": 0.06587006494521778
+      },
+      "low_activity": {
+        "users": 171,
+        "ndcg_at_10": 0.23629068383657362,
+        "recall_at_10": 0.07654618159372842
+      }
+    }
+  },
+  {
+    "weight": 0.1,
+    "denominators": {
+      "future_rows": 150029,
+      "future_users": 1352,
+      "positive_rows": 84250,
+      "positive_users": 1319,
+      "out_of_training_catalog_positive_rows": 36,
+      "already_seen_positive_rows": 0,
+      "eligible_positive_rows": 84214,
+      "eligible_positive_users": 1319,
+      "positive_users_without_eligible_target": 0
+    },
+    "catalog_size": 3444,
+    "training_user_activity_median": 52.0,
+    "warm": {
+      "users": 473,
+      "ndcg_at_10": 0.18171333830592457,
+      "recall_at_10": 0.06910439971457734,
+      "long_tail_exposure": 0.021987315010570826,
+      "catalog_coverage": 0.16637630662020905,
+      "unique_recommended_items": 573,
+      "mean_log_novelty": 8.985000143595528
+    },
+    "cold": {
+      "users": 846,
+      "ndcg_at_10": 0.3650207469473097,
+      "recall_at_10": 0.06517292931140718,
+      "long_tail_exposure": 0.0,
+      "catalog_coverage": 0.0029036004645760743,
+      "unique_recommended_items": 10,
+      "mean_log_novelty": 7.887580871582031
+    },
+    "warm_activity_slices": {
+      "high_activity": {
+        "users": 302,
+        "ndcg_at_10": 0.15031362378353028,
+        "recall_at_10": 0.06481003097609116
+      },
+      "low_activity": {
+        "users": 171,
+        "ndcg_at_10": 0.2371678048893343,
+        "recall_at_10": 0.0766886064924886
+      }
+    }
+  },
+  {
+    "weight": 0.2,
+    "denominators": {
+      "future_rows": 150029,
+      "future_users": 1352,
+      "positive_rows": 84250,
+      "positive_users": 1319,
+      "out_of_training_catalog_positive_rows": 36,
+      "already_seen_positive_rows": 0,
+      "eligible_positive_rows": 84214,
+      "eligible_positive_users": 1319,
+      "positive_users_without_eligible_target": 0
+    },
+    "catalog_size": 3444,
+    "training_user_activity_median": 52.0,
+    "warm": {
+      "users": 473,
+      "ndcg_at_10": 0.1810178337216723,
+      "recall_at_10": 0.07017634884652707,
+      "long_tail_exposure": 0.026004228329809725,
+      "catalog_coverage": 0.1721835075493612,
+      "unique_recommended_items": 593,
+      "mean_log_novelty": 9.01765762978326
+    },
+    "cold": {
+      "users": 846,
+      "ndcg_at_10": 0.3650207469473097,
+      "recall_at_10": 0.06517292931140718,
+      "long_tail_exposure": 0.0,
+      "catalog_coverage": 0.0029036004645760743,
+      "unique_recommended_items": 10,
+      "mean_log_novelty": 7.887580871582031
+    },
+    "warm_activity_slices": {
+      "high_activity": {
+        "users": 302,
+        "ndcg_at_10": 0.14973726795880157,
+        "recall_at_10": 0.0669399632445191
+      },
+      "low_activity": {
+        "users": 171,
+        "ndcg_at_10": 0.23626187384089428,
+        "recall_at_10": 0.07589207078691541
+      }
+    }
+  },
+  {
+    "weight": 0.35,
+    "denominators": {
+      "future_rows": 150029,
+      "future_users": 1352,
+      "positive_rows": 84250,
+      "positive_users": 1319,
+      "out_of_training_catalog_positive_rows": 36,
+      "already_seen_positive_rows": 0,
+      "eligible_positive_rows": 84214,
+      "eligible_positive_users": 1319,
+      "positive_users_without_eligible_target": 0
+    },
+    "catalog_size": 3444,
+    "training_user_activity_median": 52.0,
+    "warm": {
+      "users": 473,
+      "ndcg_at_10": 0.17876905955761677,
+      "recall_at_10": 0.06979318999305571,
+      "long_tail_exposure": 0.03424947145877378,
+      "catalog_coverage": 0.18147502903600465,
+      "unique_recommended_items": 625,
+      "mean_log_novelty": 9.095166338422585
+    },
+    "cold": {
+      "users": 846,
+      "ndcg_at_10": 0.3650207469473097,
+      "recall_at_10": 0.06517292931140718,
+      "long_tail_exposure": 0.0,
+      "catalog_coverage": 0.0029036004645760743,
+      "unique_recommended_items": 10,
+      "mean_log_novelty": 7.887580871582031
+    },
+    "warm_activity_slices": {
+      "high_activity": {
+        "users": 302,
+        "ndcg_at_10": 0.147707813762934,
+        "recall_at_10": 0.06690663851648797
+      },
+      "low_activity": {
+        "users": 171,
+        "ndcg_at_10": 0.23362576265699803,
+        "recall_at_10": 0.07489107622652623
+      }
+    }
+  },
+  {
+    "weight": 0.5,
+    "denominators": {
+      "future_rows": 150029,
+      "future_users": 1352,
+      "positive_rows": 84250,
+      "positive_users": 1319,
+      "out_of_training_catalog_positive_rows": 36,
+      "already_seen_positive_rows": 0,
+      "eligible_positive_rows": 84214,
+      "eligible_positive_users": 1319,
+      "positive_users_without_eligible_target": 0
+    },
+    "catalog_size": 3444,
+    "training_user_activity_median": 52.0,
+    "warm": {
+      "users": 473,
+      "ndcg_at_10": 0.171664974616787,
+      "recall_at_10": 0.06787899068016583,
+      "long_tail_exposure": 0.05412262156448203,
+      "catalog_coverage": 0.20150987224157957,
+      "unique_recommended_items": 694,
+      "mean_log_novelty": 9.241841176095523
+    },
+    "cold": {
+      "users": 846,
+      "ndcg_at_10": 0.3650207469473097,
+      "recall_at_10": 0.06517292931140718,
+      "long_tail_exposure": 0.0,
+      "catalog_coverage": 0.0029036004645760743,
+      "unique_recommended_items": 10,
+      "mean_log_novelty": 7.887580871582031
+    },
+    "warm_activity_slices": {
+      "high_activity": {
+        "users": 302,
+        "ndcg_at_10": 0.14121697715351134,
+        "recall_at_10": 0.06446333615610758
+      },
+      "low_activity": {
+        "users": 171,
+        "ndcg_at_10": 0.2254386309554377,
+        "recall_at_10": 0.07391131621388271
+      }
+    }
+  }
+]

@@ -1,0 +1,31 @@
+{
+  "dataset": "ml-1m",
+  "train_fraction": 0.7,
+  "validation_fraction": 0.15,
+  "positive_threshold": 4,
+  "seed": 42,
+  "k": 10,
+  "candidate_pool": 100,
+  "bpr": {
+    "factors": 64,
+    "epochs": 100,
+    "learning_rate": 0.01,
+    "lambda_reg": 0.01,
+    "use_bias": true,
+    "num_threads": 1
+  },
+  "reranking": {
+    "weights": [
+      0,
+      0.02,
+      0.05,
+      0.1,
+      0.2,
+      0.35,
+      0.5
+    ],
+    "maximum_validation_ndcg_relative_loss": 0.02,
+    "selection_objective": "maximum validation long-tail exposure, then NDCG, then smaller weight"
+  },
+  "bootstrap_samples": 1000
+}
