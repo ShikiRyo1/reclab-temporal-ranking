@@ -1,0 +1,644 @@
+{
+  "schema_version": 1,
+  "upstream_commit": "aa8332189cd495be6ffaa7e1c8054f1c180b5ef3",
+  "cells": [
+    {
+      "model": "sar",
+      "original_cell_1based": 4,
+      "title": "导入依赖与确认版本",
+      "context": "先导入后续每个单元要调用的对象。本单元只准备环境，不读取评分，也不训练模型。",
+      "notes": [
+        {
+          "start": 1,
+          "end": 1,
+          "text": "sys 提供 Python 解释器信息；末尾用 sys.version 确认实际内核。"
+        },
+        {
+          "start": 2,
+          "end": 2,
+          "text": "logging 控制训练日志的级别和格式，方便发现加载或计算异常。"
+        },
+        {
+          "start": 3,
+          "end": 4,
+          "text": "L3 把 NumPy 命名为 np，后面用 float32 控制数值类型；L4 把 pandas 命名为 pd，后面构建用户表并合并结果。"
+        },
+        {
+          "start": 5,
+          "end": 5,
+          "text": "minmax_scale 用于后面的 logloss 演示，把整列预测分数缩放到 [0,1]；它不等于概率校准。"
+        },
+        {
+          "start": 7,
+          "end": 7,
+          "text": "Timer 是上下文计时器；with 块结束后可从 interval 读取秒数。"
+        },
+        {
+          "start": 8,
+          "end": 9,
+          "text": "L8 导入 MovieLens 加载器；L9 导入 binarize，它实际使用严格大于阈值的判断。"
+        },
+        {
+          "start": 10,
+          "end": 11,
+          "text": "L10 导入按用户分组的随机切分器；L11 导入官方 SAR 类，不能与项目自写的 SAR-style 混为一谈。"
+        },
+        {
+          "start": 12,
+          "end": 22,
+          "text": "L12 打开多行导入括号，L22 关闭。L13–16 分别是 MAP、NDCG、Precision、Recall 排序指标；L17–18 是 RMSE、MAE 评分误差；L19 是二元 logloss；L20–21 是 R² 与解释方差。具体分母见后面的指标单元。"
+        },
+        {
+          "start": 23,
+          "end": 23,
+          "text": "store_metadata 把指标写入 Notebook 的结构化输出，供程序对照原值，不是另存数据库。"
+        },
+        {
+          "start": 25,
+          "end": 26,
+          "text": "L25 加载 IPython 的 autoreload 扩展，L26 设为自动重载已导入模块。百分号命令只能在 IPython/Notebook 内核中使用，直接复制到普通 .py 会报语法错误。"
+        },
+        {
+          "start": 28,
+          "end": 30,
+          "text": "三条 f-string 分别打印 Python、NumPy、pandas 版本。实跑环境为 Python 3.12.4、NumPy 1.26.4、pandas 2.2.3；主项目的另一套环境不能替代这里的内核。"
+        }
+      ]
+    },
+    {
+      "model": "sar",
+      "original_cell_1based": 6,
+      "title": "固定推荐长度与数据规模",
+      "context": "这两个常量影响数据加载和后续评估；为了复现，先保留原值。",
+      "notes": [
+        {
+          "start": 1,
+          "end": 2,
+          "text": "L1 的注释说明推荐长度；L2 令每位用户最多得到 10 个推荐位置，指标也在 K=10 截断。"
+        },
+        {
+          "start": 4,
+          "end": 5,
+          "text": "L4 列出加载器可选规模，L5 选 100k。这里不是独立扩展实验的 1M。"
+        }
+      ]
+    },
+    {
+      "model": "sar",
+      "original_cell_1based": 8,
+      "title": "加载评分并减少内存",
+      "context": "加载器返回含 userID、itemID、rating、timestamp 的表；本次共 100,000 行。执行副本在 L1 后增加一行 local_cache_path，见后面的映射说明。",
+      "notes": [
+        {
+          "start": 1,
+          "end": 3,
+          "text": "L1 调用加载器，L2 把上一单元的 100k 传给 size，L3 结束调用。默认 header 保留四列；timestamp 是后续时间衰减需要的输入。"
+        },
+        {
+          "start": 5,
+          "end": 6,
+          "text": "L5 解释类型转换目的；L6 只把 rating 列转成 32 位浮点数，不删评分、不改变 1–5 的数值。"
+        },
+        {
+          "start": 8,
+          "end": 8,
+          "text": "head() 在 Notebook 显示前 5 行，用来检查列名和类型。完整执行本保留了原始示例行，只在本地查看，本伴读不再刊载。"
+        }
+      ]
+    },
+    {
+      "model": "sar",
+      "original_cell_1based": 10,
+      "title": "按用户随机切分",
+      "context": "返回 train 与 test 两个 DataFrame。这里的 stratified 指按用户分组后随机分配，并不是按时间预测未来。",
+      "notes": [
+        {
+          "start": 1,
+          "end": 1,
+          "text": "data 是全部评分；ratio=0.75 是每位用户约 75% 进入训练；col_user/col_item 指明键列；seed=42 固定随机排序。每组有取整，汇总实际为 74,992/25,008，而不是恰好 75,000/25,000。"
+        }
+      ]
+    },
+    {
+      "model": "sar",
+      "original_cell_1based": 11,
+      "title": "打印切分规模",
+      "context": "这一单元把真实数量代入字符串，帮助检查切分是否意外丢行或漏用户。它不参与训练。",
+      "notes": [
+        {
+          "start": 1,
+          "end": 11,
+          "text": "L1 开始三引号模板，L11 结束模板并调用 format。L2/7 是 Train/Test 标题；L3–5、L8–10 分别放行数、用户数、物品数；L6 是字符串内部的空白行，不是 Python 语句。"
+        },
+        {
+          "start": 12,
+          "end": 14,
+          "text": "L12 取训练行数；L13 对 userID 去重计数；L14 对 itemID 去重计数。实测分别为 74,992、943、1,653。"
+        },
+        {
+          "start": 15,
+          "end": 18,
+          "text": "L15–17 同样统计测试集，得到 25,008、943、1,444；L18 关闭 format 和 print。用户都出现过训练不代表所有测试物品都能推荐：有 35 条测试评分的物品不在训练目录。"
+        }
+      ]
+    },
+    {
+      "model": "sar",
+      "original_cell_1based": 14,
+      "title": "构造带时间衰减的 SAR",
+      "context": "SAR（Simple Algorithm for Recommendation）通过用户历史亲和度和物品共同出现关系打分。实例化只保存配置；fit 才计算矩阵。",
+      "notes": [
+        {
+          "start": 1,
+          "end": 2,
+          "text": "L1 把日志设成 DEBUG；L2 在日志中显示时间、级别与消息，-8s 让级别字段左对齐。它只影响观察信息。"
+        },
+        {
+          "start": 4,
+          "end": 8,
+          "text": "L4 开始构造模型；L5–8 分别把用户、物品、评分和时间列名告诉 SAR。列名拼错会在拟合时失败。"
+        },
+        {
+          "start": 9,
+          "end": 9,
+          "text": "jaccard 用共同用户数除以用户集合并集大小衡量两个物品的相似度，不是余弦相似度。"
+        },
+        {
+          "start": 10,
+          "end": 11,
+          "text": "L10 的 30 是半衰期天数；L11 打开时间衰减。默认参考时间取训练表最大 timestamp，每隔 30 天权重约减半；不会使用现在的电脑日期。"
+        },
+        {
+          "start": 12,
+          "end": 13,
+          "text": "L12 启用预测值的评分范围归一化；L13 结束构造。此设置不让分数成为经过校准的点击概率。"
+        }
+      ]
+    },
+    {
+      "model": "sar",
+      "original_cell_1based": 16,
+      "title": "拟合模型并计时",
+      "context": "输入是 train。fit 在模型内建立索引、亲和度与物品相似度；不会把测试评分拟合进去。",
+      "notes": [
+        {
+          "start": 1,
+          "end": 2,
+          "text": "L1 进入计时上下文并命名 train_time；L2 调用 model.fit(train)，缩进表示只计量这一块。"
+        },
+        {
+          "start": 4,
+          "end": 4,
+          "text": "读取 train_time.interval 并打印秒数。本次为约 0.310 秒；硬件、库版本和调度会影响时间，复现验收比较的是排序指标。"
+        }
+      ]
+    },
+    {
+      "model": "sar",
+      "original_cell_1based": 17,
+      "title": "给测试用户生成推荐",
+      "context": "传 test 是为了取得用户 ID；该方法用已经训练好的矩阵给这些用户打分，不把 test.rating 当特征。",
+      "notes": [
+        {
+          "start": 1,
+          "end": 2,
+          "text": "L1 开始预测计时；L2 为测试表中各用户取 top10，remove_seen=True 过滤训练中已出现的用户–物品对。返回表含 userID、itemID、prediction。"
+        },
+        {
+          "start": 4,
+          "end": 4,
+          "text": "打印 test_time.interval，实测约 0.292 秒；top_k 实际有 9,430 行，即 943×10。"
+        }
+      ]
+    },
+    {
+      "model": "sar",
+      "original_cell_1based": 18,
+      "title": "检查推荐表结构",
+      "context": "显示的是预测表样例，不是指标，也不是完整推荐目录。",
+      "notes": [
+        {
+          "start": 1,
+          "end": 1,
+          "text": "head() 只展示前 5 行，便于确认 prediction 列存在。不要把这几行当总体效果的证据。"
+        }
+      ]
+    },
+    {
+      "model": "sar",
+      "original_cell_1based": 20,
+      "title": "计算四项排序指标",
+      "context": "test 是真值，top_k 是推荐。此原版 SAR 没有先删掉低评分：默认 binary 相关性把测试表中出现的物品视为相关。传 col_rating 不会自动执行 rating≥4。",
+      "notes": [
+        {
+          "start": 1,
+          "end": 1,
+          "text": "注释划分排序指标区块，与下一单元的评分误差区分。"
+        },
+        {
+          "start": 2,
+          "end": 2,
+          "text": "map_at_k 先计算每个命中位置的 Precision@r，再按 min(K, 真值物品数) 归一化并对用户取平均。此固定版本的 map_at_k 与分母用全部真值数量的 map 函数不同。"
+        },
+        {
+          "start": 3,
+          "end": 3,
+          "text": "ndcg_at_k 对前面位置的命中给更大权重，再除以该用户理想排序的 DCG。默认 score_type=binary、discfun_type=loge；DCG 与 IDCG 同时换为 log2 不改变比例。"
+        },
+        {
+          "start": 4,
+          "end": 4,
+          "text": "precision_at_k 计算命中数/K，再对可共同评估用户平均；不是“预测评分准确的百分比”。"
+        },
+        {
+          "start": 5,
+          "end": 5,
+          "text": "recall_at_k 计算命中数/该用户全部测试真值数量，再平均。本协议没有提前删除训练目录外的测试物品，所以不能套用独立 1M 实验的可达目标分母。"
+        }
+      ]
+    },
+    {
+      "model": "sar",
+      "original_cell_1based": 21,
+      "title": "评分误差到底测了哪些行",
+      "context": "这些函数先按 userID、itemID 对 test 与 top_k 做内连接（inner join）。因此只评价两表交集中的评分预测，不是在全部 25,008 条测试评分上预测 RMSE。",
+      "notes": [
+        {
+          "start": 1,
+          "end": 1,
+          "text": "注释表明下面测评分数值误差，而不是推荐顺序。"
+        },
+        {
+          "start": 2,
+          "end": 2,
+          "text": "RMSE 是误差平方均值再开根号，大误差受罚更重；本次为 1.229246。"
+        },
+        {
+          "start": 3,
+          "end": 3,
+          "text": "MAE 是绝对误差均值，单位仍是评分分数；本次为 1.033912。"
+        },
+        {
+          "start": 4,
+          "end": 4,
+          "text": "R²=1−残差平方和/真值离均差平方和；本次 −0.511334，表示在该交集上按平方误差衡量，还不如用交集真值均值预测。负值不是程序自动报错。"
+        },
+        {
+          "start": 5,
+          "end": 5,
+          "text": "解释方差为 1−Var(y−ŷ)/Var(y)；本次 0.098494。它用残差方差，R²用残差平方和；存在系统性偏移时两者可以明显不同。"
+        }
+      ]
+    },
+    {
+      "model": "sar",
+      "original_cell_1based": 22,
+      "title": "二值化与 logloss 的边界",
+      "context": "此单元是原版额外演示，不参与我们用来声明复现的 8 项排序指标，也不参与选择扩展模型。",
+      "notes": [
+        {
+          "start": 1,
+          "end": 3,
+          "text": "L1 设阈值 2；L2 复制 test 避免改掉后续原评分；L3 使用严格 rating>2 得到 0/1，所以评分 2 仍是 0。这不是 BPR 的阈值 3.5。"
+        },
+        {
+          "start": 5,
+          "end": 6,
+          "text": "L5 复制预测表；L6 先转浮点，再对所有用户的 prediction 整列做 min–max 缩放。缩到 [0,1] 只是数值变换，不能据此断言预测已校准为概率。"
+        },
+        {
+          "start": 8,
+          "end": 10,
+          "text": "L8 调用 logloss，L9 传入二值真值与缩放预测并声明键列，L10 结束。底层仍先按键内连接，再计算二元交叉熵；本次 0.569153。不要把它解释成全面评价未曝光项目的概率模型。"
+        }
+      ]
+    },
+    {
+      "model": "sar",
+      "original_cell_1based": 23,
+      "title": "格式化打印结果",
+      "context": "这里读取已有变量，未再训练或重新计算。屏幕六位小数是展示精度；JSON 保留更多位数。",
+      "notes": [
+        {
+          "start": 1,
+          "end": 2,
+          "text": "L1 打印 Model 标签；L2 用 %d 输出整数 K。此单元没有给 Model 标签填模型名称，是上游原写法。"
+        },
+        {
+          "start": 3,
+          "end": 6,
+          "text": "L3–6 依次显示 MAP、NDCG、Precision、Recall；%f 默认保留小数点后 6 位，打印变短不代表底层指标被截断。"
+        },
+        {
+          "start": 7,
+          "end": 11,
+          "text": "L7–11 依次显示 RMSE、MAE、R²、解释方差、logloss，变量来自前两个单元。"
+        },
+        {
+          "start": 12,
+          "end": 12,
+          "text": "sep='\\n' 指定各个 print 参数换行输出，并关闭调用。"
+        }
+      ]
+    },
+    {
+      "model": "sar",
+      "original_cell_1based": 24,
+      "title": "用户 54 的局部诊断",
+      "context": "这个例子教你追踪某一个用户，不能代替整体评价，也不能在简历上把一次手选案例写成总体提升。",
+      "notes": [
+        {
+          "start": 1,
+          "end": 2,
+          "text": "L1 是原作者的示例注释；L2 固定数据集里的 user_id=54，不代表当前使用者。"
+        },
+        {
+          "start": 4,
+          "end": 6,
+          "text": "L4 只取用户 54 的测试行并开始排序；L5 按真实 rating 降序；L6 取前 TOP_K 行。ground_truth 是该用户评分最高的一组测试行，不等于模型的推荐顺序。"
+        },
+        {
+          "start": 7,
+          "end": 9,
+          "text": "L7 调推荐方法；L8 构造只有 userID 一列的一行 DataFrame，并过滤训练已看物品；L9 结束。这里没显式传 top_k，官方默认也是 10。"
+        },
+        {
+          "start": 10,
+          "end": 10,
+          "text": "以 ground_truth 为左表，按用户与物品键 left join。每条真值保留；某条 prediction 为 NaN，表示它没进入该次推荐表，不表示模型分数等于 0。"
+        },
+        {
+          "start": 11,
+          "end": 11,
+          "text": "显示合并表前 10 行，便于肉眼看哪些高评分测试电影被推荐到了。原始逐用户内容仅在本地执行本查看。"
+        }
+      ]
+    },
+    {
+      "model": "sar",
+      "original_cell_1based": 26,
+      "title": "把排序指标存入 Notebook 输出",
+      "context": "结构化 metadata 使复现脚本可以按指标名称读数字，避免从打印文字中猜测。",
+      "notes": [
+        {
+          "start": 1,
+          "end": 1,
+          "text": "原注释让一般读者忽略此单元；复现与审计时它很重要，不能跳过。"
+        },
+        {
+          "start": 2,
+          "end": 5,
+          "text": "L2–5 分别存 map、ndcg、precision、recall。键名是比较脚本的契约；改变键名会找不到原指标。"
+        },
+        {
+          "start": 6,
+          "end": 7,
+          "text": "L6/7 保存训练/预测秒数。时间也被记录，但不要求与上游保存时间完全相同。"
+        }
+      ]
+    },
+    {
+      "model": "bpr",
+      "original_cell_1based": 4,
+      "title": "导入 Cornac 与上游包装类",
+      "context": "模型实现来自 Cornac；Recommenders 的 BPR 子类增加 recommend_k_items 便利方法。两者名称相似，作用不同。",
+      "notes": [
+        {
+          "start": 1,
+          "end": 2,
+          "text": "L1 读取 Python 版本；L2 导入 cornac 包，提供数据结构与底层模型，并读取版本。"
+        },
+        {
+          "start": 4,
+          "end": 5,
+          "text": "L4 导入数据加载器；L5 导入全表随机切分器。它与 SAR 的按用户随机切分不同。"
+        },
+        {
+          "start": 6,
+          "end": 6,
+          "text": "导入四个排序指标，后面使用它们的默认 userID、itemID、rating 列名。"
+        },
+        {
+          "start": 7,
+          "end": 7,
+          "text": "BPR 是 Recommenders 包装的 Cornac BPR 子类；它保留底层训练，并补充批量推荐接口。"
+        },
+        {
+          "start": 8,
+          "end": 9,
+          "text": "L8 导入上下文计时器；L9 导入常量 SEED，固定源码里数值为 42。"
+        },
+        {
+          "start": 10,
+          "end": 11,
+          "text": "L10 导入严格大于阈值的 binarize；L11 导入结构化指标输出工具。"
+        },
+        {
+          "start": 13,
+          "end": 14,
+          "text": "L13/14 打印解释器和 Cornac 版本。本次 baseline 使用 Cornac 2.3.0，不能换成根环境的 3.0.1 后仍宣称相同环境。"
+        }
+      ]
+    },
+    {
+      "model": "bpr",
+      "original_cell_1based": 5,
+      "title": "固定正反馈标准与模型大小",
+      "context": "这里把显式评分转成隐式正反馈，目标是把正样本排在抽到的比较物品前面，而非预测评分为几星。",
+      "notes": [
+        {
+          "start": 1,
+          "end": 2,
+          "text": "注释列出可选规模；MOVIELENS_DATA_SIZE 固定为 100k。"
+        },
+        {
+          "start": 4,
+          "end": 5,
+          "text": "TOP_K=10 只规定推荐评估截断；并不等于后面的批量预测只返回 10 个物品。"
+        },
+        {
+          "start": 7,
+          "end": 8,
+          "text": "RATING_THRESHOLD=3.5 配合严格大于判断；评分是整数，因此保留 4、5 分，丢弃 1、2、3 分。"
+        },
+        {
+          "start": 10,
+          "end": 12,
+          "text": "L10 注释开始模型参数区；L11 设每个用户/物品的隐因子维度为 200；L12 最多训练 200 轮。不要误记成扩展模型的 64 维、100 轮。"
+        }
+      ]
+    },
+    {
+      "model": "bpr",
+      "original_cell_1based": 9,
+      "title": "加载后只保留正反馈",
+      "context": "加载器只返回三列，后面才能直接把每行交给 from_uir。原始 100,000 行经过筛选剩 55,375 行。",
+      "notes": [
+        {
+          "start": 1,
+          "end": 4,
+          "text": "L1 调用加载器；L2 传 100k；L3 指定 userID、itemID、rating 三列，省去 timestamp；L4 结束调用。执行本同样在 L1 后加本地缓存参数。"
+        },
+        {
+          "start": 7,
+          "end": 7,
+          "text": "把评分数组按 >3.5 转成 1.0/0.0，覆盖 rating 列。原 4 分和 5 分都变成 1，强度差异不再进入这个 BPR 实验。"
+        },
+        {
+          "start": 8,
+          "end": 8,
+          "text": "只留下 rating>0 的行，reset_index(drop=True) 重新编号而不把旧索引加入新列。"
+        },
+        {
+          "start": 9,
+          "end": 9,
+          "text": "显示前 5 行检查三列结构与二元标签；不在伴读重印数据样本。"
+        }
+      ]
+    },
+    {
+      "model": "bpr",
+      "original_cell_1based": 10,
+      "title": "全表随机切分",
+      "context": "这个协议从筛选后的正反馈表随机取 75% 训练，并没有保证每位用户的比例恰好一致。",
+      "notes": [
+        {
+          "start": 1,
+          "end": 1,
+          "text": "python_random_split(data,0.75) 返回 41,531 行 train 与 13,844 行 test。seed 没写在调用里，但固定函数的默认值为 42；真实时间戳已不在三列表中。"
+        }
+      ]
+    },
+    {
+      "model": "bpr",
+      "original_cell_1based": 12,
+      "title": "把 DataFrame 变成 Cornac 数据集",
+      "context": "UIR 指 User–Item–Rating。Cornac 会把原始 ID 映射为紧凑的内部行列编号，这些内部编号不是 MovieLens 的 ID。",
+      "notes": [
+        {
+          "start": 1,
+          "end": 1,
+          "text": "itertuples(index=False) 逐行产生 userID、itemID、rating 三元组，不附带 pandas 索引；from_uir 建立稀疏交互矩阵及 ID 字典，seed=SEED 固定数据集随机状态。"
+        },
+        {
+          "start": 3,
+          "end": 4,
+          "text": "L3/4 打印训练中的用户/物品数量，实测 942 和 1,395。测试有 930 名用户，均在训练出现；另有 63 条测试行的物品不在训练目录。"
+        }
+      ]
+    },
+    {
+      "model": "bpr",
+      "original_cell_1based": 14,
+      "title": "构造 BPR 模型",
+      "context": "BPR（Bayesian Personalized Ranking）以用户对正样本和比较物品的分差优化成对排序；训练细节与梯度勘误见主手册。",
+      "notes": [
+        {
+          "start": 1,
+          "end": 3,
+          "text": "L1 构造对象；L2 传 200 维；L3 传 200 轮。只构造对象不会完成学习。"
+        },
+        {
+          "start": 4,
+          "end": 5,
+          "text": "L4 的 learning_rate=0.01 控制每次更新步长；L5 的 lambda_reg=0.001 控制正则强度。保持上游参数才能比较其保存值。"
+        },
+        {
+          "start": 6,
+          "end": 8,
+          "text": "L6 打开训练进度输出；L7 传随机种子 42；L8 结束调用。未显式给出的 use_bias 等参数使用此固定 Cornac 版本默认值，不能随手用新版接口推断。"
+        }
+      ]
+    },
+    {
+      "model": "bpr",
+      "original_cell_1based": 15,
+      "title": "拟合稀疏交互并计时",
+      "context": "fit 会实际执行 BPR 更新；比较物品从未被当作该用户正反馈的物品中抽取。未知反馈不等于已经证实不喜欢。",
+      "notes": [
+        {
+          "start": 1,
+          "end": 2,
+          "text": "L1 把计时器命名为 t；L2 在上下文中拟合 train_set。用户因子、物品因子与 item bias 保存在 bpr 对象里。"
+        },
+        {
+          "start": 3,
+          "end": 3,
+          "text": "f-string 调用 Timer 的字符串表示，打印训练用时。下一计时单元会覆盖变量 t，所以它不长期同时保存训练与预测两个用时。"
+        }
+      ]
+    },
+    {
+      "model": "bpr",
+      "original_cell_1based": 17,
+      "title": "为训练用户计算未见物品分数",
+      "context": "本单元返回的是全部未见候选分数，评估函数稍后才截前 10。这样的大表在更大目录上会成为内存和计算开销。",
+      "notes": [
+        {
+          "start": 1,
+          "end": 2,
+          "text": "L1 开始计时；L2 将 train 传给包装方法，声明键列并过滤训练正反馈已见对。没有传 top_k，而方法默认 top_k=None，所以保留每位训练用户的全部有限候选，实测 1,272,559 行。"
+        },
+        {
+          "start": 3,
+          "end": 3,
+          "text": "打印预测秒数。底层使用用户因子×物品因子转置并加 item bias；传入 train 的用户–物品键用于 seen 过滤。"
+        }
+      ]
+    },
+    {
+      "model": "bpr",
+      "original_cell_1based": 18,
+      "title": "查看批量预测的列",
+      "context": "这一步只观察已经算好的结果，不改变排序。",
+      "notes": [
+        {
+          "start": 1,
+          "end": 1,
+          "text": "head() 显示预测表前 5 行，确认 prediction 为数值且 ID 列可与 test 对齐；不得把样例表上传成公开原始数据。"
+        }
+      ]
+    },
+    {
+      "model": "bpr",
+      "original_cell_1based": 19,
+      "title": "截前 10 并计算排序指标",
+      "context": "输入 all_predictions 虽然很长，四个指标都明确使用 k=TOP_K。标签已在此前筛选为正反馈，因此与 SAR 的“全部测试评分为相关”不同。",
+      "notes": [
+        {
+          "start": 1,
+          "end": 4,
+          "text": "L1–4 分别计算 MAP、NDCG、Precision、Recall。col_prediction 指定分数列；用户/物品列用默认名称；k=10 使评估器先按每位用户分数截前 10。公式同 SAR 指标说明，但目标集合与切分不同，不能据此排列两模型优劣。"
+        },
+        {
+          "start": 7,
+          "end": 8,
+          "text": "L7 打印 Model 标签；L8 打印整数 K，\\t 是制表字符，只影响文本对齐。"
+        },
+        {
+          "start": 9,
+          "end": 12,
+          "text": "L9–12 用 :f 显示四项浮点指标，最后 sep='\\n' 令输出逐项换行。完整值保存在结构化 metadata 中。"
+        }
+      ]
+    },
+    {
+      "model": "bpr",
+      "original_cell_1based": 20,
+      "title": "保存四项排序指标",
+      "context": "这四个键与 SAR 相同，复现脚本因此能用统一读取逻辑比较两份原 Notebook 各自的结果。",
+      "notes": [
+        {
+          "start": 1,
+          "end": 1,
+          "text": "保留原注释；审计时需要执行本单元，不能因注释写了 ignore 就省略。"
+        },
+        {
+          "start": 2,
+          "end": 5,
+          "text": "L2–5 依次记录 map、ndcg、precision、recall 到 Notebook 的富输出中，不写入评分文件，也不改变模型。"
+        }
+      ]
+    }
+  ]
+}

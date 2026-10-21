@@ -1,0 +1,3064 @@
+{
+  "version": 1,
+  "built_at_utc": "2026-10-21T04:47:17.028214+00:00",
+  "commit": "aa8332189cd495be6ffaa7e1c8054f1c180b5ef3",
+  "license": "MIT",
+  "copyright": "Recommenders contributors",
+  "scope": "All original code, two local cache insertions and four helper cells; no execution outputs redistributed.",
+  "notebooks": [
+    {
+      "model": "sar",
+      "upstream_file": "examples/00_quick_start/sar_movielens.ipynb",
+      "source_sha256": "ec93b1fb81864b7ae9ce22a7ba46b53947f2c3cfe5fce982c31c4b7594569547",
+      "source_local_path": "H:\\Career_AI_Portfolio\\external\\recommenders\\examples\\00_quick_start\\sar_movielens.ipynb",
+      "executed_local_path": "H:\\Career_AI_Portfolio\\projects\\01_recommendation_service\\reports\\baseline\\sar_executed.ipynb",
+      "executed_sha256": "6ee4f8273b72365d023b3abb1083ab011166dfb24be775b24b428c575848f6be",
+      "url": "https://github.com/recommenders-team/recommenders/blob/aa8332189cd495be6ffaa7e1c8054f1c180b5ef3/examples/00_quick_start/sar_movielens.ipynb"
+    },
+    {
+      "model": "bpr",
+      "upstream_file": "examples/02_model_collaborative_filtering/cornac_bpr_deep_dive.ipynb",
+      "source_sha256": "354f97cf72d8a7d4c110fc024206a9f14c0a79a5c41e9531bd4a2f3f51c09abc",
+      "source_local_path": "H:\\Career_AI_Portfolio\\external\\recommenders\\examples\\02_model_collaborative_filtering\\cornac_bpr_deep_dive.ipynb",
+      "executed_local_path": "H:\\Career_AI_Portfolio\\projects\\01_recommendation_service\\reports\\baseline\\bpr_executed.ipynb",
+      "executed_sha256": "61fe92b807b79ef412f765640eaf0e6e6a9173459cbf895a99c5d8986631f327",
+      "url": "https://github.com/recommenders-team/recommenders/blob/aa8332189cd495be6ffaa7e1c8054f1c180b5ef3/examples/02_model_collaborative_filtering/cornac_bpr_deep_dive.ipynb"
+    }
+  ],
+  "cells": [
+    {
+      "id": "sar-original-4",
+      "model": "sar",
+      "kind": "upstream_original",
+      "original_cell_1based": 4,
+      "executed_cell_1based": 5,
+      "title": "导入依赖与确认版本",
+      "context": "先导入后续每个单元要调用的对象。本单元只准备环境，不读取评分，也不训练模型。",
+      "source_cell_sha256": "e9f763b326713d5c9feeda70f76f7d7a51184e00e420aff965de3412c2c6c589",
+      "lines": 30,
+      "annotations": [
+        {
+          "start": 1,
+          "end": 1,
+          "text": "sys 提供 Python 解释器信息；末尾用 sys.version 确认实际内核。"
+        },
+        {
+          "start": 2,
+          "end": 2,
+          "text": "logging 控制训练日志的级别和格式，方便发现加载或计算异常。"
+        },
+        {
+          "start": 3,
+          "end": 4,
+          "text": "L3 把 NumPy 命名为 np，后面用 float32 控制数值类型；L4 把 pandas 命名为 pd，后面构建用户表并合并结果。"
+        },
+        {
+          "start": 5,
+          "end": 5,
+          "text": "minmax_scale 用于后面的 logloss 演示，把整列预测分数缩放到 [0,1]；它不等于概率校准。"
+        },
+        {
+          "start": 7,
+          "end": 7,
+          "text": "Timer 是上下文计时器；with 块结束后可从 interval 读取秒数。"
+        },
+        {
+          "start": 8,
+          "end": 9,
+          "text": "L8 导入 MovieLens 加载器；L9 导入 binarize，它实际使用严格大于阈值的判断。"
+        },
+        {
+          "start": 10,
+          "end": 11,
+          "text": "L10 导入按用户分组的随机切分器；L11 导入官方 SAR 类，不能与项目自写的 SAR-style 混为一谈。"
+        },
+        {
+          "start": 12,
+          "end": 22,
+          "text": "L12 打开多行导入括号，L22 关闭。L13–16 分别是 MAP、NDCG、Precision、Recall 排序指标；L17–18 是 RMSE、MAE 评分误差；L19 是二元 logloss；L20–21 是 R² 与解释方差。具体分母见后面的指标单元。"
+        },
+        {
+          "start": 23,
+          "end": 23,
+          "text": "store_metadata 把指标写入 Notebook 的结构化输出，供程序对照原值，不是另存数据库。"
+        },
+        {
+          "start": 25,
+          "end": 26,
+          "text": "L25 加载 IPython 的 autoreload 扩展，L26 设为自动重载已导入模块。百分号命令只能在 IPython/Notebook 内核中使用，直接复制到普通 .py 会报语法错误。"
+        },
+        {
+          "start": 28,
+          "end": 30,
+          "text": "三条 f-string 分别打印 Python、NumPy、pandas 版本。实跑环境为 Python 3.12.4、NumPy 1.26.4、pandas 2.2.3；主项目的另一套环境不能替代这里的内核。"
+        }
+      ],
+      "line_mapping": [
+        {
+          "source_line": 1,
+          "source_json_line": 58,
+          "executed_line": 1,
+          "executed_json_line": 93,
+          "export_line": 6,
+          "explanation": "sys 提供 Python 解释器信息；末尾用 sys.version 确认实际内核。"
+        },
+        {
+          "source_line": 2,
+          "source_json_line": 59,
+          "executed_line": 2,
+          "executed_json_line": 94,
+          "export_line": 7,
+          "explanation": "logging 控制训练日志的级别和格式，方便发现加载或计算异常。"
+        },
+        {
+          "source_line": 3,
+          "source_json_line": 60,
+          "executed_line": 3,
+          "executed_json_line": 95,
+          "export_line": 8,
+          "explanation": "L3 把 NumPy 命名为 np，后面用 float32 控制数值类型；L4 把 pandas 命名为 pd，后面构建用户表并合并结果。"
+        },
+        {
+          "source_line": 4,
+          "source_json_line": 61,
+          "executed_line": 4,
+          "executed_json_line": 96,
+          "export_line": 9,
+          "explanation": "L3 把 NumPy 命名为 np，后面用 float32 控制数值类型；L4 把 pandas 命名为 pd，后面构建用户表并合并结果。"
+        },
+        {
+          "source_line": 5,
+          "source_json_line": 62,
+          "executed_line": 5,
+          "executed_json_line": 97,
+          "export_line": 10,
+          "explanation": "minmax_scale 用于后面的 logloss 演示，把整列预测分数缩放到 [0,1]；它不等于概率校准。"
+        },
+        {
+          "source_line": 6,
+          "source_json_line": 63,
+          "executed_line": 6,
+          "executed_json_line": 98,
+          "export_line": 11,
+          "explanation": "空行：分隔相邻逻辑，不执行操作。"
+        },
+        {
+          "source_line": 7,
+          "source_json_line": 64,
+          "executed_line": 7,
+          "executed_json_line": 99,
+          "export_line": 12,
+          "explanation": "Timer 是上下文计时器；with 块结束后可从 interval 读取秒数。"
+        },
+        {
+          "source_line": 8,
+          "source_json_line": 65,
+          "executed_line": 8,
+          "executed_json_line": 100,
+          "export_line": 13,
+          "explanation": "L8 导入 MovieLens 加载器；L9 导入 binarize，它实际使用严格大于阈值的判断。"
+        },
+        {
+          "source_line": 9,
+          "source_json_line": 66,
+          "executed_line": 9,
+          "executed_json_line": 101,
+          "export_line": 14,
+          "explanation": "L8 导入 MovieLens 加载器；L9 导入 binarize，它实际使用严格大于阈值的判断。"
+        },
+        {
+          "source_line": 10,
+          "source_json_line": 67,
+          "executed_line": 10,
+          "executed_json_line": 102,
+          "export_line": 15,
+          "explanation": "L10 导入按用户分组的随机切分器；L11 导入官方 SAR 类，不能与项目自写的 SAR-style 混为一谈。"
+        },
+        {
+          "source_line": 11,
+          "source_json_line": 68,
+          "executed_line": 11,
+          "executed_json_line": 103,
+          "export_line": 16,
+          "explanation": "L10 导入按用户分组的随机切分器；L11 导入官方 SAR 类，不能与项目自写的 SAR-style 混为一谈。"
+        },
+        {
+          "source_line": 12,
+          "source_json_line": 69,
+          "executed_line": 12,
+          "executed_json_line": 104,
+          "export_line": 17,
+          "explanation": "L12 打开多行导入括号，L22 关闭。L13–16 分别是 MAP、NDCG、Precision、Recall 排序指标；L17–18 是 RMSE、MAE 评分误差；L19 是二元 logloss；L20–21 是 R² 与解释方差。具体分母见后面的指标单元。"
+        },
+        {
+          "source_line": 13,
+          "source_json_line": 70,
+          "executed_line": 13,
+          "executed_json_line": 105,
+          "export_line": 18,
+          "explanation": "L12 打开多行导入括号，L22 关闭。L13–16 分别是 MAP、NDCG、Precision、Recall 排序指标；L17–18 是 RMSE、MAE 评分误差；L19 是二元 logloss；L20–21 是 R² 与解释方差。具体分母见后面的指标单元。"
+        },
+        {
+          "source_line": 14,
+          "source_json_line": 71,
+          "executed_line": 14,
+          "executed_json_line": 106,
+          "export_line": 19,
+          "explanation": "L12 打开多行导入括号，L22 关闭。L13–16 分别是 MAP、NDCG、Precision、Recall 排序指标；L17–18 是 RMSE、MAE 评分误差；L19 是二元 logloss；L20–21 是 R² 与解释方差。具体分母见后面的指标单元。"
+        },
+        {
+          "source_line": 15,
+          "source_json_line": 72,
+          "executed_line": 15,
+          "executed_json_line": 107,
+          "export_line": 20,
+          "explanation": "L12 打开多行导入括号，L22 关闭。L13–16 分别是 MAP、NDCG、Precision、Recall 排序指标；L17–18 是 RMSE、MAE 评分误差；L19 是二元 logloss；L20–21 是 R² 与解释方差。具体分母见后面的指标单元。"
+        },
+        {
+          "source_line": 16,
+          "source_json_line": 73,
+          "executed_line": 16,
+          "executed_json_line": 108,
+          "export_line": 21,
+          "explanation": "L12 打开多行导入括号，L22 关闭。L13–16 分别是 MAP、NDCG、Precision、Recall 排序指标；L17–18 是 RMSE、MAE 评分误差；L19 是二元 logloss；L20–21 是 R² 与解释方差。具体分母见后面的指标单元。"
+        },
+        {
+          "source_line": 17,
+          "source_json_line": 74,
+          "executed_line": 17,
+          "executed_json_line": 109,
+          "export_line": 22,
+          "explanation": "L12 打开多行导入括号，L22 关闭。L13–16 分别是 MAP、NDCG、Precision、Recall 排序指标；L17–18 是 RMSE、MAE 评分误差；L19 是二元 logloss；L20–21 是 R² 与解释方差。具体分母见后面的指标单元。"
+        },
+        {
+          "source_line": 18,
+          "source_json_line": 75,
+          "executed_line": 18,
+          "executed_json_line": 110,
+          "export_line": 23,
+          "explanation": "L12 打开多行导入括号，L22 关闭。L13–16 分别是 MAP、NDCG、Precision、Recall 排序指标；L17–18 是 RMSE、MAE 评分误差；L19 是二元 logloss；L20–21 是 R² 与解释方差。具体分母见后面的指标单元。"
+        },
+        {
+          "source_line": 19,
+          "source_json_line": 76,
+          "executed_line": 19,
+          "executed_json_line": 111,
+          "export_line": 24,
+          "explanation": "L12 打开多行导入括号，L22 关闭。L13–16 分别是 MAP、NDCG、Precision、Recall 排序指标；L17–18 是 RMSE、MAE 评分误差；L19 是二元 logloss；L20–21 是 R² 与解释方差。具体分母见后面的指标单元。"
+        },
+        {
+          "source_line": 20,
+          "source_json_line": 77,
+          "executed_line": 20,
+          "executed_json_line": 112,
+          "export_line": 25,
+          "explanation": "L12 打开多行导入括号，L22 关闭。L13–16 分别是 MAP、NDCG、Precision、Recall 排序指标；L17–18 是 RMSE、MAE 评分误差；L19 是二元 logloss；L20–21 是 R² 与解释方差。具体分母见后面的指标单元。"
+        },
+        {
+          "source_line": 21,
+          "source_json_line": 78,
+          "executed_line": 21,
+          "executed_json_line": 113,
+          "export_line": 26,
+          "explanation": "L12 打开多行导入括号，L22 关闭。L13–16 分别是 MAP、NDCG、Precision、Recall 排序指标；L17–18 是 RMSE、MAE 评分误差；L19 是二元 logloss；L20–21 是 R² 与解释方差。具体分母见后面的指标单元。"
+        },
+        {
+          "source_line": 22,
+          "source_json_line": 79,
+          "executed_line": 22,
+          "executed_json_line": 114,
+          "export_line": 27,
+          "explanation": "L12 打开多行导入括号，L22 关闭。L13–16 分别是 MAP、NDCG、Precision、Recall 排序指标；L17–18 是 RMSE、MAE 评分误差；L19 是二元 logloss；L20–21 是 R² 与解释方差。具体分母见后面的指标单元。"
+        },
+        {
+          "source_line": 23,
+          "source_json_line": 80,
+          "executed_line": 23,
+          "executed_json_line": 115,
+          "export_line": 28,
+          "explanation": "store_metadata 把指标写入 Notebook 的结构化输出，供程序对照原值，不是另存数据库。"
+        },
+        {
+          "source_line": 24,
+          "source_json_line": 81,
+          "executed_line": 24,
+          "executed_json_line": 116,
+          "export_line": 29,
+          "explanation": "空行：分隔相邻逻辑，不执行操作。"
+        },
+        {
+          "source_line": 25,
+          "source_json_line": 82,
+          "executed_line": 25,
+          "executed_json_line": 117,
+          "export_line": 30,
+          "explanation": "L25 加载 IPython 的 autoreload 扩展，L26 设为自动重载已导入模块。百分号命令只能在 IPython/Notebook 内核中使用，直接复制到普通 .py 会报语法错误。"
+        },
+        {
+          "source_line": 26,
+          "source_json_line": 83,
+          "executed_line": 26,
+          "executed_json_line": 118,
+          "export_line": 31,
+          "explanation": "L25 加载 IPython 的 autoreload 扩展，L26 设为自动重载已导入模块。百分号命令只能在 IPython/Notebook 内核中使用，直接复制到普通 .py 会报语法错误。"
+        },
+        {
+          "source_line": 27,
+          "source_json_line": 84,
+          "executed_line": 27,
+          "executed_json_line": 119,
+          "export_line": 32,
+          "explanation": "空行：分隔相邻逻辑，不执行操作。"
+        },
+        {
+          "source_line": 28,
+          "source_json_line": 85,
+          "executed_line": 28,
+          "executed_json_line": 120,
+          "export_line": 33,
+          "explanation": "三条 f-string 分别打印 Python、NumPy、pandas 版本。实跑环境为 Python 3.12.4、NumPy 1.26.4、pandas 2.2.3；主项目的另一套环境不能替代这里的内核。"
+        },
+        {
+          "source_line": 29,
+          "source_json_line": 86,
+          "executed_line": 29,
+          "executed_json_line": 121,
+          "export_line": 34,
+          "explanation": "三条 f-string 分别打印 Python、NumPy、pandas 版本。实跑环境为 Python 3.12.4、NumPy 1.26.4、pandas 2.2.3；主项目的另一套环境不能替代这里的内核。"
+        },
+        {
+          "source_line": 30,
+          "source_json_line": 87,
+          "executed_line": 30,
+          "executed_json_line": 122,
+          "export_line": 35,
+          "explanation": "三条 f-string 分别打印 Python、NumPy、pandas 版本。实跑环境为 Python 3.12.4、NumPy 1.26.4、pandas 2.2.3；主项目的另一套环境不能替代这里的内核。"
+        }
+      ],
+      "cache_parameter_inserted": false,
+      "covered_lines": 30
+    },
+    {
+      "id": "sar-original-6",
+      "model": "sar",
+      "kind": "upstream_original",
+      "original_cell_1based": 6,
+      "executed_cell_1based": 7,
+      "title": "固定推荐长度与数据规模",
+      "context": "这两个常量影响数据加载和后续评估；为了复现，先保留原值。",
+      "source_cell_sha256": "76fa279d4fb83367660c415ab3d96a7b124cb874014eb04f4bed16c16ca2a777",
+      "lines": 5,
+      "annotations": [
+        {
+          "start": 1,
+          "end": 2,
+          "text": "L1 的注释说明推荐长度；L2 令每位用户最多得到 10 个推荐位置，指标也在 K=10 截断。"
+        },
+        {
+          "start": 4,
+          "end": 5,
+          "text": "L4 列出加载器可选规模，L5 选 100k。这里不是独立扩展实验的 1M。"
+        }
+      ],
+      "line_mapping": [
+        {
+          "source_line": 1,
+          "source_json_line": 114,
+          "executed_line": 1,
+          "executed_json_line": 155,
+          "export_line": 39,
+          "explanation": "L1 的注释说明推荐长度；L2 令每位用户最多得到 10 个推荐位置，指标也在 K=10 截断。"
+        },
+        {
+          "source_line": 2,
+          "source_json_line": 115,
+          "executed_line": 2,
+          "executed_json_line": 156,
+          "export_line": 40,
+          "explanation": "L1 的注释说明推荐长度；L2 令每位用户最多得到 10 个推荐位置，指标也在 K=10 截断。"
+        },
+        {
+          "source_line": 3,
+          "source_json_line": 116,
+          "executed_line": 3,
+          "executed_json_line": 157,
+          "export_line": 41,
+          "explanation": "空行：分隔相邻逻辑，不执行操作。"
+        },
+        {
+          "source_line": 4,
+          "source_json_line": 117,
+          "executed_line": 4,
+          "executed_json_line": 158,
+          "export_line": 42,
+          "explanation": "L4 列出加载器可选规模，L5 选 100k。这里不是独立扩展实验的 1M。"
+        },
+        {
+          "source_line": 5,
+          "source_json_line": 118,
+          "executed_line": 5,
+          "executed_json_line": 159,
+          "export_line": 43,
+          "explanation": "L4 列出加载器可选规模，L5 选 100k。这里不是独立扩展实验的 1M。"
+        }
+      ],
+      "cache_parameter_inserted": false,
+      "covered_lines": 5
+    },
+    {
+      "id": "sar-original-8",
+      "model": "sar",
+      "kind": "upstream_original",
+      "original_cell_1based": 8,
+      "executed_cell_1based": 9,
+      "title": "加载评分并减少内存",
+      "context": "加载器返回含 userID、itemID、rating、timestamp 的表；本次共 100,000 行。执行副本在 L1 后增加一行 local_cache_path，见后面的映射说明。",
+      "source_cell_sha256": "c495f5f4fa8e840586e5d8396ab4e91cd45db99ed643dbfba7186dcda2568e74",
+      "lines": 8,
+      "annotations": [
+        {
+          "start": 1,
+          "end": 3,
+          "text": "L1 调用加载器，L2 把上一单元的 100k 传给 size，L3 结束调用。默认 header 保留四列；timestamp 是后续时间衰减需要的输入。"
+        },
+        {
+          "start": 5,
+          "end": 6,
+          "text": "L5 解释类型转换目的；L6 只把 rating 列转成 32 位浮点数，不删评分、不改变 1–5 的数值。"
+        },
+        {
+          "start": 8,
+          "end": 8,
+          "text": "head() 在 Notebook 显示前 5 行，用来检查列名和类型。完整执行本保留了原始示例行，只在本地查看，本伴读不再刊载。"
+        }
+      ],
+      "line_mapping": [
+        {
+          "source_line": 1,
+          "source_json_line": 222,
+          "executed_line": 1,
+          "executed_json_line": 263,
+          "export_line": 47,
+          "explanation": "L1 调用加载器，L2 把上一单元的 100k 传给 size，L3 结束调用。默认 header 保留四列；timestamp 是后续时间衰减需要的输入。"
+        },
+        {
+          "source_line": 2,
+          "source_json_line": 223,
+          "executed_line": 3,
+          "executed_json_line": 265,
+          "export_line": 48,
+          "explanation": "L1 调用加载器，L2 把上一单元的 100k 传给 size，L3 结束调用。默认 header 保留四列；timestamp 是后续时间衰减需要的输入。"
+        },
+        {
+          "source_line": 3,
+          "source_json_line": 224,
+          "executed_line": 4,
+          "executed_json_line": 266,
+          "export_line": 49,
+          "explanation": "L1 调用加载器，L2 把上一单元的 100k 传给 size，L3 结束调用。默认 header 保留四列；timestamp 是后续时间衰减需要的输入。"
+        },
+        {
+          "source_line": 4,
+          "source_json_line": 225,
+          "executed_line": 5,
+          "executed_json_line": 267,
+          "export_line": 50,
+          "explanation": "空行：分隔相邻逻辑，不执行操作。"
+        },
+        {
+          "source_line": 5,
+          "source_json_line": 226,
+          "executed_line": 6,
+          "executed_json_line": 268,
+          "export_line": 51,
+          "explanation": "L5 解释类型转换目的；L6 只把 rating 列转成 32 位浮点数，不删评分、不改变 1–5 的数值。"
+        },
+        {
+          "source_line": 6,
+          "source_json_line": 227,
+          "executed_line": 7,
+          "executed_json_line": 269,
+          "export_line": 52,
+          "explanation": "L5 解释类型转换目的；L6 只把 rating 列转成 32 位浮点数，不删评分、不改变 1–5 的数值。"
+        },
+        {
+          "source_line": 7,
+          "source_json_line": 228,
+          "executed_line": 8,
+          "executed_json_line": 270,
+          "export_line": 53,
+          "explanation": "空行：分隔相邻逻辑，不执行操作。"
+        },
+        {
+          "source_line": 8,
+          "source_json_line": 229,
+          "executed_line": 9,
+          "executed_json_line": 271,
+          "export_line": 54,
+          "explanation": "head() 在 Notebook 显示前 5 行，用来检查列名和类型。完整执行本保留了原始示例行，只在本地查看，本伴读不再刊载。"
+        }
+      ],
+      "cache_parameter_inserted": true,
+      "covered_lines": 8,
+      "inserted_line": {
+        "executed_line": 2,
+        "source": "    local_cache_path='H:\\\\Career_AI_Portfolio\\\\data\\\\movielens',",
+        "executed_json_line": 264,
+        "explanation": "指定固定本地缓存目录；读取已做 SHA-256 核验的同一 MovieLens 压缩包内容。"
+      }
+    },
+    {
+      "id": "sar-original-10",
+      "model": "sar",
+      "kind": "upstream_original",
+      "original_cell_1based": 10,
+      "executed_cell_1based": 11,
+      "title": "按用户随机切分",
+      "context": "返回 train 与 test 两个 DataFrame。这里的 stratified 指按用户分组后随机分配，并不是按时间预测未来。",
+      "source_cell_sha256": "36d6ef620c18268bd1c0573520f34f97225be91d5742649ac1765d77b7efdf69",
+      "lines": 1,
+      "annotations": [
+        {
+          "start": 1,
+          "end": 1,
+          "text": "data 是全部评分；ratio=0.75 是每位用户约 75% 进入训练；col_user/col_item 指明键列；seed=42 固定随机排序。每组有取整，汇总实际为 74,992/25,008，而不是恰好 75,000/25,000。"
+        }
+      ],
+      "line_mapping": [
+        {
+          "source_line": 1,
+          "source_json_line": 247,
+          "executed_line": 1,
+          "executed_json_line": 296,
+          "export_line": 58,
+          "explanation": "data 是全部评分；ratio=0.75 是每位用户约 75% 进入训练；col_user/col_item 指明键列；seed=42 固定随机排序。每组有取整，汇总实际为 74,992/25,008，而不是恰好 75,000/25,000。"
+        }
+      ],
+      "cache_parameter_inserted": false,
+      "covered_lines": 1
+    },
+    {
+      "id": "sar-original-11",
+      "model": "sar",
+      "kind": "upstream_original",
+      "original_cell_1based": 11,
+      "executed_cell_1based": 12,
+      "title": "打印切分规模",
+      "context": "这一单元把真实数量代入字符串，帮助检查切分是否意外丢行或漏用户。它不参与训练。",
+      "source_cell_sha256": "677baca84d1048f8bf4fde941a464539d4002f0fd8b10817d7c0ec52f6ec64bf",
+      "lines": 18,
+      "annotations": [
+        {
+          "start": 1,
+          "end": 11,
+          "text": "L1 开始三引号模板，L11 结束模板并调用 format。L2/7 是 Train/Test 标题；L3–5、L8–10 分别放行数、用户数、物品数；L6 是字符串内部的空白行，不是 Python 语句。"
+        },
+        {
+          "start": 12,
+          "end": 14,
+          "text": "L12 取训练行数；L13 对 userID 去重计数；L14 对 itemID 去重计数。实测分别为 74,992、943、1,653。"
+        },
+        {
+          "start": 15,
+          "end": 18,
+          "text": "L15–17 同样统计测试集，得到 25,008、943、1,444；L18 关闭 format 和 print。用户都出现过训练不代表所有测试物品都能推荐：有 35 条测试评分的物品不在训练目录。"
+        }
+      ],
+      "line_mapping": [
+        {
+          "source_line": 1,
+          "source_json_line": 274,
+          "executed_line": 1,
+          "executed_json_line": 330,
+          "export_line": 62,
+          "explanation": "L1 开始三引号模板，L11 结束模板并调用 format。L2/7 是 Train/Test 标题；L3–5、L8–10 分别放行数、用户数、物品数；L6 是字符串内部的空白行，不是 Python 语句。"
+        },
+        {
+          "source_line": 2,
+          "source_json_line": 275,
+          "executed_line": 2,
+          "executed_json_line": 331,
+          "export_line": 63,
+          "explanation": "L1 开始三引号模板，L11 结束模板并调用 format。L2/7 是 Train/Test 标题；L3–5、L8–10 分别放行数、用户数、物品数；L6 是字符串内部的空白行，不是 Python 语句。"
+        },
+        {
+          "source_line": 3,
+          "source_json_line": 276,
+          "executed_line": 3,
+          "executed_json_line": 332,
+          "export_line": 64,
+          "explanation": "L1 开始三引号模板，L11 结束模板并调用 format。L2/7 是 Train/Test 标题；L3–5、L8–10 分别放行数、用户数、物品数；L6 是字符串内部的空白行，不是 Python 语句。"
+        },
+        {
+          "source_line": 4,
+          "source_json_line": 277,
+          "executed_line": 4,
+          "executed_json_line": 333,
+          "export_line": 65,
+          "explanation": "L1 开始三引号模板，L11 结束模板并调用 format。L2/7 是 Train/Test 标题；L3–5、L8–10 分别放行数、用户数、物品数；L6 是字符串内部的空白行，不是 Python 语句。"
+        },
+        {
+          "source_line": 5,
+          "source_json_line": 278,
+          "executed_line": 5,
+          "executed_json_line": 334,
+          "export_line": 66,
+          "explanation": "L1 开始三引号模板，L11 结束模板并调用 format。L2/7 是 Train/Test 标题；L3–5、L8–10 分别放行数、用户数、物品数；L6 是字符串内部的空白行，不是 Python 语句。"
+        },
+        {
+          "source_line": 6,
+          "source_json_line": 279,
+          "executed_line": 6,
+          "executed_json_line": 335,
+          "export_line": 67,
+          "explanation": "L1 开始三引号模板，L11 结束模板并调用 format。L2/7 是 Train/Test 标题；L3–5、L8–10 分别放行数、用户数、物品数；L6 是字符串内部的空白行，不是 Python 语句。"
+        },
+        {
+          "source_line": 7,
+          "source_json_line": 280,
+          "executed_line": 7,
+          "executed_json_line": 336,
+          "export_line": 68,
+          "explanation": "L1 开始三引号模板，L11 结束模板并调用 format。L2/7 是 Train/Test 标题；L3–5、L8–10 分别放行数、用户数、物品数；L6 是字符串内部的空白行，不是 Python 语句。"
+        },
+        {
+          "source_line": 8,
+          "source_json_line": 281,
+          "executed_line": 8,
+          "executed_json_line": 337,
+          "export_line": 69,
+          "explanation": "L1 开始三引号模板，L11 结束模板并调用 format。L2/7 是 Train/Test 标题；L3–5、L8–10 分别放行数、用户数、物品数；L6 是字符串内部的空白行，不是 Python 语句。"
+        },
+        {
+          "source_line": 9,
+          "source_json_line": 282,
+          "executed_line": 9,
+          "executed_json_line": 338,
+          "export_line": 70,
+          "explanation": "L1 开始三引号模板，L11 结束模板并调用 format。L2/7 是 Train/Test 标题；L3–5、L8–10 分别放行数、用户数、物品数；L6 是字符串内部的空白行，不是 Python 语句。"
+        },
+        {
+          "source_line": 10,
+          "source_json_line": 283,
+          "executed_line": 10,
+          "executed_json_line": 339,
+          "export_line": 71,
+          "explanation": "L1 开始三引号模板，L11 结束模板并调用 format。L2/7 是 Train/Test 标题；L3–5、L8–10 分别放行数、用户数、物品数；L6 是字符串内部的空白行，不是 Python 语句。"
+        },
+        {
+          "source_line": 11,
+          "source_json_line": 284,
+          "executed_line": 11,
+          "executed_json_line": 340,
+          "export_line": 72,
+          "explanation": "L1 开始三引号模板，L11 结束模板并调用 format。L2/7 是 Train/Test 标题；L3–5、L8–10 分别放行数、用户数、物品数；L6 是字符串内部的空白行，不是 Python 语句。"
+        },
+        {
+          "source_line": 12,
+          "source_json_line": 285,
+          "executed_line": 12,
+          "executed_json_line": 341,
+          "export_line": 73,
+          "explanation": "L12 取训练行数；L13 对 userID 去重计数；L14 对 itemID 去重计数。实测分别为 74,992、943、1,653。"
+        },
+        {
+          "source_line": 13,
+          "source_json_line": 286,
+          "executed_line": 13,
+          "executed_json_line": 342,
+          "export_line": 74,
+          "explanation": "L12 取训练行数；L13 对 userID 去重计数；L14 对 itemID 去重计数。实测分别为 74,992、943、1,653。"
+        },
+        {
+          "source_line": 14,
+          "source_json_line": 287,
+          "executed_line": 14,
+          "executed_json_line": 343,
+          "export_line": 75,
+          "explanation": "L12 取训练行数；L13 对 userID 去重计数；L14 对 itemID 去重计数。实测分别为 74,992、943、1,653。"
+        },
+        {
+          "source_line": 15,
+          "source_json_line": 288,
+          "executed_line": 15,
+          "executed_json_line": 344,
+          "export_line": 76,
+          "explanation": "L15–17 同样统计测试集，得到 25,008、943、1,444；L18 关闭 format 和 print。用户都出现过训练不代表所有测试物品都能推荐：有 35 条测试评分的物品不在训练目录。"
+        },
+        {
+          "source_line": 16,
+          "source_json_line": 289,
+          "executed_line": 16,
+          "executed_json_line": 345,
+          "export_line": 77,
+          "explanation": "L15–17 同样统计测试集，得到 25,008、943、1,444；L18 关闭 format 和 print。用户都出现过训练不代表所有测试物品都能推荐：有 35 条测试评分的物品不在训练目录。"
+        },
+        {
+          "source_line": 17,
+          "source_json_line": 290,
+          "executed_line": 17,
+          "executed_json_line": 346,
+          "export_line": 78,
+          "explanation": "L15–17 同样统计测试集，得到 25,008、943、1,444；L18 关闭 format 和 print。用户都出现过训练不代表所有测试物品都能推荐：有 35 条测试评分的物品不在训练目录。"
+        },
+        {
+          "source_line": 18,
+          "source_json_line": 291,
+          "executed_line": 18,
+          "executed_json_line": 347,
+          "export_line": 79,
+          "explanation": "L15–17 同样统计测试集，得到 25,008、943、1,444；L18 关闭 format 和 print。用户都出现过训练不代表所有测试物品都能推荐：有 35 条测试评分的物品不在训练目录。"
+        }
+      ],
+      "cache_parameter_inserted": false,
+      "covered_lines": 18
+    },
+    {
+      "id": "sar-original-14",
+      "model": "sar",
+      "kind": "upstream_original",
+      "original_cell_1based": 14,
+      "executed_cell_1based": 15,
+      "title": "构造带时间衰减的 SAR",
+      "context": "SAR（Simple Algorithm for Recommendation）通过用户历史亲和度和物品共同出现关系打分。实例化只保存配置；fit 才计算矩阵。",
+      "source_cell_sha256": "f048af4e7c45f9d0b02500c1d929770cdf8bb8f941df9d19f718e84315813414",
+      "lines": 13,
+      "annotations": [
+        {
+          "start": 1,
+          "end": 2,
+          "text": "L1 把日志设成 DEBUG；L2 在日志中显示时间、级别与消息，-8s 让级别字段左对齐。它只影响观察信息。"
+        },
+        {
+          "start": 4,
+          "end": 8,
+          "text": "L4 开始构造模型；L5–8 分别把用户、物品、评分和时间列名告诉 SAR。列名拼错会在拟合时失败。"
+        },
+        {
+          "start": 9,
+          "end": 9,
+          "text": "jaccard 用共同用户数除以用户集合并集大小衡量两个物品的相似度，不是余弦相似度。"
+        },
+        {
+          "start": 10,
+          "end": 11,
+          "text": "L10 的 30 是半衰期天数；L11 打开时间衰减。默认参考时间取训练表最大 timestamp，每隔 30 天权重约减半；不会使用现在的电脑日期。"
+        },
+        {
+          "start": 12,
+          "end": 13,
+          "text": "L12 启用预测值的评分范围归一化；L13 结束构造。此设置不让分数成为经过校准的点击概率。"
+        }
+      ],
+      "line_mapping": [
+        {
+          "source_line": 1,
+          "source_json_line": 318,
+          "executed_line": 1,
+          "executed_json_line": 381,
+          "export_line": 83,
+          "explanation": "L1 把日志设成 DEBUG；L2 在日志中显示时间、级别与消息，-8s 让级别字段左对齐。它只影响观察信息。"
+        },
+        {
+          "source_line": 2,
+          "source_json_line": 319,
+          "executed_line": 2,
+          "executed_json_line": 382,
+          "export_line": 84,
+          "explanation": "L1 把日志设成 DEBUG；L2 在日志中显示时间、级别与消息，-8s 让级别字段左对齐。它只影响观察信息。"
+        },
+        {
+          "source_line": 3,
+          "source_json_line": 320,
+          "executed_line": 3,
+          "executed_json_line": 383,
+          "export_line": 85,
+          "explanation": "空行：分隔相邻逻辑，不执行操作。"
+        },
+        {
+          "source_line": 4,
+          "source_json_line": 321,
+          "executed_line": 4,
+          "executed_json_line": 384,
+          "export_line": 86,
+          "explanation": "L4 开始构造模型；L5–8 分别把用户、物品、评分和时间列名告诉 SAR。列名拼错会在拟合时失败。"
+        },
+        {
+          "source_line": 5,
+          "source_json_line": 322,
+          "executed_line": 5,
+          "executed_json_line": 385,
+          "export_line": 87,
+          "explanation": "L4 开始构造模型；L5–8 分别把用户、物品、评分和时间列名告诉 SAR。列名拼错会在拟合时失败。"
+        },
+        {
+          "source_line": 6,
+          "source_json_line": 323,
+          "executed_line": 6,
+          "executed_json_line": 386,
+          "export_line": 88,
+          "explanation": "L4 开始构造模型；L5–8 分别把用户、物品、评分和时间列名告诉 SAR。列名拼错会在拟合时失败。"
+        },
+        {
+          "source_line": 7,
+          "source_json_line": 324,
+          "executed_line": 7,
+          "executed_json_line": 387,
+          "export_line": 89,
+          "explanation": "L4 开始构造模型；L5–8 分别把用户、物品、评分和时间列名告诉 SAR。列名拼错会在拟合时失败。"
+        },
+        {
+          "source_line": 8,
+          "source_json_line": 325,
+          "executed_line": 8,
+          "executed_json_line": 388,
+          "export_line": 90,
+          "explanation": "L4 开始构造模型；L5–8 分别把用户、物品、评分和时间列名告诉 SAR。列名拼错会在拟合时失败。"
+        },
+        {
+          "source_line": 9,
+          "source_json_line": 326,
+          "executed_line": 9,
+          "executed_json_line": 389,
+          "export_line": 91,
+          "explanation": "jaccard 用共同用户数除以用户集合并集大小衡量两个物品的相似度，不是余弦相似度。"
+        },
+        {
+          "source_line": 10,
+          "source_json_line": 327,
+          "executed_line": 10,
+          "executed_json_line": 390,
+          "export_line": 92,
+          "explanation": "L10 的 30 是半衰期天数；L11 打开时间衰减。默认参考时间取训练表最大 timestamp，每隔 30 天权重约减半；不会使用现在的电脑日期。"
+        },
+        {
+          "source_line": 11,
+          "source_json_line": 328,
+          "executed_line": 11,
+          "executed_json_line": 391,
+          "export_line": 93,
+          "explanation": "L10 的 30 是半衰期天数；L11 打开时间衰减。默认参考时间取训练表最大 timestamp，每隔 30 天权重约减半；不会使用现在的电脑日期。"
+        },
+        {
+          "source_line": 12,
+          "source_json_line": 329,
+          "executed_line": 12,
+          "executed_json_line": 392,
+          "export_line": 94,
+          "explanation": "L12 启用预测值的评分范围归一化；L13 结束构造。此设置不让分数成为经过校准的点击概率。"
+        },
+        {
+          "source_line": 13,
+          "source_json_line": 330,
+          "executed_line": 13,
+          "executed_json_line": 393,
+          "export_line": 95,
+          "explanation": "L12 启用预测值的评分范围归一化；L13 结束构造。此设置不让分数成为经过校准的点击概率。"
+        }
+      ],
+      "cache_parameter_inserted": false,
+      "covered_lines": 13
+    },
+    {
+      "id": "sar-original-16",
+      "model": "sar",
+      "kind": "upstream_original",
+      "original_cell_1based": 16,
+      "executed_cell_1based": 17,
+      "title": "拟合模型并计时",
+      "context": "输入是 train。fit 在模型内建立索引、亲和度与物品相似度；不会把测试评分拟合进去。",
+      "source_cell_sha256": "eb4c94f3f8ae585b3dc8fa3aeec604fa71a8de2b101d6dcbfcfc4741d07d9493",
+      "lines": 4,
+      "annotations": [
+        {
+          "start": 1,
+          "end": 2,
+          "text": "L1 进入计时上下文并命名 train_time；L2 调用 model.fit(train)，缩进表示只计量这一块。"
+        },
+        {
+          "start": 4,
+          "end": 4,
+          "text": "读取 train_time.interval 并打印秒数。本次为约 0.310 秒；硬件、库版本和调度会影响时间，复现验收比较的是排序指标。"
+        }
+      ],
+      "line_mapping": [
+        {
+          "source_line": 1,
+          "source_json_line": 377,
+          "executed_line": 1,
+          "executed_json_line": 495,
+          "export_line": 99,
+          "explanation": "L1 进入计时上下文并命名 train_time；L2 调用 model.fit(train)，缩进表示只计量这一块。"
+        },
+        {
+          "source_line": 2,
+          "source_json_line": 378,
+          "executed_line": 2,
+          "executed_json_line": 496,
+          "export_line": 100,
+          "explanation": "L1 进入计时上下文并命名 train_time；L2 调用 model.fit(train)，缩进表示只计量这一块。"
+        },
+        {
+          "source_line": 3,
+          "source_json_line": 379,
+          "executed_line": 3,
+          "executed_json_line": 497,
+          "export_line": 101,
+          "explanation": "空行：分隔相邻逻辑，不执行操作。"
+        },
+        {
+          "source_line": 4,
+          "source_json_line": 380,
+          "executed_line": 4,
+          "executed_json_line": 498,
+          "export_line": 102,
+          "explanation": "读取 train_time.interval 并打印秒数。本次为约 0.310 秒；硬件、库版本和调度会影响时间，复现验收比较的是排序指标。"
+        }
+      ],
+      "cache_parameter_inserted": false,
+      "covered_lines": 4
+    },
+    {
+      "id": "sar-original-17",
+      "model": "sar",
+      "kind": "upstream_original",
+      "original_cell_1based": 17,
+      "executed_cell_1based": 18,
+      "title": "给测试用户生成推荐",
+      "context": "传 test 是为了取得用户 ID；该方法用已经训练好的矩阵给这些用户打分，不把 test.rating 当特征。",
+      "source_cell_sha256": "d4964e0b0e73754a354599370fbd76649031d615bfe1df156630187641125880",
+      "lines": 4,
+      "annotations": [
+        {
+          "start": 1,
+          "end": 2,
+          "text": "L1 开始预测计时；L2 为测试表中各用户取 top10，remove_seen=True 过滤训练中已出现的用户–物品对。返回表含 userID、itemID、prediction。"
+        },
+        {
+          "start": 4,
+          "end": 4,
+          "text": "打印 test_time.interval，实测约 0.292 秒；top_k 实际有 9,430 行，即 943×10。"
+        }
+      ],
+      "line_mapping": [
+        {
+          "source_line": 1,
+          "source_json_line": 405,
+          "executed_line": 1,
+          "executed_json_line": 536,
+          "export_line": 106,
+          "explanation": "L1 开始预测计时；L2 为测试表中各用户取 top10，remove_seen=True 过滤训练中已出现的用户–物品对。返回表含 userID、itemID、prediction。"
+        },
+        {
+          "source_line": 2,
+          "source_json_line": 406,
+          "executed_line": 2,
+          "executed_json_line": 537,
+          "export_line": 107,
+          "explanation": "L1 开始预测计时；L2 为测试表中各用户取 top10，remove_seen=True 过滤训练中已出现的用户–物品对。返回表含 userID、itemID、prediction。"
+        },
+        {
+          "source_line": 3,
+          "source_json_line": 407,
+          "executed_line": 3,
+          "executed_json_line": 538,
+          "export_line": 108,
+          "explanation": "空行：分隔相邻逻辑，不执行操作。"
+        },
+        {
+          "source_line": 4,
+          "source_json_line": 408,
+          "executed_line": 4,
+          "executed_json_line": 539,
+          "export_line": 109,
+          "explanation": "打印 test_time.interval，实测约 0.292 秒；top_k 实际有 9,430 行，即 943×10。"
+        }
+      ],
+      "cache_parameter_inserted": false,
+      "covered_lines": 4
+    },
+    {
+      "id": "sar-original-18",
+      "model": "sar",
+      "kind": "upstream_original",
+      "original_cell_1based": 18,
+      "executed_cell_1based": 19,
+      "title": "检查推荐表结构",
+      "context": "显示的是预测表样例，不是指标，也不是完整推荐目录。",
+      "source_cell_sha256": "a0a1d5cf6d9edd28b07e1b6c70a14cae4a4f84d48b80218d56f80c6fa4b24bad",
+      "lines": 1,
+      "annotations": [
+        {
+          "start": 1,
+          "end": 1,
+          "text": "head() 只展示前 5 行，便于确认 prediction 列存在。不要把这几行当总体效果的证据。"
+        }
+      ],
+      "line_mapping": [
+        {
+          "source_line": 1,
+          "source_json_line": 492,
+          "executed_line": 1,
+          "executed_json_line": 630,
+          "export_line": 113,
+          "explanation": "head() 只展示前 5 行，便于确认 prediction 列存在。不要把这几行当总体效果的证据。"
+        }
+      ],
+      "cache_parameter_inserted": false,
+      "covered_lines": 1
+    },
+    {
+      "id": "sar-original-20",
+      "model": "sar",
+      "kind": "upstream_original",
+      "original_cell_1based": 20,
+      "executed_cell_1based": 21,
+      "title": "计算四项排序指标",
+      "context": "test 是真值，top_k 是推荐。此原版 SAR 没有先删掉低评分：默认 binary 相关性把测试表中出现的物品视为相关。传 col_rating 不会自动执行 rating≥4。",
+      "source_cell_sha256": "ac294a93fa7af7c0da0141767ddbda288de403e3283180b5a1764873545f6d7b",
+      "lines": 5,
+      "annotations": [
+        {
+          "start": 1,
+          "end": 1,
+          "text": "注释划分排序指标区块，与下一单元的评分误差区分。"
+        },
+        {
+          "start": 2,
+          "end": 2,
+          "text": "map_at_k 先计算每个命中位置的 Precision@r，再按 min(K, 真值物品数) 归一化并对用户取平均。此固定版本的 map_at_k 与分母用全部真值数量的 map 函数不同。"
+        },
+        {
+          "start": 3,
+          "end": 3,
+          "text": "ndcg_at_k 对前面位置的命中给更大权重，再除以该用户理想排序的 DCG。默认 score_type=binary、discfun_type=loge；DCG 与 IDCG 同时换为 log2 不改变比例。"
+        },
+        {
+          "start": 4,
+          "end": 4,
+          "text": "precision_at_k 计算命中数/K，再对可共同评估用户平均；不是“预测评分准确的百分比”。"
+        },
+        {
+          "start": 5,
+          "end": 5,
+          "text": "recall_at_k 计算命中数/该用户全部测试真值数量，再平均。本协议没有提前删除训练目录外的测试物品，所以不能套用独立 1M 实验的可达目标分母。"
+        }
+      ],
+      "line_mapping": [
+        {
+          "source_line": 1,
+          "source_json_line": 510,
+          "executed_line": 1,
+          "executed_json_line": 655,
+          "export_line": 117,
+          "explanation": "注释划分排序指标区块，与下一单元的评分误差区分。"
+        },
+        {
+          "source_line": 2,
+          "source_json_line": 511,
+          "executed_line": 2,
+          "executed_json_line": 656,
+          "export_line": 118,
+          "explanation": "map_at_k 先计算每个命中位置的 Precision@r，再按 min(K, 真值物品数) 归一化并对用户取平均。此固定版本的 map_at_k 与分母用全部真值数量的 map 函数不同。"
+        },
+        {
+          "source_line": 3,
+          "source_json_line": 512,
+          "executed_line": 3,
+          "executed_json_line": 657,
+          "export_line": 119,
+          "explanation": "ndcg_at_k 对前面位置的命中给更大权重，再除以该用户理想排序的 DCG。默认 score_type=binary、discfun_type=loge；DCG 与 IDCG 同时换为 log2 不改变比例。"
+        },
+        {
+          "source_line": 4,
+          "source_json_line": 513,
+          "executed_line": 4,
+          "executed_json_line": 658,
+          "export_line": 120,
+          "explanation": "precision_at_k 计算命中数/K，再对可共同评估用户平均；不是“预测评分准确的百分比”。"
+        },
+        {
+          "source_line": 5,
+          "source_json_line": 514,
+          "executed_line": 5,
+          "executed_json_line": 659,
+          "export_line": 121,
+          "explanation": "recall_at_k 计算命中数/该用户全部测试真值数量，再平均。本协议没有提前删除训练目录外的测试物品，所以不能套用独立 1M 实验的可达目标分母。"
+        }
+      ],
+      "cache_parameter_inserted": false,
+      "covered_lines": 5
+    },
+    {
+      "id": "sar-original-21",
+      "model": "sar",
+      "kind": "upstream_original",
+      "original_cell_1based": 21,
+      "executed_cell_1based": 22,
+      "title": "评分误差到底测了哪些行",
+      "context": "这些函数先按 userID、itemID 对 test 与 top_k 做内连接（inner join）。因此只评价两表交集中的评分预测，不是在全部 25,008 条测试评分上预测 RMSE。",
+      "source_cell_sha256": "3df70c59890f94071fe6b0d1853d391d278948a086770662aa12cde0abc15c6f",
+      "lines": 5,
+      "annotations": [
+        {
+          "start": 1,
+          "end": 1,
+          "text": "注释表明下面测评分数值误差，而不是推荐顺序。"
+        },
+        {
+          "start": 2,
+          "end": 2,
+          "text": "RMSE 是误差平方均值再开根号，大误差受罚更重；本次为 1.229246。"
+        },
+        {
+          "start": 3,
+          "end": 3,
+          "text": "MAE 是绝对误差均值，单位仍是评分分数；本次为 1.033912。"
+        },
+        {
+          "start": 4,
+          "end": 4,
+          "text": "R²=1−残差平方和/真值离均差平方和；本次 −0.511334，表示在该交集上按平方误差衡量，还不如用交集真值均值预测。负值不是程序自动报错。"
+        },
+        {
+          "start": 5,
+          "end": 5,
+          "text": "解释方差为 1−Var(y−ŷ)/Var(y)；本次 0.098494。它用残差方差，R²用残差平方和；存在系统性偏移时两者可以明显不同。"
+        }
+      ],
+      "line_mapping": [
+        {
+          "source_line": 1,
+          "source_json_line": 523,
+          "executed_line": 1,
+          "executed_json_line": 675,
+          "export_line": 125,
+          "explanation": "注释表明下面测评分数值误差，而不是推荐顺序。"
+        },
+        {
+          "source_line": 2,
+          "source_json_line": 524,
+          "executed_line": 2,
+          "executed_json_line": 676,
+          "export_line": 126,
+          "explanation": "RMSE 是误差平方均值再开根号，大误差受罚更重；本次为 1.229246。"
+        },
+        {
+          "source_line": 3,
+          "source_json_line": 525,
+          "executed_line": 3,
+          "executed_json_line": 677,
+          "export_line": 127,
+          "explanation": "MAE 是绝对误差均值，单位仍是评分分数；本次为 1.033912。"
+        },
+        {
+          "source_line": 4,
+          "source_json_line": 526,
+          "executed_line": 4,
+          "executed_json_line": 678,
+          "export_line": 128,
+          "explanation": "R²=1−残差平方和/真值离均差平方和；本次 −0.511334，表示在该交集上按平方误差衡量，还不如用交集真值均值预测。负值不是程序自动报错。"
+        },
+        {
+          "source_line": 5,
+          "source_json_line": 527,
+          "executed_line": 5,
+          "executed_json_line": 679,
+          "export_line": 129,
+          "explanation": "解释方差为 1−Var(y−ŷ)/Var(y)；本次 0.098494。它用残差方差，R²用残差平方和；存在系统性偏移时两者可以明显不同。"
+        }
+      ],
+      "cache_parameter_inserted": false,
+      "covered_lines": 5
+    },
+    {
+      "id": "sar-original-22",
+      "model": "sar",
+      "kind": "upstream_original",
+      "original_cell_1based": 22,
+      "executed_cell_1based": 23,
+      "title": "二值化与 logloss 的边界",
+      "context": "此单元是原版额外演示，不参与我们用来声明复现的 8 项排序指标，也不参与选择扩展模型。",
+      "source_cell_sha256": "1fc51e02ee3328b7b8520b455dad7457a586ac07dbf74376f76f7326c2786f61",
+      "lines": 10,
+      "annotations": [
+        {
+          "start": 1,
+          "end": 3,
+          "text": "L1 设阈值 2；L2 复制 test 避免改掉后续原评分；L3 使用严格 rating>2 得到 0/1，所以评分 2 仍是 0。这不是 BPR 的阈值 3.5。"
+        },
+        {
+          "start": 5,
+          "end": 6,
+          "text": "L5 复制预测表；L6 先转浮点，再对所有用户的 prediction 整列做 min–max 缩放。缩到 [0,1] 只是数值变换，不能据此断言预测已校准为概率。"
+        },
+        {
+          "start": 8,
+          "end": 10,
+          "text": "L8 调用 logloss，L9 传入二值真值与缩放预测并声明键列，L10 结束。底层仍先按键内连接，再计算二元交叉熵；本次 0.569153。不要把它解释成全面评价未曝光项目的概率模型。"
+        }
+      ],
+      "line_mapping": [
+        {
+          "source_line": 1,
+          "source_json_line": 540,
+          "executed_line": 1,
+          "executed_json_line": 698,
+          "export_line": 133,
+          "explanation": "L1 设阈值 2；L2 复制 test 避免改掉后续原评分；L3 使用严格 rating>2 得到 0/1，所以评分 2 仍是 0。这不是 BPR 的阈值 3.5。"
+        },
+        {
+          "source_line": 2,
+          "source_json_line": 541,
+          "executed_line": 2,
+          "executed_json_line": 699,
+          "export_line": 134,
+          "explanation": "L1 设阈值 2；L2 复制 test 避免改掉后续原评分；L3 使用严格 rating>2 得到 0/1，所以评分 2 仍是 0。这不是 BPR 的阈值 3.5。"
+        },
+        {
+          "source_line": 3,
+          "source_json_line": 542,
+          "executed_line": 3,
+          "executed_json_line": 700,
+          "export_line": 135,
+          "explanation": "L1 设阈值 2；L2 复制 test 避免改掉后续原评分；L3 使用严格 rating>2 得到 0/1，所以评分 2 仍是 0。这不是 BPR 的阈值 3.5。"
+        },
+        {
+          "source_line": 4,
+          "source_json_line": 543,
+          "executed_line": 4,
+          "executed_json_line": 701,
+          "export_line": 136,
+          "explanation": "空行：分隔相邻逻辑，不执行操作。"
+        },
+        {
+          "source_line": 5,
+          "source_json_line": 544,
+          "executed_line": 5,
+          "executed_json_line": 702,
+          "export_line": 137,
+          "explanation": "L5 复制预测表；L6 先转浮点，再对所有用户的 prediction 整列做 min–max 缩放。缩到 [0,1] 只是数值变换，不能据此断言预测已校准为概率。"
+        },
+        {
+          "source_line": 6,
+          "source_json_line": 545,
+          "executed_line": 6,
+          "executed_json_line": 703,
+          "export_line": 138,
+          "explanation": "L5 复制预测表；L6 先转浮点，再对所有用户的 prediction 整列做 min–max 缩放。缩到 [0,1] 只是数值变换，不能据此断言预测已校准为概率。"
+        },
+        {
+          "source_line": 7,
+          "source_json_line": 546,
+          "executed_line": 7,
+          "executed_json_line": 704,
+          "export_line": 139,
+          "explanation": "空行：分隔相邻逻辑，不执行操作。"
+        },
+        {
+          "source_line": 8,
+          "source_json_line": 547,
+          "executed_line": 8,
+          "executed_json_line": 705,
+          "export_line": 140,
+          "explanation": "L8 调用 logloss，L9 传入二值真值与缩放预测并声明键列，L10 结束。底层仍先按键内连接，再计算二元交叉熵；本次 0.569153。不要把它解释成全面评价未曝光项目的概率模型。"
+        },
+        {
+          "source_line": 9,
+          "source_json_line": 548,
+          "executed_line": 9,
+          "executed_json_line": 706,
+          "export_line": 141,
+          "explanation": "L8 调用 logloss，L9 传入二值真值与缩放预测并声明键列，L10 结束。底层仍先按键内连接，再计算二元交叉熵；本次 0.569153。不要把它解释成全面评价未曝光项目的概率模型。"
+        },
+        {
+          "source_line": 10,
+          "source_json_line": 549,
+          "executed_line": 10,
+          "executed_json_line": 707,
+          "export_line": 142,
+          "explanation": "L8 调用 logloss，L9 传入二值真值与缩放预测并声明键列，L10 结束。底层仍先按键内连接，再计算二元交叉熵；本次 0.569153。不要把它解释成全面评价未曝光项目的概率模型。"
+        }
+      ],
+      "cache_parameter_inserted": false,
+      "covered_lines": 10
+    },
+    {
+      "id": "sar-original-23",
+      "model": "sar",
+      "kind": "upstream_original",
+      "original_cell_1based": 23,
+      "executed_cell_1based": 24,
+      "title": "格式化打印结果",
+      "context": "这里读取已有变量，未再训练或重新计算。屏幕六位小数是展示精度；JSON 保留更多位数。",
+      "source_cell_sha256": "a00078d3fea7c944d5e00f18b898a60c3a9caa97ce0a5a07ea2eb5e20fb5cb4d",
+      "lines": 12,
+      "annotations": [
+        {
+          "start": 1,
+          "end": 2,
+          "text": "L1 打印 Model 标签；L2 用 %d 输出整数 K。此单元没有给 Model 标签填模型名称，是上游原写法。"
+        },
+        {
+          "start": 3,
+          "end": 6,
+          "text": "L3–6 依次显示 MAP、NDCG、Precision、Recall；%f 默认保留小数点后 6 位，打印变短不代表底层指标被截断。"
+        },
+        {
+          "start": 7,
+          "end": 11,
+          "text": "L7–11 依次显示 RMSE、MAE、R²、解释方差、logloss，变量来自前两个单元。"
+        },
+        {
+          "start": 12,
+          "end": 12,
+          "text": "sep='\\n' 指定各个 print 参数换行输出，并关闭调用。"
+        }
+      ],
+      "line_mapping": [
+        {
+          "source_line": 1,
+          "source_json_line": 580,
+          "executed_line": 1,
+          "executed_json_line": 744,
+          "export_line": 146,
+          "explanation": "L1 打印 Model 标签；L2 用 %d 输出整数 K。此单元没有给 Model 标签填模型名称，是上游原写法。"
+        },
+        {
+          "source_line": 2,
+          "source_json_line": 581,
+          "executed_line": 2,
+          "executed_json_line": 745,
+          "export_line": 147,
+          "explanation": "L1 打印 Model 标签；L2 用 %d 输出整数 K。此单元没有给 Model 标签填模型名称，是上游原写法。"
+        },
+        {
+          "source_line": 3,
+          "source_json_line": 582,
+          "executed_line": 3,
+          "executed_json_line": 746,
+          "export_line": 148,
+          "explanation": "L3–6 依次显示 MAP、NDCG、Precision、Recall；%f 默认保留小数点后 6 位，打印变短不代表底层指标被截断。"
+        },
+        {
+          "source_line": 4,
+          "source_json_line": 583,
+          "executed_line": 4,
+          "executed_json_line": 747,
+          "export_line": 149,
+          "explanation": "L3–6 依次显示 MAP、NDCG、Precision、Recall；%f 默认保留小数点后 6 位，打印变短不代表底层指标被截断。"
+        },
+        {
+          "source_line": 5,
+          "source_json_line": 584,
+          "executed_line": 5,
+          "executed_json_line": 748,
+          "export_line": 150,
+          "explanation": "L3–6 依次显示 MAP、NDCG、Precision、Recall；%f 默认保留小数点后 6 位，打印变短不代表底层指标被截断。"
+        },
+        {
+          "source_line": 6,
+          "source_json_line": 585,
+          "executed_line": 6,
+          "executed_json_line": 749,
+          "export_line": 151,
+          "explanation": "L3–6 依次显示 MAP、NDCG、Precision、Recall；%f 默认保留小数点后 6 位，打印变短不代表底层指标被截断。"
+        },
+        {
+          "source_line": 7,
+          "source_json_line": 586,
+          "executed_line": 7,
+          "executed_json_line": 750,
+          "export_line": 152,
+          "explanation": "L7–11 依次显示 RMSE、MAE、R²、解释方差、logloss，变量来自前两个单元。"
+        },
+        {
+          "source_line": 8,
+          "source_json_line": 587,
+          "executed_line": 8,
+          "executed_json_line": 751,
+          "export_line": 153,
+          "explanation": "L7–11 依次显示 RMSE、MAE、R²、解释方差、logloss，变量来自前两个单元。"
+        },
+        {
+          "source_line": 9,
+          "source_json_line": 588,
+          "executed_line": 9,
+          "executed_json_line": 752,
+          "export_line": 154,
+          "explanation": "L7–11 依次显示 RMSE、MAE、R²、解释方差、logloss，变量来自前两个单元。"
+        },
+        {
+          "source_line": 10,
+          "source_json_line": 589,
+          "executed_line": 10,
+          "executed_json_line": 753,
+          "export_line": 155,
+          "explanation": "L7–11 依次显示 RMSE、MAE、R²、解释方差、logloss，变量来自前两个单元。"
+        },
+        {
+          "source_line": 11,
+          "source_json_line": 590,
+          "executed_line": 11,
+          "executed_json_line": 754,
+          "export_line": 156,
+          "explanation": "L7–11 依次显示 RMSE、MAE、R²、解释方差、logloss，变量来自前两个单元。"
+        },
+        {
+          "source_line": 12,
+          "source_json_line": 591,
+          "executed_line": 12,
+          "executed_json_line": 755,
+          "export_line": 157,
+          "explanation": "sep='\\n' 指定各个 print 参数换行输出，并关闭调用。"
+        }
+      ],
+      "cache_parameter_inserted": false,
+      "covered_lines": 12
+    },
+    {
+      "id": "sar-original-24",
+      "model": "sar",
+      "kind": "upstream_original",
+      "original_cell_1based": 24,
+      "executed_cell_1based": 25,
+      "title": "用户 54 的局部诊断",
+      "context": "这个例子教你追踪某一个用户，不能代替整体评价，也不能在简历上把一次手选案例写成总体提升。",
+      "source_cell_sha256": "dd603e1a9f0133913df456d8aea8116e95d6b774a7636ea1d56ac2a65e20d8f6",
+      "lines": 11,
+      "annotations": [
+        {
+          "start": 1,
+          "end": 2,
+          "text": "L1 是原作者的示例注释；L2 固定数据集里的 user_id=54，不代表当前使用者。"
+        },
+        {
+          "start": 4,
+          "end": 6,
+          "text": "L4 只取用户 54 的测试行并开始排序；L5 按真实 rating 降序；L6 取前 TOP_K 行。ground_truth 是该用户评分最高的一组测试行，不等于模型的推荐顺序。"
+        },
+        {
+          "start": 7,
+          "end": 9,
+          "text": "L7 调推荐方法；L8 构造只有 userID 一列的一行 DataFrame，并过滤训练已看物品；L9 结束。这里没显式传 top_k，官方默认也是 10。"
+        },
+        {
+          "start": 10,
+          "end": 10,
+          "text": "以 ground_truth 为左表，按用户与物品键 left join。每条真值保留；某条 prediction 为 NaN，表示它没进入该次推荐表，不表示模型分数等于 0。"
+        },
+        {
+          "start": 11,
+          "end": 11,
+          "text": "显示合并表前 10 行，便于肉眼看哪些高评分测试电影被推荐到了。原始逐用户内容仅在本地执行本查看。"
+        }
+      ],
+      "line_mapping": [
+        {
+          "source_line": 1,
+          "source_json_line": 744,
+          "executed_line": 1,
+          "executed_json_line": 920,
+          "export_line": 161,
+          "explanation": "L1 是原作者的示例注释；L2 固定数据集里的 user_id=54，不代表当前使用者。"
+        },
+        {
+          "source_line": 2,
+          "source_json_line": 745,
+          "executed_line": 2,
+          "executed_json_line": 921,
+          "export_line": 162,
+          "explanation": "L1 是原作者的示例注释；L2 固定数据集里的 user_id=54，不代表当前使用者。"
+        },
+        {
+          "source_line": 3,
+          "source_json_line": 746,
+          "executed_line": 3,
+          "executed_json_line": 922,
+          "export_line": 163,
+          "explanation": "空行：分隔相邻逻辑，不执行操作。"
+        },
+        {
+          "source_line": 4,
+          "source_json_line": 747,
+          "executed_line": 4,
+          "executed_json_line": 923,
+          "export_line": 164,
+          "explanation": "L4 只取用户 54 的测试行并开始排序；L5 按真实 rating 降序；L6 取前 TOP_K 行。ground_truth 是该用户评分最高的一组测试行，不等于模型的推荐顺序。"
+        },
+        {
+          "source_line": 5,
+          "source_json_line": 748,
+          "executed_line": 5,
+          "executed_json_line": 924,
+          "export_line": 165,
+          "explanation": "L4 只取用户 54 的测试行并开始排序；L5 按真实 rating 降序；L6 取前 TOP_K 行。ground_truth 是该用户评分最高的一组测试行，不等于模型的推荐顺序。"
+        },
+        {
+          "source_line": 6,
+          "source_json_line": 749,
+          "executed_line": 6,
+          "executed_json_line": 925,
+          "export_line": 166,
+          "explanation": "L4 只取用户 54 的测试行并开始排序；L5 按真实 rating 降序；L6 取前 TOP_K 行。ground_truth 是该用户评分最高的一组测试行，不等于模型的推荐顺序。"
+        },
+        {
+          "source_line": 7,
+          "source_json_line": 750,
+          "executed_line": 7,
+          "executed_json_line": 926,
+          "export_line": 167,
+          "explanation": "L7 调推荐方法；L8 构造只有 userID 一列的一行 DataFrame，并过滤训练已看物品；L9 结束。这里没显式传 top_k，官方默认也是 10。"
+        },
+        {
+          "source_line": 8,
+          "source_json_line": 751,
+          "executed_line": 8,
+          "executed_json_line": 927,
+          "export_line": 168,
+          "explanation": "L7 调推荐方法；L8 构造只有 userID 一列的一行 DataFrame，并过滤训练已看物品；L9 结束。这里没显式传 top_k，官方默认也是 10。"
+        },
+        {
+          "source_line": 9,
+          "source_json_line": 752,
+          "executed_line": 9,
+          "executed_json_line": 928,
+          "export_line": 169,
+          "explanation": "L7 调推荐方法；L8 构造只有 userID 一列的一行 DataFrame，并过滤训练已看物品；L9 结束。这里没显式传 top_k，官方默认也是 10。"
+        },
+        {
+          "source_line": 10,
+          "source_json_line": 753,
+          "executed_line": 10,
+          "executed_json_line": 929,
+          "export_line": 170,
+          "explanation": "以 ground_truth 为左表，按用户与物品键 left join。每条真值保留；某条 prediction 为 NaN，表示它没进入该次推荐表，不表示模型分数等于 0。"
+        },
+        {
+          "source_line": 11,
+          "source_json_line": 754,
+          "executed_line": 11,
+          "executed_json_line": 930,
+          "export_line": 171,
+          "explanation": "显示合并表前 10 行，便于肉眼看哪些高评分测试电影被推荐到了。原始逐用户内容仅在本地执行本查看。"
+        }
+      ],
+      "cache_parameter_inserted": false,
+      "covered_lines": 11
+    },
+    {
+      "id": "sar-original-26",
+      "model": "sar",
+      "kind": "upstream_original",
+      "original_cell_1based": 26,
+      "executed_cell_1based": 27,
+      "title": "把排序指标存入 Notebook 输出",
+      "context": "结构化 metadata 使复现脚本可以按指标名称读数字，避免从打印文字中猜测。",
+      "source_cell_sha256": "45baa5dbfe89c94a1c82200c1a61535cf7d76fb0aa4da5636078f3eb8e50f0a0",
+      "lines": 7,
+      "annotations": [
+        {
+          "start": 1,
+          "end": 1,
+          "text": "原注释让一般读者忽略此单元；复现与审计时它很重要，不能跳过。"
+        },
+        {
+          "start": 2,
+          "end": 5,
+          "text": "L2–5 分别存 map、ndcg、precision、recall。键名是比较脚本的契约；改变键名会找不到原指标。"
+        },
+        {
+          "start": 6,
+          "end": 7,
+          "text": "L6/7 保存训练/预测秒数。时间也被记录，但不要求与上游保存时间完全相同。"
+        }
+      ],
+      "line_mapping": [
+        {
+          "source_line": 1,
+          "source_json_line": 877,
+          "executed_line": 1,
+          "executed_json_line": 1059,
+          "export_line": 175,
+          "explanation": "原注释让一般读者忽略此单元；复现与审计时它很重要，不能跳过。"
+        },
+        {
+          "source_line": 2,
+          "source_json_line": 878,
+          "executed_line": 2,
+          "executed_json_line": 1060,
+          "export_line": 176,
+          "explanation": "L2–5 分别存 map、ndcg、precision、recall。键名是比较脚本的契约；改变键名会找不到原指标。"
+        },
+        {
+          "source_line": 3,
+          "source_json_line": 879,
+          "executed_line": 3,
+          "executed_json_line": 1061,
+          "export_line": 177,
+          "explanation": "L2–5 分别存 map、ndcg、precision、recall。键名是比较脚本的契约；改变键名会找不到原指标。"
+        },
+        {
+          "source_line": 4,
+          "source_json_line": 880,
+          "executed_line": 4,
+          "executed_json_line": 1062,
+          "export_line": 178,
+          "explanation": "L2–5 分别存 map、ndcg、precision、recall。键名是比较脚本的契约；改变键名会找不到原指标。"
+        },
+        {
+          "source_line": 5,
+          "source_json_line": 881,
+          "executed_line": 5,
+          "executed_json_line": 1063,
+          "export_line": 179,
+          "explanation": "L2–5 分别存 map、ndcg、precision、recall。键名是比较脚本的契约；改变键名会找不到原指标。"
+        },
+        {
+          "source_line": 6,
+          "source_json_line": 882,
+          "executed_line": 6,
+          "executed_json_line": 1064,
+          "export_line": 180,
+          "explanation": "L6/7 保存训练/预测秒数。时间也被记录，但不要求与上游保存时间完全相同。"
+        },
+        {
+          "source_line": 7,
+          "source_json_line": 883,
+          "executed_line": 7,
+          "executed_json_line": 1065,
+          "export_line": 181,
+          "explanation": "L6/7 保存训练/预测秒数。时间也被记录，但不要求与上游保存时间完全相同。"
+        }
+      ],
+      "cache_parameter_inserted": false,
+      "covered_lines": 7
+    },
+    {
+      "id": "bpr-original-4",
+      "model": "bpr",
+      "kind": "upstream_original",
+      "original_cell_1based": 4,
+      "executed_cell_1based": 5,
+      "title": "导入 Cornac 与上游包装类",
+      "context": "模型实现来自 Cornac；Recommenders 的 BPR 子类增加 recommend_k_items 便利方法。两者名称相似，作用不同。",
+      "source_cell_sha256": "981dd5fc95298c404353add6ccba5c478b25a60f3cc7739e6151ab4b9fbe6943",
+      "lines": 14,
+      "annotations": [
+        {
+          "start": 1,
+          "end": 2,
+          "text": "L1 读取 Python 版本；L2 导入 cornac 包，提供数据结构与底层模型，并读取版本。"
+        },
+        {
+          "start": 4,
+          "end": 5,
+          "text": "L4 导入数据加载器；L5 导入全表随机切分器。它与 SAR 的按用户随机切分不同。"
+        },
+        {
+          "start": 6,
+          "end": 6,
+          "text": "导入四个排序指标，后面使用它们的默认 userID、itemID、rating 列名。"
+        },
+        {
+          "start": 7,
+          "end": 7,
+          "text": "BPR 是 Recommenders 包装的 Cornac BPR 子类；它保留底层训练，并补充批量推荐接口。"
+        },
+        {
+          "start": 8,
+          "end": 9,
+          "text": "L8 导入上下文计时器；L9 导入常量 SEED，固定源码里数值为 42。"
+        },
+        {
+          "start": 10,
+          "end": 11,
+          "text": "L10 导入严格大于阈值的 binarize；L11 导入结构化指标输出工具。"
+        },
+        {
+          "start": 13,
+          "end": 14,
+          "text": "L13/14 打印解释器和 Cornac 版本。本次 baseline 使用 Cornac 2.3.0，不能换成根环境的 3.0.1 后仍宣称相同环境。"
+        }
+      ],
+      "line_mapping": [
+        {
+          "source_line": 1,
+          "source_json_line": 99,
+          "executed_line": 1,
+          "executed_json_line": 127,
+          "export_line": 6,
+          "explanation": "L1 读取 Python 版本；L2 导入 cornac 包，提供数据结构与底层模型，并读取版本。"
+        },
+        {
+          "source_line": 2,
+          "source_json_line": 100,
+          "executed_line": 2,
+          "executed_json_line": 128,
+          "export_line": 7,
+          "explanation": "L1 读取 Python 版本；L2 导入 cornac 包，提供数据结构与底层模型，并读取版本。"
+        },
+        {
+          "source_line": 3,
+          "source_json_line": 101,
+          "executed_line": 3,
+          "executed_json_line": 129,
+          "export_line": 8,
+          "explanation": "空行：分隔相邻逻辑，不执行操作。"
+        },
+        {
+          "source_line": 4,
+          "source_json_line": 102,
+          "executed_line": 4,
+          "executed_json_line": 130,
+          "export_line": 9,
+          "explanation": "L4 导入数据加载器；L5 导入全表随机切分器。它与 SAR 的按用户随机切分不同。"
+        },
+        {
+          "source_line": 5,
+          "source_json_line": 103,
+          "executed_line": 5,
+          "executed_json_line": 131,
+          "export_line": 10,
+          "explanation": "L4 导入数据加载器；L5 导入全表随机切分器。它与 SAR 的按用户随机切分不同。"
+        },
+        {
+          "source_line": 6,
+          "source_json_line": 104,
+          "executed_line": 6,
+          "executed_json_line": 132,
+          "export_line": 11,
+          "explanation": "导入四个排序指标，后面使用它们的默认 userID、itemID、rating 列名。"
+        },
+        {
+          "source_line": 7,
+          "source_json_line": 105,
+          "executed_line": 7,
+          "executed_json_line": 133,
+          "export_line": 12,
+          "explanation": "BPR 是 Recommenders 包装的 Cornac BPR 子类；它保留底层训练，并补充批量推荐接口。"
+        },
+        {
+          "source_line": 8,
+          "source_json_line": 106,
+          "executed_line": 8,
+          "executed_json_line": 134,
+          "export_line": 13,
+          "explanation": "L8 导入上下文计时器；L9 导入常量 SEED，固定源码里数值为 42。"
+        },
+        {
+          "source_line": 9,
+          "source_json_line": 107,
+          "executed_line": 9,
+          "executed_json_line": 135,
+          "export_line": 14,
+          "explanation": "L8 导入上下文计时器；L9 导入常量 SEED，固定源码里数值为 42。"
+        },
+        {
+          "source_line": 10,
+          "source_json_line": 108,
+          "executed_line": 10,
+          "executed_json_line": 136,
+          "export_line": 15,
+          "explanation": "L10 导入严格大于阈值的 binarize；L11 导入结构化指标输出工具。"
+        },
+        {
+          "source_line": 11,
+          "source_json_line": 109,
+          "executed_line": 11,
+          "executed_json_line": 137,
+          "export_line": 16,
+          "explanation": "L10 导入严格大于阈值的 binarize；L11 导入结构化指标输出工具。"
+        },
+        {
+          "source_line": 12,
+          "source_json_line": 110,
+          "executed_line": 12,
+          "executed_json_line": 138,
+          "export_line": 17,
+          "explanation": "空行：分隔相邻逻辑，不执行操作。"
+        },
+        {
+          "source_line": 13,
+          "source_json_line": 111,
+          "executed_line": 13,
+          "executed_json_line": 139,
+          "export_line": 18,
+          "explanation": "L13/14 打印解释器和 Cornac 版本。本次 baseline 使用 Cornac 2.3.0，不能换成根环境的 3.0.1 后仍宣称相同环境。"
+        },
+        {
+          "source_line": 14,
+          "source_json_line": 112,
+          "executed_line": 14,
+          "executed_json_line": 140,
+          "export_line": 19,
+          "explanation": "L13/14 打印解释器和 Cornac 版本。本次 baseline 使用 Cornac 2.3.0，不能换成根环境的 3.0.1 后仍宣称相同环境。"
+        }
+      ],
+      "cache_parameter_inserted": false,
+      "covered_lines": 14
+    },
+    {
+      "id": "bpr-original-5",
+      "model": "bpr",
+      "kind": "upstream_original",
+      "original_cell_1based": 5,
+      "executed_cell_1based": 6,
+      "title": "固定正反馈标准与模型大小",
+      "context": "这里把显式评分转成隐式正反馈，目标是把正样本排在抽到的比较物品前面，而非预测评分为几星。",
+      "source_cell_sha256": "8fa8e396a7b9ecd98117fa445a1f2063dd349984b69fbe9782bc601ad63227c6",
+      "lines": 12,
+      "annotations": [
+        {
+          "start": 1,
+          "end": 2,
+          "text": "注释列出可选规模；MOVIELENS_DATA_SIZE 固定为 100k。"
+        },
+        {
+          "start": 4,
+          "end": 5,
+          "text": "TOP_K=10 只规定推荐评估截断；并不等于后面的批量预测只返回 10 个物品。"
+        },
+        {
+          "start": 7,
+          "end": 8,
+          "text": "RATING_THRESHOLD=3.5 配合严格大于判断；评分是整数，因此保留 4、5 分，丢弃 1、2、3 分。"
+        },
+        {
+          "start": 10,
+          "end": 12,
+          "text": "L10 注释开始模型参数区；L11 设每个用户/物品的隐因子维度为 200；L12 最多训练 200 轮。不要误记成扩展模型的 64 维、100 轮。"
+        }
+      ],
+      "line_mapping": [
+        {
+          "source_line": 1,
+          "source_json_line": 139,
+          "executed_line": 1,
+          "executed_json_line": 167,
+          "export_line": 23,
+          "explanation": "注释列出可选规模；MOVIELENS_DATA_SIZE 固定为 100k。"
+        },
+        {
+          "source_line": 2,
+          "source_json_line": 140,
+          "executed_line": 2,
+          "executed_json_line": 168,
+          "export_line": 24,
+          "explanation": "注释列出可选规模；MOVIELENS_DATA_SIZE 固定为 100k。"
+        },
+        {
+          "source_line": 3,
+          "source_json_line": 141,
+          "executed_line": 3,
+          "executed_json_line": 169,
+          "export_line": 25,
+          "explanation": "空行：分隔相邻逻辑，不执行操作。"
+        },
+        {
+          "source_line": 4,
+          "source_json_line": 142,
+          "executed_line": 4,
+          "executed_json_line": 170,
+          "export_line": 26,
+          "explanation": "TOP_K=10 只规定推荐评估截断；并不等于后面的批量预测只返回 10 个物品。"
+        },
+        {
+          "source_line": 5,
+          "source_json_line": 143,
+          "executed_line": 5,
+          "executed_json_line": 171,
+          "export_line": 27,
+          "explanation": "TOP_K=10 只规定推荐评估截断；并不等于后面的批量预测只返回 10 个物品。"
+        },
+        {
+          "source_line": 6,
+          "source_json_line": 144,
+          "executed_line": 6,
+          "executed_json_line": 172,
+          "export_line": 28,
+          "explanation": "空行：分隔相邻逻辑，不执行操作。"
+        },
+        {
+          "source_line": 7,
+          "source_json_line": 145,
+          "executed_line": 7,
+          "executed_json_line": 173,
+          "export_line": 29,
+          "explanation": "RATING_THRESHOLD=3.5 配合严格大于判断；评分是整数，因此保留 4、5 分，丢弃 1、2、3 分。"
+        },
+        {
+          "source_line": 8,
+          "source_json_line": 146,
+          "executed_line": 8,
+          "executed_json_line": 174,
+          "export_line": 30,
+          "explanation": "RATING_THRESHOLD=3.5 配合严格大于判断；评分是整数，因此保留 4、5 分，丢弃 1、2、3 分。"
+        },
+        {
+          "source_line": 9,
+          "source_json_line": 147,
+          "executed_line": 9,
+          "executed_json_line": 175,
+          "export_line": 31,
+          "explanation": "空行：分隔相邻逻辑，不执行操作。"
+        },
+        {
+          "source_line": 10,
+          "source_json_line": 148,
+          "executed_line": 10,
+          "executed_json_line": 176,
+          "export_line": 32,
+          "explanation": "L10 注释开始模型参数区；L11 设每个用户/物品的隐因子维度为 200；L12 最多训练 200 轮。不要误记成扩展模型的 64 维、100 轮。"
+        },
+        {
+          "source_line": 11,
+          "source_json_line": 149,
+          "executed_line": 11,
+          "executed_json_line": 177,
+          "export_line": 33,
+          "explanation": "L10 注释开始模型参数区；L11 设每个用户/物品的隐因子维度为 200；L12 最多训练 200 轮。不要误记成扩展模型的 64 维、100 轮。"
+        },
+        {
+          "source_line": 12,
+          "source_json_line": 150,
+          "executed_line": 12,
+          "executed_json_line": 178,
+          "export_line": 34,
+          "explanation": "L10 注释开始模型参数区；L11 设每个用户/物品的隐因子维度为 200；L12 最多训练 200 轮。不要误记成扩展模型的 64 维、100 轮。"
+        }
+      ],
+      "cache_parameter_inserted": false,
+      "covered_lines": 12
+    },
+    {
+      "id": "bpr-original-9",
+      "model": "bpr",
+      "kind": "upstream_original",
+      "original_cell_1based": 9,
+      "executed_cell_1based": 10,
+      "title": "加载后只保留正反馈",
+      "context": "加载器只返回三列，后面才能直接把每行交给 from_uir。原始 100,000 行经过筛选剩 55,375 行。",
+      "source_cell_sha256": "4c9db38e303c1ebe83f053bb7a8bb61f37aa582620e364e79fc441ac07ead59e",
+      "lines": 9,
+      "annotations": [
+        {
+          "start": 1,
+          "end": 4,
+          "text": "L1 调用加载器；L2 传 100k；L3 指定 userID、itemID、rating 三列，省去 timestamp；L4 结束调用。执行本同样在 L1 后加本地缓存参数。"
+        },
+        {
+          "start": 7,
+          "end": 7,
+          "text": "把评分数组按 >3.5 转成 1.0/0.0，覆盖 rating 列。原 4 分和 5 分都变成 1，强度差异不再进入这个 BPR 实验。"
+        },
+        {
+          "start": 8,
+          "end": 8,
+          "text": "只留下 rating>0 的行，reset_index(drop=True) 重新编号而不把旧索引加入新列。"
+        },
+        {
+          "start": 9,
+          "end": 9,
+          "text": "显示前 5 行检查三列结构与二元标签；不在伴读重印数据样本。"
+        }
+      ],
+      "line_mapping": [
+        {
+          "source_line": 1,
+          "source_json_line": 528,
+          "executed_line": 1,
+          "executed_json_line": 453,
+          "export_line": 38,
+          "explanation": "L1 调用加载器；L2 传 100k；L3 指定 userID、itemID、rating 三列，省去 timestamp；L4 结束调用。执行本同样在 L1 后加本地缓存参数。"
+        },
+        {
+          "source_line": 2,
+          "source_json_line": 529,
+          "executed_line": 3,
+          "executed_json_line": 455,
+          "export_line": 39,
+          "explanation": "L1 调用加载器；L2 传 100k；L3 指定 userID、itemID、rating 三列，省去 timestamp；L4 结束调用。执行本同样在 L1 后加本地缓存参数。"
+        },
+        {
+          "source_line": 3,
+          "source_json_line": 530,
+          "executed_line": 4,
+          "executed_json_line": 456,
+          "export_line": 40,
+          "explanation": "L1 调用加载器；L2 传 100k；L3 指定 userID、itemID、rating 三列，省去 timestamp；L4 结束调用。执行本同样在 L1 后加本地缓存参数。"
+        },
+        {
+          "source_line": 4,
+          "source_json_line": 531,
+          "executed_line": 5,
+          "executed_json_line": 457,
+          "export_line": 41,
+          "explanation": "L1 调用加载器；L2 传 100k；L3 指定 userID、itemID、rating 三列，省去 timestamp；L4 结束调用。执行本同样在 L1 后加本地缓存参数。"
+        },
+        {
+          "source_line": 5,
+          "source_json_line": 532,
+          "executed_line": 6,
+          "executed_json_line": 458,
+          "export_line": 42,
+          "explanation": "空行：分隔相邻逻辑，不执行操作。"
+        },
+        {
+          "source_line": 6,
+          "source_json_line": 533,
+          "executed_line": 7,
+          "executed_json_line": 459,
+          "export_line": 43,
+          "explanation": "空行：分隔相邻逻辑，不执行操作。"
+        },
+        {
+          "source_line": 7,
+          "source_json_line": 534,
+          "executed_line": 8,
+          "executed_json_line": 460,
+          "export_line": 44,
+          "explanation": "把评分数组按 >3.5 转成 1.0/0.0，覆盖 rating 列。原 4 分和 5 分都变成 1，强度差异不再进入这个 BPR 实验。"
+        },
+        {
+          "source_line": 8,
+          "source_json_line": 535,
+          "executed_line": 9,
+          "executed_json_line": 461,
+          "export_line": 45,
+          "explanation": "只留下 rating>0 的行，reset_index(drop=True) 重新编号而不把旧索引加入新列。"
+        },
+        {
+          "source_line": 9,
+          "source_json_line": 536,
+          "executed_line": 10,
+          "executed_json_line": 462,
+          "export_line": 46,
+          "explanation": "显示前 5 行检查三列结构与二元标签；不在伴读重印数据样本。"
+        }
+      ],
+      "cache_parameter_inserted": true,
+      "covered_lines": 9,
+      "inserted_line": {
+        "executed_line": 2,
+        "source": "    local_cache_path='H:\\\\Career_AI_Portfolio\\\\data\\\\movielens',",
+        "executed_json_line": 454,
+        "explanation": "指定固定本地缓存目录；读取已做 SHA-256 核验的同一 MovieLens 压缩包内容。"
+      }
+    },
+    {
+      "id": "bpr-original-10",
+      "model": "bpr",
+      "kind": "upstream_original",
+      "original_cell_1based": 10,
+      "executed_cell_1based": 11,
+      "title": "全表随机切分",
+      "context": "这个协议从筛选后的正反馈表随机取 75% 训练，并没有保证每位用户的比例恰好一致。",
+      "source_cell_sha256": "b4baa27b804bf147b5d7f119a9f4d871ba09a75895729cbbdc6d341d505e2dc7",
+      "lines": 1,
+      "annotations": [
+        {
+          "start": 1,
+          "end": 1,
+          "text": "python_random_split(data,0.75) 返回 41,531 行 train 与 13,844 行 test。seed 没写在调用里，但固定函数的默认值为 42；真实时间戳已不在三列表中。"
+        }
+      ],
+      "line_mapping": [
+        {
+          "source_line": 1,
+          "source_json_line": 561,
+          "executed_line": 1,
+          "executed_json_line": 487,
+          "export_line": 50,
+          "explanation": "python_random_split(data,0.75) 返回 41,531 行 train 与 13,844 行 test。seed 没写在调用里，但固定函数的默认值为 42；真实时间戳已不在三列表中。"
+        }
+      ],
+      "cache_parameter_inserted": false,
+      "covered_lines": 1
+    },
+    {
+      "id": "bpr-original-12",
+      "model": "bpr",
+      "kind": "upstream_original",
+      "original_cell_1based": 12,
+      "executed_cell_1based": 13,
+      "title": "把 DataFrame 变成 Cornac 数据集",
+      "context": "UIR 指 User–Item–Rating。Cornac 会把原始 ID 映射为紧凑的内部行列编号，这些内部编号不是 MovieLens 的 ID。",
+      "source_cell_sha256": "9fdc90df8589657b02a3ff2b034c08888a3fa8f63aaf48e25fd5156a77f082ce",
+      "lines": 4,
+      "annotations": [
+        {
+          "start": 1,
+          "end": 1,
+          "text": "itertuples(index=False) 逐行产生 userID、itemID、rating 三元组，不附带 pandas 索引；from_uir 建立稀疏交互矩阵及 ID 字典，seed=SEED 固定数据集随机状态。"
+        },
+        {
+          "start": 3,
+          "end": 4,
+          "text": "L3/4 打印训练中的用户/物品数量，实测 942 和 1,395。测试有 930 名用户，均在训练出现；另有 63 条测试行的物品不在训练目录。"
+        }
+      ],
+      "line_mapping": [
+        {
+          "source_line": 1,
+          "source_json_line": 617,
+          "executed_line": 1,
+          "executed_json_line": 543,
+          "export_line": 54,
+          "explanation": "itertuples(index=False) 逐行产生 userID、itemID、rating 三元组，不附带 pandas 索引；from_uir 建立稀疏交互矩阵及 ID 字典，seed=SEED 固定数据集随机状态。"
+        },
+        {
+          "source_line": 2,
+          "source_json_line": 618,
+          "executed_line": 2,
+          "executed_json_line": 544,
+          "export_line": 55,
+          "explanation": "空行：分隔相邻逻辑，不执行操作。"
+        },
+        {
+          "source_line": 3,
+          "source_json_line": 619,
+          "executed_line": 3,
+          "executed_json_line": 545,
+          "export_line": 56,
+          "explanation": "L3/4 打印训练中的用户/物品数量，实测 942 和 1,395。测试有 930 名用户，均在训练出现；另有 63 条测试行的物品不在训练目录。"
+        },
+        {
+          "source_line": 4,
+          "source_json_line": 620,
+          "executed_line": 4,
+          "executed_json_line": 546,
+          "export_line": 57,
+          "explanation": "L3/4 打印训练中的用户/物品数量，实测 942 和 1,395。测试有 930 名用户，均在训练出现；另有 63 条测试行的物品不在训练目录。"
+        }
+      ],
+      "cache_parameter_inserted": false,
+      "covered_lines": 4
+    },
+    {
+      "id": "bpr-original-14",
+      "model": "bpr",
+      "kind": "upstream_original",
+      "original_cell_1based": 14,
+      "executed_cell_1based": 15,
+      "title": "构造 BPR 模型",
+      "context": "BPR（Bayesian Personalized Ranking）以用户对正样本和比较物品的分差优化成对排序；训练细节与梯度勘误见主手册。",
+      "source_cell_sha256": "6a4e2d15d39102eeb8cbaee449fbe311f788512cd93026d88188706b29bee52f",
+      "lines": 8,
+      "annotations": [
+        {
+          "start": 1,
+          "end": 3,
+          "text": "L1 构造对象；L2 传 200 维；L3 传 200 轮。只构造对象不会完成学习。"
+        },
+        {
+          "start": 4,
+          "end": 5,
+          "text": "L4 的 learning_rate=0.01 控制每次更新步长；L5 的 lambda_reg=0.001 控制正则强度。保持上游参数才能比较其保存值。"
+        },
+        {
+          "start": 6,
+          "end": 8,
+          "text": "L6 打开训练进度输出；L7 传随机种子 42；L8 结束调用。未显式给出的 use_bias 等参数使用此固定 Cornac 版本默认值，不能随手用新版接口推断。"
+        }
+      ],
+      "line_mapping": [
+        {
+          "source_line": 1,
+          "source_json_line": 673,
+          "executed_line": 1,
+          "executed_json_line": 599,
+          "export_line": 61,
+          "explanation": "L1 构造对象；L2 传 200 维；L3 传 200 轮。只构造对象不会完成学习。"
+        },
+        {
+          "source_line": 2,
+          "source_json_line": 674,
+          "executed_line": 2,
+          "executed_json_line": 600,
+          "export_line": 62,
+          "explanation": "L1 构造对象；L2 传 200 维；L3 传 200 轮。只构造对象不会完成学习。"
+        },
+        {
+          "source_line": 3,
+          "source_json_line": 675,
+          "executed_line": 3,
+          "executed_json_line": 601,
+          "export_line": 63,
+          "explanation": "L1 构造对象；L2 传 200 维；L3 传 200 轮。只构造对象不会完成学习。"
+        },
+        {
+          "source_line": 4,
+          "source_json_line": 676,
+          "executed_line": 4,
+          "executed_json_line": 602,
+          "export_line": 64,
+          "explanation": "L4 的 learning_rate=0.01 控制每次更新步长；L5 的 lambda_reg=0.001 控制正则强度。保持上游参数才能比较其保存值。"
+        },
+        {
+          "source_line": 5,
+          "source_json_line": 677,
+          "executed_line": 5,
+          "executed_json_line": 603,
+          "export_line": 65,
+          "explanation": "L4 的 learning_rate=0.01 控制每次更新步长；L5 的 lambda_reg=0.001 控制正则强度。保持上游参数才能比较其保存值。"
+        },
+        {
+          "source_line": 6,
+          "source_json_line": 678,
+          "executed_line": 6,
+          "executed_json_line": 604,
+          "export_line": 66,
+          "explanation": "L6 打开训练进度输出；L7 传随机种子 42；L8 结束调用。未显式给出的 use_bias 等参数使用此固定 Cornac 版本默认值，不能随手用新版接口推断。"
+        },
+        {
+          "source_line": 7,
+          "source_json_line": 679,
+          "executed_line": 7,
+          "executed_json_line": 605,
+          "export_line": 67,
+          "explanation": "L6 打开训练进度输出；L7 传随机种子 42；L8 结束调用。未显式给出的 use_bias 等参数使用此固定 Cornac 版本默认值，不能随手用新版接口推断。"
+        },
+        {
+          "source_line": 8,
+          "source_json_line": 680,
+          "executed_line": 8,
+          "executed_json_line": 606,
+          "export_line": 68,
+          "explanation": "L6 打开训练进度输出；L7 传随机种子 42；L8 结束调用。未显式给出的 use_bias 等参数使用此固定 Cornac 版本默认值，不能随手用新版接口推断。"
+        }
+      ],
+      "cache_parameter_inserted": false,
+      "covered_lines": 8
+    },
+    {
+      "id": "bpr-original-15",
+      "model": "bpr",
+      "kind": "upstream_original",
+      "original_cell_1based": 15,
+      "executed_cell_1based": 16,
+      "title": "拟合稀疏交互并计时",
+      "context": "fit 会实际执行 BPR 更新；比较物品从未被当作该用户正反馈的物品中抽取。未知反馈不等于已经证实不喜欢。",
+      "source_cell_sha256": "f2667de4ac8e3aa66043529822f262623bef9e1601fc7f8ab92c2402136f07e5",
+      "lines": 3,
+      "annotations": [
+        {
+          "start": 1,
+          "end": 2,
+          "text": "L1 把计时器命名为 t；L2 在上下文中拟合 train_set。用户因子、物品因子与 item bias 保存在 bpr 对象里。"
+        },
+        {
+          "start": 3,
+          "end": 3,
+          "text": "f-string 调用 Timer 的字符串表示，打印训练用时。下一计时单元会覆盖变量 t，所以它不长期同时保存训练与预测两个用时。"
+        }
+      ],
+      "line_mapping": [
+        {
+          "source_line": 1,
+          "source_json_line": 2657,
+          "executed_line": 1,
+          "executed_json_line": 2663,
+          "export_line": 72,
+          "explanation": "L1 把计时器命名为 t；L2 在上下文中拟合 train_set。用户因子、物品因子与 item bias 保存在 bpr 对象里。"
+        },
+        {
+          "source_line": 2,
+          "source_json_line": 2658,
+          "executed_line": 2,
+          "executed_json_line": 2664,
+          "export_line": 73,
+          "explanation": "L1 把计时器命名为 t；L2 在上下文中拟合 train_set。用户因子、物品因子与 item bias 保存在 bpr 对象里。"
+        },
+        {
+          "source_line": 3,
+          "source_json_line": 2659,
+          "executed_line": 3,
+          "executed_json_line": 2665,
+          "export_line": 74,
+          "explanation": "f-string 调用 Timer 的字符串表示，打印训练用时。下一计时单元会覆盖变量 t，所以它不长期同时保存训练与预测两个用时。"
+        }
+      ],
+      "cache_parameter_inserted": false,
+      "covered_lines": 3
+    },
+    {
+      "id": "bpr-original-17",
+      "model": "bpr",
+      "kind": "upstream_original",
+      "original_cell_1based": 17,
+      "executed_cell_1based": 18,
+      "title": "为训练用户计算未见物品分数",
+      "context": "本单元返回的是全部未见候选分数，评估函数稍后才截前 10。这样的大表在更大目录上会成为内存和计算开销。",
+      "source_cell_sha256": "387bbe5b357192b7dad937fa62e55a4875b073b6b8e2729500441a49a7ae9f26",
+      "lines": 3,
+      "annotations": [
+        {
+          "start": 1,
+          "end": 2,
+          "text": "L1 开始计时；L2 将 train 传给包装方法，声明键列并过滤训练正反馈已见对。没有传 top_k，而方法默认 top_k=None，所以保留每位训练用户的全部有限候选，实测 1,272,559 行。"
+        },
+        {
+          "start": 3,
+          "end": 3,
+          "text": "打印预测秒数。底层使用用户因子×物品因子转置并加 item bias；传入 train 的用户–物品键用于 seen 过滤。"
+        }
+      ],
+      "line_mapping": [
+        {
+          "source_line": 1,
+          "source_json_line": 2719,
+          "executed_line": 1,
+          "executed_json_line": 2725,
+          "export_line": 78,
+          "explanation": "L1 开始计时；L2 将 train 传给包装方法，声明键列并过滤训练正反馈已见对。没有传 top_k，而方法默认 top_k=None，所以保留每位训练用户的全部有限候选，实测 1,272,559 行。"
+        },
+        {
+          "source_line": 2,
+          "source_json_line": 2720,
+          "executed_line": 2,
+          "executed_json_line": 2726,
+          "export_line": 79,
+          "explanation": "L1 开始计时；L2 将 train 传给包装方法，声明键列并过滤训练正反馈已见对。没有传 top_k，而方法默认 top_k=None，所以保留每位训练用户的全部有限候选，实测 1,272,559 行。"
+        },
+        {
+          "source_line": 3,
+          "source_json_line": 2721,
+          "executed_line": 3,
+          "executed_json_line": 2727,
+          "export_line": 80,
+          "explanation": "打印预测秒数。底层使用用户因子×物品因子转置并加 item bias；传入 train 的用户–物品键用于 seen 过滤。"
+        }
+      ],
+      "cache_parameter_inserted": false,
+      "covered_lines": 3
+    },
+    {
+      "id": "bpr-original-18",
+      "model": "bpr",
+      "kind": "upstream_original",
+      "original_cell_1based": 18,
+      "executed_cell_1based": 19,
+      "title": "查看批量预测的列",
+      "context": "这一步只观察已经算好的结果，不改变排序。",
+      "source_cell_sha256": "d264045df8f23f6a908c86ce0798bd5956ce2d42f16199e563fc729b92a1f19b",
+      "lines": 1,
+      "annotations": [
+        {
+          "start": 1,
+          "end": 1,
+          "text": "head() 显示预测表前 5 行，确认 prediction 为数值且 ID 列可与 test 对齐；不得把样例表上传成公开原始数据。"
+        }
+      ],
+      "line_mapping": [
+        {
+          "source_line": 1,
+          "source_json_line": 2821,
+          "executed_line": 1,
+          "executed_json_line": 2827,
+          "export_line": 84,
+          "explanation": "head() 显示预测表前 5 行，确认 prediction 为数值且 ID 列可与 test 对齐；不得把样例表上传成公开原始数据。"
+        }
+      ],
+      "cache_parameter_inserted": false,
+      "covered_lines": 1
+    },
+    {
+      "id": "bpr-original-19",
+      "model": "bpr",
+      "kind": "upstream_original",
+      "original_cell_1based": 19,
+      "executed_cell_1based": 20,
+      "title": "截前 10 并计算排序指标",
+      "context": "输入 all_predictions 虽然很长，四个指标都明确使用 k=TOP_K。标签已在此前筛选为正反馈，因此与 SAR 的“全部测试评分为相关”不同。",
+      "source_cell_sha256": "1792705069e60632e261fca367a6fde13cb153bd661086d7cf61eb305d4e2524",
+      "lines": 12,
+      "annotations": [
+        {
+          "start": 1,
+          "end": 4,
+          "text": "L1–4 分别计算 MAP、NDCG、Precision、Recall。col_prediction 指定分数列；用户/物品列用默认名称；k=10 使评估器先按每位用户分数截前 10。公式同 SAR 指标说明，但目标集合与切分不同，不能据此排列两模型优劣。"
+        },
+        {
+          "start": 7,
+          "end": 8,
+          "text": "L7 打印 Model 标签；L8 打印整数 K，\\t 是制表字符，只影响文本对齐。"
+        },
+        {
+          "start": 9,
+          "end": 12,
+          "text": "L9–12 用 :f 显示四项浮点指标，最后 sep='\\n' 令输出逐项换行。完整值保存在结构化 metadata 中。"
+        }
+      ],
+      "line_mapping": [
+        {
+          "source_line": 1,
+          "source_json_line": 2859,
+          "executed_line": 1,
+          "executed_json_line": 2865,
+          "export_line": 88,
+          "explanation": "L1–4 分别计算 MAP、NDCG、Precision、Recall。col_prediction 指定分数列；用户/物品列用默认名称；k=10 使评估器先按每位用户分数截前 10。公式同 SAR 指标说明，但目标集合与切分不同，不能据此排列两模型优劣。"
+        },
+        {
+          "source_line": 2,
+          "source_json_line": 2860,
+          "executed_line": 2,
+          "executed_json_line": 2866,
+          "export_line": 89,
+          "explanation": "L1–4 分别计算 MAP、NDCG、Precision、Recall。col_prediction 指定分数列；用户/物品列用默认名称；k=10 使评估器先按每位用户分数截前 10。公式同 SAR 指标说明，但目标集合与切分不同，不能据此排列两模型优劣。"
+        },
+        {
+          "source_line": 3,
+          "source_json_line": 2861,
+          "executed_line": 3,
+          "executed_json_line": 2867,
+          "export_line": 90,
+          "explanation": "L1–4 分别计算 MAP、NDCG、Precision、Recall。col_prediction 指定分数列；用户/物品列用默认名称；k=10 使评估器先按每位用户分数截前 10。公式同 SAR 指标说明，但目标集合与切分不同，不能据此排列两模型优劣。"
+        },
+        {
+          "source_line": 4,
+          "source_json_line": 2862,
+          "executed_line": 4,
+          "executed_json_line": 2868,
+          "export_line": 91,
+          "explanation": "L1–4 分别计算 MAP、NDCG、Precision、Recall。col_prediction 指定分数列；用户/物品列用默认名称；k=10 使评估器先按每位用户分数截前 10。公式同 SAR 指标说明，但目标集合与切分不同，不能据此排列两模型优劣。"
+        },
+        {
+          "source_line": 5,
+          "source_json_line": 2863,
+          "executed_line": 5,
+          "executed_json_line": 2869,
+          "export_line": 92,
+          "explanation": "空行：分隔相邻逻辑，不执行操作。"
+        },
+        {
+          "source_line": 6,
+          "source_json_line": 2864,
+          "executed_line": 6,
+          "executed_json_line": 2870,
+          "export_line": 93,
+          "explanation": "空行：分隔相邻逻辑，不执行操作。"
+        },
+        {
+          "source_line": 7,
+          "source_json_line": 2865,
+          "executed_line": 7,
+          "executed_json_line": 2871,
+          "export_line": 94,
+          "explanation": "L7 打印 Model 标签；L8 打印整数 K，\\t 是制表字符，只影响文本对齐。"
+        },
+        {
+          "source_line": 8,
+          "source_json_line": 2866,
+          "executed_line": 8,
+          "executed_json_line": 2872,
+          "export_line": 95,
+          "explanation": "L7 打印 Model 标签；L8 打印整数 K，\\t 是制表字符，只影响文本对齐。"
+        },
+        {
+          "source_line": 9,
+          "source_json_line": 2867,
+          "executed_line": 9,
+          "executed_json_line": 2873,
+          "export_line": 96,
+          "explanation": "L9–12 用 :f 显示四项浮点指标，最后 sep='\\n' 令输出逐项换行。完整值保存在结构化 metadata 中。"
+        },
+        {
+          "source_line": 10,
+          "source_json_line": 2868,
+          "executed_line": 10,
+          "executed_json_line": 2874,
+          "export_line": 97,
+          "explanation": "L9–12 用 :f 显示四项浮点指标，最后 sep='\\n' 令输出逐项换行。完整值保存在结构化 metadata 中。"
+        },
+        {
+          "source_line": 11,
+          "source_json_line": 2869,
+          "executed_line": 11,
+          "executed_json_line": 2875,
+          "export_line": 98,
+          "explanation": "L9–12 用 :f 显示四项浮点指标，最后 sep='\\n' 令输出逐项换行。完整值保存在结构化 metadata 中。"
+        },
+        {
+          "source_line": 12,
+          "source_json_line": 2870,
+          "executed_line": 12,
+          "executed_json_line": 2876,
+          "export_line": 99,
+          "explanation": "L9–12 用 :f 显示四项浮点指标，最后 sep='\\n' 令输出逐项换行。完整值保存在结构化 metadata 中。"
+        }
+      ],
+      "cache_parameter_inserted": false,
+      "covered_lines": 12
+    },
+    {
+      "id": "bpr-original-20",
+      "model": "bpr",
+      "kind": "upstream_original",
+      "original_cell_1based": 20,
+      "executed_cell_1based": 21,
+      "title": "保存四项排序指标",
+      "context": "这四个键与 SAR 相同，复现脚本因此能用统一读取逻辑比较两份原 Notebook 各自的结果。",
+      "source_cell_sha256": "9f4b770cf9bd4e4eef71f721c521549b3b2b1899678b7f9121ee85780ef74115",
+      "lines": 5,
+      "annotations": [
+        {
+          "start": 1,
+          "end": 1,
+          "text": "保留原注释；审计时需要执行本单元，不能因注释写了 ignore 就省略。"
+        },
+        {
+          "start": 2,
+          "end": 5,
+          "text": "L2–5 依次记录 map、ndcg、precision、recall 到 Notebook 的富输出中，不写入评分文件，也不改变模型。"
+        }
+      ],
+      "line_mapping": [
+        {
+          "source_line": 1,
+          "source_json_line": 2964,
+          "executed_line": 1,
+          "executed_json_line": 2970,
+          "export_line": 103,
+          "explanation": "保留原注释；审计时需要执行本单元，不能因注释写了 ignore 就省略。"
+        },
+        {
+          "source_line": 2,
+          "source_json_line": 2965,
+          "executed_line": 2,
+          "executed_json_line": 2971,
+          "export_line": 104,
+          "explanation": "L2–5 依次记录 map、ndcg、precision、recall 到 Notebook 的富输出中，不写入评分文件，也不改变模型。"
+        },
+        {
+          "source_line": 3,
+          "source_json_line": 2966,
+          "executed_line": 3,
+          "executed_json_line": 2972,
+          "export_line": 105,
+          "explanation": "L2–5 依次记录 map、ndcg、precision、recall 到 Notebook 的富输出中，不写入评分文件，也不改变模型。"
+        },
+        {
+          "source_line": 4,
+          "source_json_line": 2967,
+          "executed_line": 4,
+          "executed_json_line": 2973,
+          "export_line": 106,
+          "explanation": "L2–5 依次记录 map、ndcg、precision、recall 到 Notebook 的富输出中，不写入评分文件，也不改变模型。"
+        },
+        {
+          "source_line": 5,
+          "source_json_line": 2968,
+          "executed_line": 5,
+          "executed_json_line": 2974,
+          "export_line": 107,
+          "explanation": "L2–5 依次记录 map、ndcg、precision、recall 到 Notebook 的富输出中，不写入评分文件，也不改变模型。"
+        }
+      ],
+      "cache_parameter_inserted": false,
+      "covered_lines": 5
+    },
+    {
+      "id": "sar-helper-preamble",
+      "model": "sar",
+      "kind": "local_helper",
+      "original_cell_1based": null,
+      "executed_cell_1based": 1,
+      "title": "固定源码导入路径",
+      "context": "此单元来自本项目的 run_upstream.py，不是上游算法改写。",
+      "source_cell_sha256": "1ff5b1b7a58aa0f6504e43f52eb9fc28dd549e7e66ea292e4195029c3937b2a8",
+      "lines": 3,
+      "annotations": [
+        {
+          "start": 1,
+          "end": 1,
+          "text": "导入 sys，准备调整此内核进程的模块搜索顺序。"
+        },
+        {
+          "start": 2,
+          "end": 2,
+          "text": "把固定源码 checkout 插到 sys.path 第 0 位，保证 import recommenders 读取本次核验过的目录，不是机器上的另一个安装版本。Windows 路径中的双反斜杠是字符串转义。"
+        },
+        {
+          "start": 3,
+          "end": 3,
+          "text": "打印预期固定提交，帮助阅读输出。打印本身不能证明磁盘确实在该提交；runner 在执行前另用 git rev-parse 与 git diff 进行真实检查。"
+        }
+      ],
+      "covered_lines": 3,
+      "line_mapping": [
+        {
+          "source_line": 1,
+          "executed_line": 1,
+          "executed_json_line": 26,
+          "explanation": "导入 sys，准备调整此内核进程的模块搜索顺序。"
+        },
+        {
+          "source_line": 2,
+          "executed_line": 2,
+          "executed_json_line": 27,
+          "explanation": "把固定源码 checkout 插到 sys.path 第 0 位，保证 import recommenders 读取本次核验过的目录，不是机器上的另一个安装版本。Windows 路径中的双反斜杠是字符串转义。"
+        },
+        {
+          "source_line": 3,
+          "executed_line": 3,
+          "executed_json_line": 28,
+          "explanation": "打印预期固定提交，帮助阅读输出。打印本身不能证明磁盘确实在该提交；runner 在执行前另用 git rev-parse 与 git diff 进行真实检查。"
+        }
+      ]
+    },
+    {
+      "id": "sar-helper-capture",
+      "model": "sar",
+      "kind": "local_helper",
+      "original_cell_1based": null,
+      "executed_cell_1based": 28,
+      "title": "导出本次执行证据",
+      "context": "此单元来自本项目的 run_upstream.py，不是上游算法改写。",
+      "source_cell_sha256": "83b4986a792ac8be203957f99287d975fe9da40cdc4dba90c1ae14c9045b5daa",
+      "lines": 22,
+      "annotations": [
+        {
+          "start": 1,
+          "end": 2,
+          "text": "L1 导入 JSON 与 SHA-256 工具；L2 导入 Path 用于文件写入。它们不参与模型打分。"
+        },
+        {
+          "start": 3,
+          "end": 4,
+          "text": "L3 定义 frame_hash；L4 把表按当前行序导出为不含索引、换行固定为 \\n 的 CSV 字节，再计算 SHA-256。这里保存的是摘要，不把评分表写成公共文件。"
+        },
+        {
+          "start": 5,
+          "end": 6,
+          "text": "L5 开始 evidence 字典；L6 保存训练与测试的行数。变量 train/test 已由原单元创建。"
+        },
+        {
+          "start": 7,
+          "end": 8,
+          "text": "L7 保存去重用户数，L8 保存去重物品数；int 将 NumPy 计数转成可直接 JSON 序列化的 Python 整数。"
+        },
+        {
+          "start": 9,
+          "end": 10,
+          "text": "L9 对训练/测试用户集合取交集，L10 取测试减训练的差集，分别记录共同用户与只在测试出现的用户数量。"
+        },
+        {
+          "start": 11,
+          "end": 11,
+          "text": "isin 判断测试物品是否存在于训练物品中，~ 取反，sum 计数；这是训练目录外测试行数量，不是测试冷用户数。"
+        },
+        {
+          "start": 12,
+          "end": 13,
+          "text": "L12 记录训练/测试表哈希；L13 保存当前 data 行数和 seed=42。SAR 的 data 仍为原始 100,000 行，没有先按评分阈值过滤。seed 字段是已核实的参数记录，不在此重设随机数。"
+        },
+        {
+          "start": 14,
+          "end": 16,
+          "text": "L14/15 保存四项已算出的排序指标，float 兼容 JSON 数值；L16 关闭字典。不会把指标重新算一次。"
+        },
+        {
+          "start": 17,
+          "end": 17,
+          "text": "用字典推导式逐项保存 RMSE、MAE、R²、解释方差和 logloss，所有值转成 float；这些是原单元实际运行结果。"
+        },
+        {
+          "start": 18,
+          "end": 19,
+          "text": "L18/19 分别保存训练和预测计时器的 interval。计时不同不等于排序复现失败。"
+        },
+        {
+          "start": 20,
+          "end": 20,
+          "text": "记录 top_k 表行数，用于核对用户数乘推荐长度。"
+        },
+        {
+          "start": 21,
+          "end": 22,
+          "text": "L21 以 UTF-8 将 details 格式化写入 sar_run_details.json；L22 在 Notebook 再显示字典。只有汇总数量、指标与哈希，不包含逐用户评分。"
+        }
+      ],
+      "covered_lines": 22,
+      "line_mapping": [
+        {
+          "source_line": 1,
+          "executed_line": 1,
+          "executed_json_line": 1090,
+          "explanation": "L1 导入 JSON 与 SHA-256 工具；L2 导入 Path 用于文件写入。它们不参与模型打分。"
+        },
+        {
+          "source_line": 2,
+          "executed_line": 2,
+          "executed_json_line": 1091,
+          "explanation": "L1 导入 JSON 与 SHA-256 工具；L2 导入 Path 用于文件写入。它们不参与模型打分。"
+        },
+        {
+          "source_line": 3,
+          "executed_line": 3,
+          "executed_json_line": 1092,
+          "explanation": "L3 定义 frame_hash；L4 把表按当前行序导出为不含索引、换行固定为 \\n 的 CSV 字节，再计算 SHA-256。这里保存的是摘要，不把评分表写成公共文件。"
+        },
+        {
+          "source_line": 4,
+          "executed_line": 4,
+          "executed_json_line": 1093,
+          "explanation": "L3 定义 frame_hash；L4 把表按当前行序导出为不含索引、换行固定为 \\n 的 CSV 字节，再计算 SHA-256。这里保存的是摘要，不把评分表写成公共文件。"
+        },
+        {
+          "source_line": 5,
+          "executed_line": 5,
+          "executed_json_line": 1094,
+          "explanation": "L5 开始 evidence 字典；L6 保存训练与测试的行数。变量 train/test 已由原单元创建。"
+        },
+        {
+          "source_line": 6,
+          "executed_line": 6,
+          "executed_json_line": 1095,
+          "explanation": "L5 开始 evidence 字典；L6 保存训练与测试的行数。变量 train/test 已由原单元创建。"
+        },
+        {
+          "source_line": 7,
+          "executed_line": 7,
+          "executed_json_line": 1096,
+          "explanation": "L7 保存去重用户数，L8 保存去重物品数；int 将 NumPy 计数转成可直接 JSON 序列化的 Python 整数。"
+        },
+        {
+          "source_line": 8,
+          "executed_line": 8,
+          "executed_json_line": 1097,
+          "explanation": "L7 保存去重用户数，L8 保存去重物品数；int 将 NumPy 计数转成可直接 JSON 序列化的 Python 整数。"
+        },
+        {
+          "source_line": 9,
+          "executed_line": 9,
+          "executed_json_line": 1098,
+          "explanation": "L9 对训练/测试用户集合取交集，L10 取测试减训练的差集，分别记录共同用户与只在测试出现的用户数量。"
+        },
+        {
+          "source_line": 10,
+          "executed_line": 10,
+          "executed_json_line": 1099,
+          "explanation": "L9 对训练/测试用户集合取交集，L10 取测试减训练的差集，分别记录共同用户与只在测试出现的用户数量。"
+        },
+        {
+          "source_line": 11,
+          "executed_line": 11,
+          "executed_json_line": 1100,
+          "explanation": "isin 判断测试物品是否存在于训练物品中，~ 取反，sum 计数；这是训练目录外测试行数量，不是测试冷用户数。"
+        },
+        {
+          "source_line": 12,
+          "executed_line": 12,
+          "executed_json_line": 1101,
+          "explanation": "L12 记录训练/测试表哈希；L13 保存当前 data 行数和 seed=42。SAR 的 data 仍为原始 100,000 行，没有先按评分阈值过滤。seed 字段是已核实的参数记录，不在此重设随机数。"
+        },
+        {
+          "source_line": 13,
+          "executed_line": 13,
+          "executed_json_line": 1102,
+          "explanation": "L12 记录训练/测试表哈希；L13 保存当前 data 行数和 seed=42。SAR 的 data 仍为原始 100,000 行，没有先按评分阈值过滤。seed 字段是已核实的参数记录，不在此重设随机数。"
+        },
+        {
+          "source_line": 14,
+          "executed_line": 14,
+          "executed_json_line": 1103,
+          "explanation": "L14/15 保存四项已算出的排序指标，float 兼容 JSON 数值；L16 关闭字典。不会把指标重新算一次。"
+        },
+        {
+          "source_line": 15,
+          "executed_line": 15,
+          "executed_json_line": 1104,
+          "explanation": "L14/15 保存四项已算出的排序指标，float 兼容 JSON 数值；L16 关闭字典。不会把指标重新算一次。"
+        },
+        {
+          "source_line": 16,
+          "executed_line": 16,
+          "executed_json_line": 1105,
+          "explanation": "L14/15 保存四项已算出的排序指标，float 兼容 JSON 数值；L16 关闭字典。不会把指标重新算一次。"
+        },
+        {
+          "source_line": 17,
+          "executed_line": 17,
+          "executed_json_line": 1106,
+          "explanation": "用字典推导式逐项保存 RMSE、MAE、R²、解释方差和 logloss，所有值转成 float；这些是原单元实际运行结果。"
+        },
+        {
+          "source_line": 18,
+          "executed_line": 18,
+          "executed_json_line": 1107,
+          "explanation": "L18/19 分别保存训练和预测计时器的 interval。计时不同不等于排序复现失败。"
+        },
+        {
+          "source_line": 19,
+          "executed_line": 19,
+          "executed_json_line": 1108,
+          "explanation": "L18/19 分别保存训练和预测计时器的 interval。计时不同不等于排序复现失败。"
+        },
+        {
+          "source_line": 20,
+          "executed_line": 20,
+          "executed_json_line": 1109,
+          "explanation": "记录 top_k 表行数，用于核对用户数乘推荐长度。"
+        },
+        {
+          "source_line": 21,
+          "executed_line": 21,
+          "executed_json_line": 1110,
+          "explanation": "L21 以 UTF-8 将 details 格式化写入 sar_run_details.json；L22 在 Notebook 再显示字典。只有汇总数量、指标与哈希，不包含逐用户评分。"
+        },
+        {
+          "source_line": 22,
+          "executed_line": 22,
+          "executed_json_line": 1111,
+          "explanation": "L21 以 UTF-8 将 details 格式化写入 sar_run_details.json；L22 在 Notebook 再显示字典。只有汇总数量、指标与哈希，不包含逐用户评分。"
+        }
+      ]
+    },
+    {
+      "id": "bpr-helper-preamble",
+      "model": "bpr",
+      "kind": "local_helper",
+      "original_cell_1based": null,
+      "executed_cell_1based": 1,
+      "title": "固定源码导入路径",
+      "context": "此单元来自本项目的 run_upstream.py，不是上游算法改写。",
+      "source_cell_sha256": "1ff5b1b7a58aa0f6504e43f52eb9fc28dd549e7e66ea292e4195029c3937b2a8",
+      "lines": 3,
+      "annotations": [
+        {
+          "start": 1,
+          "end": 1,
+          "text": "导入 sys，准备调整此内核进程的模块搜索顺序。"
+        },
+        {
+          "start": 2,
+          "end": 2,
+          "text": "把固定源码 checkout 插到 sys.path 第 0 位，保证 import recommenders 读取本次核验过的目录，不是机器上的另一个安装版本。Windows 路径中的双反斜杠是字符串转义。"
+        },
+        {
+          "start": 3,
+          "end": 3,
+          "text": "打印预期固定提交，帮助阅读输出。打印本身不能证明磁盘确实在该提交；runner 在执行前另用 git rev-parse 与 git diff 进行真实检查。"
+        }
+      ],
+      "covered_lines": 3,
+      "line_mapping": [
+        {
+          "source_line": 1,
+          "executed_line": 1,
+          "executed_json_line": 26,
+          "explanation": "导入 sys，准备调整此内核进程的模块搜索顺序。"
+        },
+        {
+          "source_line": 2,
+          "executed_line": 2,
+          "executed_json_line": 27,
+          "explanation": "把固定源码 checkout 插到 sys.path 第 0 位，保证 import recommenders 读取本次核验过的目录，不是机器上的另一个安装版本。Windows 路径中的双反斜杠是字符串转义。"
+        },
+        {
+          "source_line": 3,
+          "executed_line": 3,
+          "executed_json_line": 28,
+          "explanation": "打印预期固定提交，帮助阅读输出。打印本身不能证明磁盘确实在该提交；runner 在执行前另用 git rev-parse 与 git diff 进行真实检查。"
+        }
+      ]
+    },
+    {
+      "id": "bpr-helper-capture",
+      "model": "bpr",
+      "kind": "local_helper",
+      "original_cell_1based": null,
+      "executed_cell_1based": 23,
+      "title": "导出本次执行证据",
+      "context": "此单元来自本项目的 run_upstream.py，不是上游算法改写。",
+      "source_cell_sha256": "c833d50d9ca01baf71f1824900c762be0bdb3022c9c8fa024fe209e586cbbf26",
+      "lines": 19,
+      "annotations": [
+        {
+          "start": 1,
+          "end": 2,
+          "text": "L1 导入 JSON 与 SHA-256 工具；L2 导入 Path 用于文件写入。它们不参与模型打分。"
+        },
+        {
+          "start": 3,
+          "end": 4,
+          "text": "L3 定义 frame_hash；L4 把表按当前行序导出为不含索引、换行固定为 \\n 的 CSV 字节，再计算 SHA-256。这里保存的是摘要，不把评分表写成公共文件。"
+        },
+        {
+          "start": 5,
+          "end": 6,
+          "text": "L5 开始 evidence 字典；L6 保存训练与测试的行数。变量 train/test 已由原单元创建。"
+        },
+        {
+          "start": 7,
+          "end": 8,
+          "text": "L7 保存去重用户数，L8 保存去重物品数；int 将 NumPy 计数转成可直接 JSON 序列化的 Python 整数。"
+        },
+        {
+          "start": 9,
+          "end": 10,
+          "text": "L9 对训练/测试用户集合取交集，L10 取测试减训练的差集，分别记录共同用户与只在测试出现的用户数量。"
+        },
+        {
+          "start": 11,
+          "end": 11,
+          "text": "isin 判断测试物品是否存在于训练物品中，~ 取反，sum 计数；这是训练目录外测试行数量，不是测试冷用户数。"
+        },
+        {
+          "start": 12,
+          "end": 13,
+          "text": "L12 记录训练/测试表哈希；L13 保存当前 data 行数和 seed=42。BPR 的 data 已经过正反馈过滤，实际为 55,375 行。seed 字段是已核实的参数记录，不在此重设随机数。"
+        },
+        {
+          "start": 14,
+          "end": 16,
+          "text": "L14/15 保存四项已算出的排序指标，float 兼容 JSON 数值；L16 关闭字典。不会把指标重新算一次。"
+        },
+        {
+          "start": 17,
+          "end": 17,
+          "text": "记录 all_predictions 的行数；没有把所有预测明细写入 JSON。"
+        },
+        {
+          "start": 18,
+          "end": 19,
+          "text": "L18 写入 bpr_run_details.json，indent=2 方便阅读；L19 显示汇总字典。BPR 原计时变量 t 被复用，所以此单元没有仿造不存在的独立训练时间字段。"
+        }
+      ],
+      "covered_lines": 19,
+      "line_mapping": [
+        {
+          "source_line": 1,
+          "executed_line": 1,
+          "executed_json_line": 3020,
+          "explanation": "L1 导入 JSON 与 SHA-256 工具；L2 导入 Path 用于文件写入。它们不参与模型打分。"
+        },
+        {
+          "source_line": 2,
+          "executed_line": 2,
+          "executed_json_line": 3021,
+          "explanation": "L1 导入 JSON 与 SHA-256 工具；L2 导入 Path 用于文件写入。它们不参与模型打分。"
+        },
+        {
+          "source_line": 3,
+          "executed_line": 3,
+          "executed_json_line": 3022,
+          "explanation": "L3 定义 frame_hash；L4 把表按当前行序导出为不含索引、换行固定为 \\n 的 CSV 字节，再计算 SHA-256。这里保存的是摘要，不把评分表写成公共文件。"
+        },
+        {
+          "source_line": 4,
+          "executed_line": 4,
+          "executed_json_line": 3023,
+          "explanation": "L3 定义 frame_hash；L4 把表按当前行序导出为不含索引、换行固定为 \\n 的 CSV 字节，再计算 SHA-256。这里保存的是摘要，不把评分表写成公共文件。"
+        },
+        {
+          "source_line": 5,
+          "executed_line": 5,
+          "executed_json_line": 3024,
+          "explanation": "L5 开始 evidence 字典；L6 保存训练与测试的行数。变量 train/test 已由原单元创建。"
+        },
+        {
+          "source_line": 6,
+          "executed_line": 6,
+          "executed_json_line": 3025,
+          "explanation": "L5 开始 evidence 字典；L6 保存训练与测试的行数。变量 train/test 已由原单元创建。"
+        },
+        {
+          "source_line": 7,
+          "executed_line": 7,
+          "executed_json_line": 3026,
+          "explanation": "L7 保存去重用户数，L8 保存去重物品数；int 将 NumPy 计数转成可直接 JSON 序列化的 Python 整数。"
+        },
+        {
+          "source_line": 8,
+          "executed_line": 8,
+          "executed_json_line": 3027,
+          "explanation": "L7 保存去重用户数，L8 保存去重物品数；int 将 NumPy 计数转成可直接 JSON 序列化的 Python 整数。"
+        },
+        {
+          "source_line": 9,
+          "executed_line": 9,
+          "executed_json_line": 3028,
+          "explanation": "L9 对训练/测试用户集合取交集，L10 取测试减训练的差集，分别记录共同用户与只在测试出现的用户数量。"
+        },
+        {
+          "source_line": 10,
+          "executed_line": 10,
+          "executed_json_line": 3029,
+          "explanation": "L9 对训练/测试用户集合取交集，L10 取测试减训练的差集，分别记录共同用户与只在测试出现的用户数量。"
+        },
+        {
+          "source_line": 11,
+          "executed_line": 11,
+          "executed_json_line": 3030,
+          "explanation": "isin 判断测试物品是否存在于训练物品中，~ 取反，sum 计数；这是训练目录外测试行数量，不是测试冷用户数。"
+        },
+        {
+          "source_line": 12,
+          "executed_line": 12,
+          "executed_json_line": 3031,
+          "explanation": "L12 记录训练/测试表哈希；L13 保存当前 data 行数和 seed=42。BPR 的 data 已经过正反馈过滤，实际为 55,375 行。seed 字段是已核实的参数记录，不在此重设随机数。"
+        },
+        {
+          "source_line": 13,
+          "executed_line": 13,
+          "executed_json_line": 3032,
+          "explanation": "L12 记录训练/测试表哈希；L13 保存当前 data 行数和 seed=42。BPR 的 data 已经过正反馈过滤，实际为 55,375 行。seed 字段是已核实的参数记录，不在此重设随机数。"
+        },
+        {
+          "source_line": 14,
+          "executed_line": 14,
+          "executed_json_line": 3033,
+          "explanation": "L14/15 保存四项已算出的排序指标，float 兼容 JSON 数值；L16 关闭字典。不会把指标重新算一次。"
+        },
+        {
+          "source_line": 15,
+          "executed_line": 15,
+          "executed_json_line": 3034,
+          "explanation": "L14/15 保存四项已算出的排序指标，float 兼容 JSON 数值；L16 关闭字典。不会把指标重新算一次。"
+        },
+        {
+          "source_line": 16,
+          "executed_line": 16,
+          "executed_json_line": 3035,
+          "explanation": "L14/15 保存四项已算出的排序指标，float 兼容 JSON 数值；L16 关闭字典。不会把指标重新算一次。"
+        },
+        {
+          "source_line": 17,
+          "executed_line": 17,
+          "executed_json_line": 3036,
+          "explanation": "记录 all_predictions 的行数；没有把所有预测明细写入 JSON。"
+        },
+        {
+          "source_line": 18,
+          "executed_line": 18,
+          "executed_json_line": 3037,
+          "explanation": "L18 写入 bpr_run_details.json，indent=2 方便阅读；L19 显示汇总字典。BPR 原计时变量 t 被复用，所以此单元没有仿造不存在的独立训练时间字段。"
+        },
+        {
+          "source_line": 19,
+          "executed_line": 19,
+          "executed_json_line": 3038,
+          "explanation": "L18 写入 bpr_run_details.json，indent=2 方便阅读；L19 显示汇总字典。BPR 原计时变量 t 被复用，所以此单元没有仿造不存在的独立训练时间字段。"
+        }
+      ]
+    }
+  ],
+  "totals": {
+    "original_code_cells": 26,
+    "original_code_lines_including_blank_and_comment": 206,
+    "helper_code_cells": 4,
+    "helper_code_lines": 47,
+    "cache_parameter_lines": 2,
+    "unexplained_lines": 0
+  },
+  "generated_files": {
+    "上游Notebook逐行伴读_源稿.md": "3ea91ec53e912d15684cff98b4208768310ac9e51744e8d90ca87f0234a2a6a0",
+    "notebook_annotations.json": "df6b99306cc7b40d6beb550ab69f66e9bfc9f29a41c8360c52327468d2fed1a5",
+    "bpr_code.txt": "829ea13b14b8983cf5fdc2f615c426582778183d0e43e18df613257e0fa28b2b",
+    "sar_code.txt": "79e1c129884f8f9a7b5927195c78a05f2776a437d35d1fc14f2ad4352bc28ae9",
+    "UPSTREAM_LICENSE": "dd2d5cac439162ce313a118a85993450fa5fc6e7cbbc3ba3ab04df18bc664e8b",
+    "上游Notebook逐行伴读.html": "20fb2e1fcedcc4e0a665de8192ea575c9182763b2573fa06ddff604e4a189faa"
+  }
+}

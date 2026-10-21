@@ -2,6 +2,8 @@
 
 项目把数据科学、模型评测和模型部署连成一个可演示的作品。输入是公开的电影历史评分；输出是可重跑的实验、带版本的模型、可调用的推荐API和配套教案。主要面向 Data Scientist、Machine Learning Engineer 与负责模型落地的 AI Engineer。
 
+2026-10-21再审发现，原来的逐条“通过”表述过满：上游原代码逐行教学、实现复杂度、首次安装手册，以及截图和传输元数据存在缺口。本轮以v0.1.1补齐内容并重新验收，模型、实验结果与0.1.0容器保持原样。历史上未记录的精确时间没有被补造，具体范围见[再审说明](reaudit_20261021.md)。
+
 ## 完成了什么
 
 1. 固定 Recommenders 提交 `aa8332189cd495be6ffaa7e1c8054f1c180b5ef3`，完整执行官方 SAR 与 BPR notebook。8项排序指标与上游保存值一致。复现的是这两个示例的规定数据和参数，并不代表复现整个开源库。
@@ -15,9 +17,9 @@
 
 - 已有本机服务：浏览器打开 `http://127.0.0.1:8011`，输入用户1161；空用户演示冷启动。`/docs`提供可执行API文档。
 - 重启：在项目目录运行 `docker compose up -d`。关闭：`docker compose stop`。原始模型保留在本地 `artifacts/model.joblib`。
-- 第一次学习：按教学主手册顺序阅读，遇到具体代码再查逐行伴读。文件与阅读路线见 [教学入口](../teaching/README.md)。
+- 第一次学习：先读新补册的环境部分，再按教学主手册顺序学习；遇到具体代码时查自有代码伴读和上游代码补册。文件与阅读路线见 [教学入口](../teaching/README.md)。
 - 面试准备：[简历、30秒与90秒介绍](career_story.md)；[分阶段输入输出](milestones.md)；[部署操作](operations.md)。
-- 公开源代码：[reclab-temporal-ranking](https://github.com/ShikiRyo1/reclab-temporal-ranking)。版本为 `baseline-v1` 与 `v0.1.0`，最终发布证据见验收记录。
+- 公开源代码：[reclab-temporal-ranking](https://github.com/ShikiRyo1/reclab-temporal-ranking)。保留 `baseline-v1` 与 `v0.1.0`，本轮教学与审查修补另标为 `v0.1.1`；最终发布证据见验收记录。
 
 ## 求职时怎样讲
 

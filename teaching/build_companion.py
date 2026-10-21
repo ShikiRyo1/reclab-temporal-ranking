@@ -71,7 +71,22 @@ page='<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewpo
 (HERE/'代码逐行阅读指南.html').write_text(page,encoding='utf-8')
 (HERE/'qa'/'source_manifest.json').write_text(json.dumps({'source_files':manifest,'lines':sum(x['lines'] for x in manifest),'guide_sources':[p.name for p in files],'docx_sha256':hashlib.sha256(out.read_bytes()).hexdigest()},indent=2),encoding='utf-8')
 shots=[('01_upstream_commit.png','https://github.com/recommenders-team/recommenders/tree/aa8332189cd495be6ffaa7e1c8054f1c180b5ef3','打开固定commit代码页'),('02_personalized.png','http://127.0.0.1:8011','输入1161/10/全部类别/自动权重，生成推荐'),('03_cold_drama.png','http://127.0.0.1:8011','空用户/Drama类别，生成推荐'),('04_request_response.png','http://127.0.0.1:8011','展开请求与响应JSON'),('05_swagger_execute.png','http://127.0.0.1:8011/docs','展开POST，Try it out，输入JSON，Execute'),('06_swagger_200.png','http://127.0.0.1:8011/docs','查看合法请求Server response 200'),('07_swagger_422.png','http://127.0.0.1:8011/docs','k=51执行后查看422'),('08_github_published.png','https://github.com/ShikiRyo1/reclab-temporal-ranking','打开已发布仓库首页')]
-with (HERE/'screenshots'/'index.csv').open('w',encoding='utf-8-sig',newline='') as f:
-    w=csv.writer(f);w.writerow(['file','url','action','sha256','kind'])
-    for name,url,action in shots:w.writerow([name,url,action,hashlib.sha256((HERE/'screenshots'/name).read_bytes()).hexdigest(),'真实浏览器运行截图'])
+index_path=HERE/'screenshots'/'index.csv'
+# Rebuilding teaching must not erase captured provenance or later audit metadata.
+fields=['file','url','action','sha256','kind'];previous={}
+if index_path.exists():
+    with index_path.open(encoding='utf-8-sig',newline='') as f:
+        reader=csv.DictReader(f)
+        fields+= [key for key in (reader.fieldnames or []) if key not in fields]
+        previous={row['file']:row for row in reader}
+updated_rows=[]
+for name,url,action in shots:
+    row=previous.get(name,{})
+    current_sha=hashlib.sha256((HERE/'screenshots'/name).read_bytes()).hexdigest()
+    if row.get('sha256') and row['sha256']!=current_sha:
+        raise ValueError(f'Screenshot changed; re-audit provenance before rebuilding: {name}')
+    row.update(file=name,url=url,action=action,sha256=current_sha,kind='真实浏览器运行截图')
+    updated_rows.append(row)
+with index_path.open('w',encoding='utf-8-sig',newline='') as f:
+    w=csv.DictWriter(f,fieldnames=fields);w.writeheader();w.writerows(updated_rows)
 print(json.dumps({'docx':str(out),'files':len(manifest),'source_lines':sum(x['lines'] for x in manifest),'equations':len(EQUATIONS)},ensure_ascii=False))

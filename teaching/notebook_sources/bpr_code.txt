@@ -1,0 +1,133 @@
+# Copyright (c) Recommenders contributors. MIT License; commit aa8332189cd495be6ffaa7e1c8054f1c180b5ef3.
+# Reading export only: use the Notebook kernel for IPython magic commands.
+
+# BPR original cell 4; executed cell 5
+
+import sys
+import cornac
+
+from recommenders.datasets import movielens
+from recommenders.datasets.python_splitters import python_random_split
+from recommenders.evaluation.python_evaluation import map_at_k, ndcg_at_k, precision_at_k, recall_at_k
+from recommenders.models.cornac.bpr import BPR
+from recommenders.utils.timer import Timer
+from recommenders.utils.constants import SEED
+from recommenders.utils.python_utils import binarize
+from recommenders.utils.notebook_utils import store_metadata
+
+print(f"System version: {sys.version}")
+print(f"Cornac version: {cornac.__version__}")
+
+# BPR original cell 5; executed cell 6
+
+# Select MovieLens data size: 100k, 1m, 10m, or 20m
+MOVIELENS_DATA_SIZE = "100k"
+
+# top k items to recommend
+TOP_K = 10
+
+# Minimum rating to consider as positive implicit feedback
+RATING_THRESHOLD = 3.5
+
+# Model parameters
+NUM_FACTORS = 200
+NUM_EPOCHS = 200
+
+# BPR original cell 9; executed cell 10
+
+data = movielens.load_pandas_df(
+    size=MOVIELENS_DATA_SIZE,
+    header=["userID", "itemID", "rating"]
+)
+
+
+data['rating'] = binarize(data['rating'].values, RATING_THRESHOLD)
+data = data[data['rating'] > 0].reset_index(drop=True)
+data.head()
+
+# BPR original cell 10; executed cell 11
+
+train, test = python_random_split(data, 0.75)
+
+# BPR original cell 12; executed cell 13
+
+train_set = cornac.data.Dataset.from_uir(train.itertuples(index=False), seed=SEED)
+
+print('Number of users: {}'.format(train_set.num_users))
+print('Number of items: {}'.format(train_set.num_items))
+
+# BPR original cell 14; executed cell 15
+
+bpr = BPR(
+    k=NUM_FACTORS,
+    max_iter=NUM_EPOCHS,
+    learning_rate=0.01,
+    lambda_reg=0.001,
+    verbose=True,
+    seed=SEED
+)
+
+# BPR original cell 15; executed cell 16
+
+with Timer() as t:
+    bpr.fit(train_set)
+print(f"Took {t} seconds for training.")
+
+# BPR original cell 17; executed cell 18
+
+with Timer() as t:
+    all_predictions = bpr.recommend_k_items(train, col_user='userID', col_item='itemID', remove_seen=True)
+print(f"Took {t} seconds for prediction.")
+
+# BPR original cell 18; executed cell 19
+
+all_predictions.head()
+
+# BPR original cell 19; executed cell 20
+
+eval_map = map_at_k(test, all_predictions, col_prediction='prediction', k=TOP_K)
+eval_ndcg = ndcg_at_k(test, all_predictions, col_prediction='prediction', k=TOP_K)
+eval_precision = precision_at_k(test, all_predictions, col_prediction='prediction', k=TOP_K)
+eval_recall = recall_at_k(test, all_predictions, col_prediction='prediction', k=TOP_K)
+
+
+print(f"Model:",
+      f"Top K:\t\t {TOP_K}",
+      f"MAP@K:\t\t {eval_map:f}",
+      f"NDCG@K:\t\t {eval_ndcg:f}",
+      f"Precision@K:\t {eval_precision:f}",
+      f"Recall@K:\t {eval_recall:f}", sep="\n")
+
+# BPR original cell 20; executed cell 21
+
+# Record results for tests - ignore this cell
+store_metadata("map", eval_map)
+store_metadata("ndcg", eval_ndcg)
+store_metadata("precision", eval_precision)
+store_metadata("recall", eval_recall)
+
+# Local helper preamble; executed cell 1
+import sys
+sys.path.insert(0, 'H:\\Career_AI_Portfolio\\external\\recommenders')
+print('Pinned source commit: aa8332189cd495be6ffaa7e1c8054f1c180b5ef3')
+
+# Local helper capture; executed cell 23
+import json, hashlib
+from pathlib import Path
+def frame_hash(frame):
+    return hashlib.sha256(frame.to_csv(index=False, lineterminator='\n').encode()).hexdigest()
+details = {
+ 'train_rows': len(train), 'test_rows': len(test),
+ 'train_users': int(train.userID.nunique()), 'test_users': int(test.userID.nunique()),
+ 'train_items': int(train.itemID.nunique()), 'test_items': int(test.itemID.nunique()),
+ 'common_train_test_users': len(set(train.userID) & set(test.userID)),
+ 'test_only_users': len(set(test.userID) - set(train.userID)),
+ 'test_rows_item_absent_from_train': int((~test.itemID.isin(train.itemID)).sum()),
+ 'train_sha256': frame_hash(train), 'test_sha256': frame_hash(test),
+ 'data_rows': len(data), 'seed': 42,
+ 'metrics': {'map': float(eval_map), 'ndcg': float(eval_ndcg),
+             'precision': float(eval_precision), 'recall': float(eval_recall)}
+}
+details['prediction_rows'] = len(all_predictions)
+Path('H:\\Career_AI_Portfolio\\projects\\01_recommendation_service\\reports\\baseline\\bpr_run_details.json').write_text(json.dumps(details, indent=2), encoding='utf-8')
+print(details)

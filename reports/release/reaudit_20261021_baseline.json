@@ -1,0 +1,640 @@
+{
+  "audit_timestamp_utc": "2026-10-21T04:35:29.798109+00:00",
+  "scope": "P1 code, upstream evidence, raw data, experiment mathematics, frozen artifact, environment and version; teaching/UI and full 40-item signoff delegated to root.",
+  "status": "PASS_SCOPED",
+  "audit_script_sha256": "91043f4d1354b02aee0c335073d51c09c679777fd6db3b2f2d6e3d9c627e329f",
+  "checks": [
+    {
+      "name": "Pinned upstream source checkout",
+      "passed": true,
+      "evidence": {
+        "commit": {
+          "command": [
+            "git",
+            "rev-parse",
+            "HEAD"
+          ],
+          "exit_code": 0,
+          "stdout": "aa8332189cd495be6ffaa7e1c8054f1c180b5ef3",
+          "stderr": ""
+        },
+        "diff": {
+          "command": [
+            "git",
+            "diff",
+            "--exit-code",
+            "aa8332189cd495be6ffaa7e1c8054f1c180b5ef3",
+            "--",
+            "recommenders",
+            "examples"
+          ],
+          "exit_code": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        "license_sha256": "dd2d5cac439162ce313a118a85993450fa5fc6e7cbbc3ba3ab04df18bc664e8b",
+        "copied_license_matches": true
+      }
+    },
+    {
+      "name": "sar original notebook execution evidence",
+      "passed": true,
+      "evidence": {
+        "source_sha256": "ec93b1fb81864b7ae9ce22a7ba46b53947f2c3cfe5fce982c31c4b7594569547",
+        "executed_sha256": "6ee4f8273b72365d023b3abb1083ab011166dfb24be775b24b428c575848f6be",
+        "original_code_cells": 15,
+        "executed_code_cells": 17,
+        "execution_counts": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17
+        ],
+        "unexpected_source_changes": [],
+        "error_count": 0,
+        "source_saved_metrics": {
+          "map": 0.24472205306261383,
+          "ndcg": 0.3795334514937595,
+          "precision": 0.3310710498409332,
+          "recall": 0.17683684715427114
+        },
+        "actual_output_metrics": {
+          "map": 0.24472205306261383,
+          "ndcg": 0.3795334514937595,
+          "precision": 0.3310710498409332,
+          "recall": 0.17683684715427114
+        },
+        "differences": {
+          "map": 0.0,
+          "ndcg": 0.0,
+          "precision": 0.0,
+          "recall": 0.0
+        },
+        "scope": "Re-read complete stored outputs and cell code; did not rerun notebooks or overwrite evidence."
+      }
+    },
+    {
+      "name": "bpr original notebook execution evidence",
+      "passed": true,
+      "evidence": {
+        "source_sha256": "354f97cf72d8a7d4c110fc024206a9f14c0a79a5c41e9531bd4a2f3f51c09abc",
+        "executed_sha256": "61fe92b807b79ef412f765640eaf0e6e6a9173459cbf895a99c5d8986631f327",
+        "original_code_cells": 11,
+        "executed_code_cells": 13,
+        "execution_counts": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13
+        ],
+        "unexpected_source_changes": [],
+        "error_count": 0,
+        "source_saved_metrics": {
+          "map": 0.180367644269974,
+          "ndcg": 0.3051899536864835,
+          "precision": 0.23903225806451614,
+          "recall": 0.20866044380376064
+        },
+        "actual_output_metrics": {
+          "map": 0.180367644269974,
+          "ndcg": 0.3051899536864835,
+          "precision": 0.23903225806451614,
+          "recall": 0.20866044380376064
+        },
+        "differences": {
+          "map": 0.0,
+          "ndcg": 0.0,
+          "precision": 0.0,
+          "recall": 0.0
+        },
+        "scope": "Re-read complete stored outputs and cell code; did not rerun notebooks or overwrite evidence."
+      }
+    },
+    {
+      "name": "ml-100k.zip immutable bytes",
+      "passed": true,
+      "evidence": {
+        "sha256": "50d2a982c66986937beb9ffb3aa76efe955bf3d5c6b761f4e3a7cd717c6a3229",
+        "bytes": 4924029,
+        "zip_crc_passed": true,
+        "members": {
+          "ml-100k/u.data": {
+            "sha256": "06416e597f82b7342361e41163890c81036900f418ad91315590814211dca490",
+            "archive_member_sha256": "06416e597f82b7342361e41163890c81036900f418ad91315590814211dca490",
+            "matches_record_and_archive": true
+          },
+          "ml-100k/u.item": {
+            "sha256": "553841ebc7de3a0fd0d6b62a204ea30c1e651aacfb2814c7a6584ac52f2c5701",
+            "archive_member_sha256": "553841ebc7de3a0fd0d6b62a204ea30c1e651aacfb2814c7a6584ac52f2c5701",
+            "matches_record_and_archive": true
+          }
+        }
+      }
+    },
+    {
+      "name": "ml-1m.zip immutable bytes",
+      "passed": true,
+      "evidence": {
+        "sha256": "a6898adb50b9ca05aa231689da44c217cb524e7ebd39d264c56e2832f2c54e20",
+        "bytes": 5917549,
+        "zip_crc_passed": true,
+        "members": {
+          "ml-1m/ratings.dat": {
+            "sha256": "506d64ca44484487c11dc2d9a28de5c54948213e6b96285e298afe28d6ea4e0f",
+            "archive_member_sha256": "506d64ca44484487c11dc2d9a28de5c54948213e6b96285e298afe28d6ea4e0f",
+            "matches_record_and_archive": true
+          },
+          "ml-1m/movies.dat": {
+            "sha256": "0140fc2356357c1a851d0f52e893a1e4d3696df632c4141cea8d5bc3d621f0b9",
+            "archive_member_sha256": "0140fc2356357c1a851d0f52e893a1e4d3696df632c4141cea8d5bc3d621f0b9",
+            "matches_record_and_archive": true
+          },
+          "ml-1m/README": {
+            "sha256": "2d5ddce86ccbd247207456165827b4b9ddf27282bca93807d4c763e28414f133",
+            "archive_member_sha256": "2d5ddce86ccbd247207456165827b4b9ddf27282bca93807d4c763e28414f133",
+            "matches_record_and_archive": true
+          }
+        }
+      }
+    },
+    {
+      "name": "Current model/config/reports match version snapshot",
+      "passed": true,
+      "evidence": [
+        {
+          "source": "artifacts/model.joblib",
+          "snapshot": "artifacts/releases/v0.1.0/model.joblib",
+          "current_sha256": "14874e07e00af8f4d9b4e94f51ebb0b368a6fdc5b98391697a4f6c846fb8b5ad",
+          "snapshot_sha256": "14874e07e00af8f4d9b4e94f51ebb0b368a6fdc5b98391697a4f6c846fb8b5ad",
+          "bytes": 3128919,
+          "matches": true
+        },
+        {
+          "source": "reports/experiment/summary.json",
+          "snapshot": "artifacts/releases/v0.1.0/summary.json",
+          "current_sha256": "4c71931c31319b8a50bc5778ef2ea826d9c813c20a282a34de2450cf8885c431",
+          "snapshot_sha256": "4c71931c31319b8a50bc5778ef2ea826d9c813c20a282a34de2450cf8885c431",
+          "bytes": 16744,
+          "matches": true
+        },
+        {
+          "source": "configs/temporal_1m.json",
+          "snapshot": "artifacts/releases/v0.1.0/temporal_1m.json",
+          "current_sha256": "30794fbd42d9b83ef8cfc3b9ab461f9dcf6718505c014b4616cf0900678e8852",
+          "snapshot_sha256": "30794fbd42d9b83ef8cfc3b9ab461f9dcf6718505c014b4616cf0900678e8852",
+          "bytes": 608,
+          "matches": true
+        },
+        {
+          "source": "reports/experiment/selected_config.json",
+          "snapshot": "artifacts/releases/v0.1.0/selected_config.json",
+          "current_sha256": "31226158b6e7c1e1af9224b53d56011a23976df8e2307c29488adca421fcec17",
+          "snapshot_sha256": "31226158b6e7c1e1af9224b53d56011a23976df8e2307c29488adca421fcec17",
+          "bytes": 1806,
+          "matches": true
+        }
+      ]
+    },
+    {
+      "name": "Main environment dependency lock",
+      "passed": true,
+      "evidence": {
+        "lock_sha256": "dae6ba9739ea9b3c1233b9e1d1bf1ae80f1757ec54be8b845b98f8be8b5db91b",
+        "locked_packages": 50,
+        "installed_packages": 51,
+        "version_mismatches": {},
+        "extra_installed_packages": {
+          "reclab-portfolio": "0.1.0"
+        },
+        "pip_check": {
+          "command": [
+            "H:\\Career_AI_Portfolio\\projects\\01_recommendation_service\\.venv\\Scripts\\python.exe",
+            "-m",
+            "pip",
+            "check"
+          ],
+          "exit_code": 0,
+          "stdout": "No broken requirements found.",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "Baseline environment dependency lock",
+      "passed": true,
+      "evidence": {
+        "lock_sha256": "58cb19f7837a65bc3a9233fc55b7b567e1c1333e54663d74fe0543a8a6fc0359",
+        "locked_packages": 76,
+        "installed_packages": 77,
+        "version_mismatches": {},
+        "extra_installed_packages": {
+          "pip": "26.2.2"
+        },
+        "pip_check": {
+          "command": [
+            "H:\\Career_AI_Portfolio\\projects\\01_recommendation_service\\baseline\\.venv\\Scripts\\python.exe",
+            "-m",
+            "pip",
+            "check"
+          ],
+          "exit_code": 0,
+          "stdout": "No broken requirements found.",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "Two stored full experiment runs agree",
+      "passed": true,
+      "evidence": {
+        "field_equality": {
+          "test": true,
+          "selection_sha256_before_test": true,
+          "paired_bootstrap_reranked_minus_bpr": true,
+          "config": true,
+          "split": true
+        },
+        "first_summary_sha256": "24996542f69f6fa7ae2de463a1663d0d71c9d92d308b7b7026108cc350acad16",
+        "current_summary_sha256": "4c71931c31319b8a50bc5778ef2ea826d9c813c20a282a34de2450cf8885c431",
+        "training_seconds": [
+          18.82756409997819,
+          19.1182091999799
+        ]
+      }
+    },
+    {
+      "name": "Independent temporal split from raw ratings",
+      "passed": true,
+      "evidence": {
+        "rows": 1000209,
+        "cutoffs": [
+          974862386,
+          976422042
+        ],
+        "partition_rows": [
+          700148,
+          150029,
+          150032
+        ],
+        "partition_hashes": {
+          "train": "193b6ce0e624cc4ab28db4ae16c39196f9bb1485aee0340b0a7ca879eb22e783",
+          "validation": "41643f3d3a8f99a062fe7a7f858d23fe840faad2207c102232c76b94af9dbf5b",
+          "test": "50bbde9ef9aba7369d9c8d93ee07164e84436e8cb442dd1603a0667988406bd4"
+        },
+        "strict_order": true
+      }
+    },
+    {
+      "name": "Model catalog/popularity/history derive only from training",
+      "passed": true,
+      "evidence": {
+        "users": 4865,
+        "catalog": 3444,
+        "head_items": 689,
+        "tail_items": 2755,
+        "selected_lambda": 0.2,
+        "protocol": {
+          "name": "global-temporal-70-15-15-frozen-train-v1",
+          "factors_cutoff_utc": "2000-11-22T03:06:26+00:00",
+          "serving_history_cutoff_utc": "2000-11-22T03:06:26+00:00",
+          "test_history_cutoff_utc": "2000-12-10T04:20:42+00:00",
+          "serving_mode": "historical training snapshot; no online history updates"
+        }
+      }
+    },
+    {
+      "name": "Independent four-model test metrics and target denominators",
+      "passed": true,
+      "evidence": {
+        "method": "Separate Python sorting, scalar math.log2 metrics and raw-data cohort construction; no project metric or ranker function imported.",
+        "mismatch_fields": [],
+        "absolute_tolerance": 1e-12,
+        "observed": {
+          "popularity": {
+            "denominators": {
+              "future_rows": 150032,
+              "future_users": 1512,
+              "positive_rows": 83152,
+              "positive_users": 1486,
+              "out_of_training_catalog_positive_rows": 151,
+              "already_seen_positive_rows": 0,
+              "eligible_positive_rows": 83001,
+              "eligible_positive_users": 1485,
+              "positive_users_without_eligible_target": 1
+            },
+            "warm": {
+              "users": 922,
+              "ndcg_at_10": 0.2078071444622405,
+              "recall_at_10": 0.05388879796341784,
+              "long_tail_exposure": 0.0,
+              "catalog_coverage": 0.04065040650406504,
+              "unique_recommended_items": 140
+            },
+            "cold": {
+              "users": 563,
+              "ndcg_at_10": 0.34806212114626295,
+              "recall_at_10": 0.06081902724624871,
+              "long_tail_exposure": 0.0,
+              "catalog_coverage": 0.025261324041811847,
+              "unique_recommended_items": 87
+            }
+          },
+          "sar": {
+            "denominators": {
+              "future_rows": 150032,
+              "future_users": 1512,
+              "positive_rows": 83152,
+              "positive_users": 1486,
+              "out_of_training_catalog_positive_rows": 151,
+              "already_seen_positive_rows": 0,
+              "eligible_positive_rows": 83001,
+              "eligible_positive_users": 1485,
+              "positive_users_without_eligible_target": 1
+            },
+            "warm": {
+              "users": 922,
+              "ndcg_at_10": 0.22408460744002634,
+              "recall_at_10": 0.06004891116909846,
+              "long_tail_exposure": 0.001193058568329718,
+              "catalog_coverage": 0.09117305458768873,
+              "unique_recommended_items": 314
+            },
+            "cold": {
+              "users": 563,
+              "ndcg_at_10": 0.34806212114626295,
+              "recall_at_10": 0.06081902724624871,
+              "long_tail_exposure": 0.0,
+              "catalog_coverage": 0.025261324041811847,
+              "unique_recommended_items": 87
+            }
+          },
+          "bpr": {
+            "denominators": {
+              "future_rows": 150032,
+              "future_users": 1512,
+              "positive_rows": 83152,
+              "positive_users": 1486,
+              "out_of_training_catalog_positive_rows": 151,
+              "already_seen_positive_rows": 0,
+              "eligible_positive_rows": 83001,
+              "eligible_positive_users": 1485,
+              "positive_users_without_eligible_target": 1
+            },
+            "warm": {
+              "users": 922,
+              "ndcg_at_10": 0.24412915807976887,
+              "recall_at_10": 0.071576495414015,
+              "long_tail_exposure": 0.01843817787418655,
+              "catalog_coverage": 0.20063879210220673,
+              "unique_recommended_items": 691
+            },
+            "cold": {
+              "users": 563,
+              "ndcg_at_10": 0.34806212114626295,
+              "recall_at_10": 0.06081902724624871,
+              "long_tail_exposure": 0.0,
+              "catalog_coverage": 0.025261324041811847,
+              "unique_recommended_items": 87
+            }
+          },
+          "bpr_reranked": {
+            "denominators": {
+              "future_rows": 150032,
+              "future_users": 1512,
+              "positive_rows": 83152,
+              "positive_users": 1486,
+              "out_of_training_catalog_positive_rows": 151,
+              "already_seen_positive_rows": 0,
+              "eligible_positive_rows": 83001,
+              "eligible_positive_users": 1485,
+              "positive_users_without_eligible_target": 1
+            },
+            "warm": {
+              "users": 922,
+              "ndcg_at_10": 0.2409352286166565,
+              "recall_at_10": 0.0711594391020478,
+              "long_tail_exposure": 0.0227765726681128,
+              "catalog_coverage": 0.20963995354239257,
+              "unique_recommended_items": 722
+            },
+            "cold": {
+              "users": 563,
+              "ndcg_at_10": 0.34806212114626295,
+              "recall_at_10": 0.06081902724624871,
+              "long_tail_exposure": 0.0,
+              "catalog_coverage": 0.025261324041811847,
+              "unique_recommended_items": 87
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Independent validation-only weight selection",
+      "passed": true,
+      "evidence": {
+        "selected_weight": 0.2,
+        "minimum_validation_ndcg": 0.17885387247881027,
+        "feasible_weights": [
+          0,
+          0.02,
+          0.05,
+          0.1,
+          0.2
+        ],
+        "observed_sweep": {
+          "0": {
+            "users": 473,
+            "ndcg_at_10": 0.18250395150899007,
+            "recall_at_10": 0.06796804356394452,
+            "long_tail_exposure": 0.01945031712473573,
+            "catalog_coverage": 0.16347270615563297,
+            "unique_recommended_items": 563
+          },
+          "0.02": {
+            "users": 473,
+            "ndcg_at_10": 0.1826108564124934,
+            "recall_at_10": 0.06797620636280498,
+            "long_tail_exposure": 0.01945031712473573,
+            "catalog_coverage": 0.16376306620209058,
+            "unique_recommended_items": 564
+          },
+          "0.05": {
+            "users": 473,
+            "ndcg_at_10": 0.18225458998416066,
+            "recall_at_10": 0.06972971810990133,
+            "long_tail_exposure": 0.02050739957716702,
+            "catalog_coverage": 0.16463414634146342,
+            "unique_recommended_items": 567
+          },
+          "0.1": {
+            "users": 473,
+            "ndcg_at_10": 0.18171333830592454,
+            "recall_at_10": 0.06910439971457734,
+            "long_tail_exposure": 0.021987315010570826,
+            "catalog_coverage": 0.16637630662020905,
+            "unique_recommended_items": 573
+          },
+          "0.2": {
+            "users": 473,
+            "ndcg_at_10": 0.18101783372167227,
+            "recall_at_10": 0.07017634884652707,
+            "long_tail_exposure": 0.026004228329809725,
+            "catalog_coverage": 0.1721835075493612,
+            "unique_recommended_items": 593
+          },
+          "0.35": {
+            "users": 473,
+            "ndcg_at_10": 0.1787690595576167,
+            "recall_at_10": 0.06979318999305571,
+            "long_tail_exposure": 0.03424947145877378,
+            "catalog_coverage": 0.18147502903600465,
+            "unique_recommended_items": 625
+          },
+          "0.5": {
+            "users": 473,
+            "ndcg_at_10": 0.171664974616787,
+            "recall_at_10": 0.06787899068016583,
+            "long_tail_exposure": 0.05412262156448203,
+            "catalog_coverage": 0.20150987224157957,
+            "unique_recommended_items": 694
+          }
+        }
+      }
+    },
+    {
+      "name": "Independent paired bootstrap from freshly recomputed per-user results",
+      "passed": true,
+      "evidence": {
+        "draws": 1000,
+        "seed": 42,
+        "users": 922,
+        "observed": {
+          "ndcg": {
+            "mean_difference": -0.003193929463112372,
+            "paired_95_percent_interval": [
+              -0.004971950933151104,
+              -0.001335219215370113
+            ]
+          },
+          "recall": {
+            "mean_difference": -0.0004170563119672034,
+            "paired_95_percent_interval": [
+              -0.0014117888329655437,
+              0.0005564637878636236
+            ]
+          },
+          "tail_exposure": {
+            "mean_difference": 0.004338394793926247,
+            "paired_95_percent_interval": [
+              0.003036876355748373,
+              0.005642624728850324
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "Frozen experiment and current model unchanged by audit",
+      "passed": true,
+      "evidence": {
+        "artifacts\\model.joblib": "14874e07e00af8f4d9b4e94f51ebb0b368a6fdc5b98391697a4f6c846fb8b5ad",
+        "reports\\experiment\\code_companion_coverage.json": "1aa9e539f7c1da29394ad791a09954d4554935126094680f53d2b300b0323140",
+        "reports\\experiment\\data_audit.json": "b35f9555cf57f7f9caf4f9b57ea80250250b81c2b45a9789eba26879f1de717c",
+        "reports\\experiment\\first_run_summary.json": "24996542f69f6fa7ae2de463a1663d0d71c9d92d308b7b7026108cc350acad16",
+        "reports\\experiment\\reproducibility_check.json": "f68538dd8578a602fe272c5e878faaf10c5b4edaa6813deae8079726a2a17ea0",
+        "reports\\experiment\\selected_config.json": "31226158b6e7c1e1af9224b53d56011a23976df8e2307c29488adca421fcec17",
+        "reports\\experiment\\summary.json": "4c71931c31319b8a50bc5778ef2ea826d9c813c20a282a34de2450cf8885c431",
+        "reports\\experiment\\test_companion_coverage.json": "5e4893aece2b853cc38ec0f44c9e3e90604ccffd5d26dba9bf0c31facf43477b",
+        "reports\\experiment\\validation_sweep.json": "ae4679704d90e9e3a518e7a5baa120bb2ab3ab32e6c437f58e6a591b9fe671cd"
+      }
+    }
+  ],
+  "findings": [],
+  "current_source_sha256": {
+    "src\\reclab\\__init__.py": "02f00ad5c1606c3e59c55e9877394629e916c8b0fc739d13bf5ec835ff2ca611",
+    "src\\reclab\\api.py": "e32ece532d74cde97c926db331bebb7dc8b1fb96b853dd084ac70300168eaebc",
+    "src\\reclab\\data.py": "34d5467050a4f53e3581ffb81691769344e8618c63e75a7023636d6efc238de3",
+    "src\\reclab\\metrics.py": "da9031301235121613a00c54f8e1ecc1a36ea56d26d001492a78847edcce24ca",
+    "src\\reclab\\models.py": "7f4c3a92d9ee0042254170df6b5c8090ae36855bca57625dac1f4a5e7e5dd599",
+    "src\\reclab\\rerank.py": "387db7e4219a879c030c668aabb00b62645b1177ee1260881fd009a6cf7a96c6",
+    "src\\reclab\\train.py": "9d6cd8afab073dfa6481ecce91ac2ca4869cfb579ad57dd33fd98e97d4a065c3",
+    "baseline\\run_upstream.py": "71c8feb0c3cf651f80e19897ab6f3e9436f795dc2b2e565549a64bfd1610d4d5",
+    "baseline\\check_bpr_math.py": "1ceb604c034a90dbb71e3bf364f1eb7046699f45f6cb93f2fa129031c4883f45",
+    "baseline\\setup.ps1": "7cda13b9026c813c8f10cfe9d0302135565430c2cb05307f907567b7acae1b44"
+  },
+  "git": {
+    "head": {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "stdout": "613df4c3ec3e59620066d507ef5e1eaa0fecc026",
+      "stderr": ""
+    },
+    "version": {
+      "command": [
+        "git",
+        "rev-parse",
+        "v0.1.0^{commit}"
+      ],
+      "exit_code": 0,
+      "stdout": "613df4c3ec3e59620066d507ef5e1eaa0fecc026",
+      "stderr": ""
+    },
+    "status": {
+      "command": [
+        "git",
+        "status",
+        "--short"
+      ],
+      "exit_code": 0,
+      "stdout": "?? reports/release/reaudit_20261021_baseline.py\n?? reports/release/reaudit_20261021_http.json",
+      "stderr": ""
+    },
+    "remote": {
+      "command": [
+        "git",
+        "ls-remote",
+        "origin",
+        "refs/heads/main",
+        "refs/tags/v0.1.0",
+        "refs/tags/v0.1.0^{}",
+        "refs/tags/baseline-v1"
+      ],
+      "exit_code": 0,
+      "stdout": "613df4c3ec3e59620066d507ef5e1eaa0fecc026\trefs/heads/main\ne1743f45c4ae8c0686c7b978e8427e83eb0c708c\trefs/tags/baseline-v1\n56d7c6dadc970795492321b2eeed5ec2f9da8fc9\trefs/tags/v0.1.0\n613df4c3ec3e59620066d507ef5e1eaa0fecc026\trefs/tags/v0.1.0^{}",
+      "stderr": ""
+    }
+  },
+  "limitations": [
+    "Stored upstream notebooks were inspected cell by cell; they were not retrained for this audit.",
+    "Frozen model metrics were independently recomputed; model fitting was not repeated.",
+    "Current pytest/HTTP reruns are performed and recorded separately by root.",
+    "No claim of production capacity, online causal uplift, multi-seed robustness, activated cloud CI or learner mastery."
+  ]
+}

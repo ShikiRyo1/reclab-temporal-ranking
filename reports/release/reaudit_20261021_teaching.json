@@ -1,0 +1,189 @@
+{
+  "status": "PASS_WITH_DISCLOSED_LIMITS",
+  "audited_utc": "2026-10-21T04:51:35.508965+00:00",
+  "teaching_gate": "teaching/qa/reaudit_20261021/document_acceptance.json",
+  "teaching_gate_sha256": "f602d169a43547ab9c7c84105c6e5be38a37b2aa58b664c61e4ec271e6f421e5",
+  "requirements": [
+    {
+      "id": "R10",
+      "status": "PASS",
+      "assessment": "42-page main + 35-page companion + 29-page additive DOCX/PDF; editable sources"
+    },
+    {
+      "id": "R11",
+      "status": "PASS_WITH_DISCLOSED_LIMITS",
+      "assessment": "Tool chapters 1–4 supply preconditions, commands, reasons and checkpoints; clean-machine install is documented, not executed"
+    },
+    {
+      "id": "R12",
+      "status": "PASS",
+      "assessment": "29 current project source/config files preserved; 20 code range maps freshly checked; 26 upstream cells + helper/cache additions mapped and explained"
+    },
+    {
+      "id": "R13",
+      "status": "PASS",
+      "assessment": "33 main and 55 companion native math nodes preserved; 3 new editable formulas, symbol definitions and examples; all new formula pages visually checked"
+    },
+    {
+      "id": "R14",
+      "status": "PASS",
+      "assessment": "Main algorithm definitions/derivations/failure cases plus supplement6 actual time/space complexity and scaling exercises"
+    },
+    {
+      "id": "R15",
+      "status": "PASS_WITH_DISCLOSED_LIMITS",
+      "assessment": "Supplement1–5 actual versions/paths, official install instructions, terminal, Git, Python, Docker, browser, Word and file use; no clean reinstall"
+    },
+    {
+      "id": "R16",
+      "status": "PASS",
+      "assessment": "Main19/22 and supplement4 concrete UI steps; original8 images plus new2 real replays with inputs/output checks"
+    },
+    {
+      "id": "R17",
+      "status": "PASS",
+      "assessment": "Copyable code with line explanation and searchable HTML; all supplement fenced-code lines exactly preserved in Word; screenshots optional"
+    },
+    {
+      "id": "R18",
+      "status": "PASS",
+      "assessment": "Chinese-first prose, English API/algorithm identifiers, main23 glossary and main21 calibrated interview text"
+    },
+    {
+      "id": "R19",
+      "status": "PASS",
+      "assessment": "Bilingual teaching workflow and Chinese humanizer review applied; configured refined terminology preference retained"
+    },
+    {
+      "id": "R20",
+      "status": "PASS",
+      "assessment": "Source mapping expanded to cover omitted direct upstream code; examples, reasoning, exercises and answers retained"
+    },
+    {
+      "id": "R21",
+      "status": "PASS",
+      "assessment": "42-page main,35-page code guide,29-page targeted supplement; code/searchable originals support selective reading"
+    },
+    {
+      "id": "R22",
+      "status": "PASS",
+      "assessment": "Original milestone teaching and screenshot records preserved; this audit adds synchronous capture_events and review/build history"
+    },
+    {
+      "id": "R23",
+      "status": "PASS_WITH_DISCLOSED_LIMITS",
+      "assessment": "Original provenance gap disclosed without fabrication; new replays include UTC intervals and UI/model versions; browser exact build unavailable"
+    },
+    {
+      "id": "R24",
+      "status": "PASS",
+      "assessment": "Independent re-audit found real omissions; fixes and regression evidence recorded; original v0.1.0 remains byte-identical"
+    },
+    {
+      "id": "R25",
+      "status": "PASS",
+      "assessment": "Public LaTeX sources, native Word math; old77 reviewed pages byte-checked and all29 new final pages visually reviewed"
+    },
+    {
+      "id": "R26",
+      "status": "PASS_WITH_DISCLOSED_LIMITS",
+      "assessment": "50 tests and17 real HTTP checks re-run by root; environment/CLI/source/hash/doc checks executed; fresh install and HTML interaction not claimed"
+    }
+  ],
+  "new_supplement_pages": 29,
+  "preserved_original_pages": 77,
+  "current_total_pages": 106,
+  "new_upstream_code_lines": 255,
+  "old_project_code_lines": 2185,
+  "findings_fixed": [
+    "Added executable environment and tool instructions with observed-versus-expected labels",
+    "Added implementation-specific complexity including full lexsort and iterative bootstrap",
+    "Added all 26 upstream code cells, four helper cells and two cache lines with original/executed location mapping",
+    "Enriched honest screenshot provenance and protected it from generator overwrites",
+    "Added two real replay screenshots with contemporaneous events",
+    "Fixed ready endpoint field description and SAR-versus-BPR helper-data semantics",
+    "Kept short code blocks together and bound cell headings to context"
+  ],
+  "limitations": [
+    "Original eight screenshots lack exact capture timestamps and IAB engine/tool build; unknown is retained, filesystem times are not capture times.",
+    "Two new screenshots have contemporaneous capture intervals and application commit/model version; browser build is not exposed by the documented API.",
+    "Fresh installation is official documented guidance, not a clean-machine installation performed in this audit. Existing environments and command contracts were checked.",
+    "HTML was statically checked only. A previous file-navigation safety denial was respected; no alternate browser route was attempted.",
+    "Isolated punctuation wrapping remains on supplement pages 25 and 29; content and code are readable and not clipped.",
+    "Source/chapter text of the old main manual differs only by one blank line; all nonempty text matches and the complete saved source matches native DOCX prose/math nodes."
+  ],
+  "original_document_hashes": [
+    {
+      "file": "个性化推荐与排序服务完整学习手册.docx",
+      "sha256": "81c08e69465bcb1cb0b5d76c989ad6d6486b127c8b63dc40184fb1bae8cdbdbe",
+      "size": 849366,
+      "current_sha256": "81c08e69465bcb1cb0b5d76c989ad6d6486b127c8b63dc40184fb1bae8cdbdbe",
+      "unchanged": true
+    },
+    {
+      "file": "个性化推荐与排序服务完整学习手册.pdf",
+      "sha256": "a422c2875d21b08795adfeaed7cfeb67e46d755a6c6710b9aa8573a184d3a27b",
+      "size": 1950482,
+      "current_sha256": "a422c2875d21b08795adfeaed7cfeb67e46d755a6c6710b9aa8573a184d3a27b",
+      "unchanged": true
+    },
+    {
+      "file": "代码逐行阅读指南.docx",
+      "sha256": "11dd54a4cb8fa4aa8d999fae1a425625fe46cb62f582e43c7a6594472cdbb6ff",
+      "size": 95679,
+      "current_sha256": "11dd54a4cb8fa4aa8d999fae1a425625fe46cb62f582e43c7a6594472cdbb6ff",
+      "unchanged": true
+    },
+    {
+      "file": "代码逐行阅读指南.pdf",
+      "sha256": "aa6dc1819955b52f8e70a4e8f3b57eea10f3ac61be6a21fecb6b213a4f9093bc",
+      "size": 1007071,
+      "current_sha256": "aa6dc1819955b52f8e70a4e8f3b57eea10f3ac61be6a21fecb6b213a4f9093bc",
+      "unchanged": true
+    }
+  ],
+  "new_artifacts": [
+    {
+      "file": "teaching/环境搭建与上游代码补充手册.docx",
+      "sha256": "7b8a8d13346178bbe7949543ec7ccbf8f9fdebdeadeacac387dfcf1d9bc6e5f6",
+      "bytes": 929319
+    },
+    {
+      "file": "teaching/环境搭建与上游代码补充手册.pdf",
+      "sha256": "51c8a97407ff5a4a253da8eecd357262b2c17450f4f1c5757c8d252e9f3bbb3e",
+      "bytes": 976222
+    },
+    {
+      "file": "teaching/环境搭建与上游代码补充手册_源稿.md",
+      "sha256": "615875e95ad75defa01c52e1558c925d76832a6e90413580d25559e50510bacb",
+      "bytes": 69489
+    },
+    {
+      "file": "teaching/supplement_equations.tex",
+      "sha256": "5d6c6e5b184d1752a6fd006558b867fe394dd8e0f63ab038747c5fd7282ceec2",
+      "bytes": 273
+    },
+    {
+      "file": "teaching/上游Notebook逐行伴读.html",
+      "sha256": "20fb2e1fcedcc4e0a665de8192ea575c9182763b2573fa06ddff604e4a189faa",
+      "bytes": 112631
+    },
+    {
+      "file": "teaching/notebook_sources/source_manifest.json",
+      "sha256": "8848356bfefd3bc9991bea2d66b1ed235c7b9d0bc98c82f76a14624d1e99fd09",
+      "bytes": 134358
+    },
+    {
+      "file": "teaching/screenshots/index.csv",
+      "sha256": "9aa7794e52d0f4cb12ddad4aacd91fa2008446cf689ba967e3e7194d77537a8a",
+      "bytes": 6229
+    },
+    {
+      "file": "teaching/screenshots/reaudit_20261021/capture_manifest.json",
+      "sha256": "0d9eb2b019435ca3d8ff4b49e138c26ffadff8ed666067bc63f4ff907c8b9b2b",
+      "bytes": 2024
+    }
+  ],
+  "no_p2_files_created": true,
+  "git_committed_by_teaching_agent": false
+}

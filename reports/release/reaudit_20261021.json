@@ -1,0 +1,409 @@
+{
+  "status": "PASS_LOCAL_DELIVERY_WITH_HISTORICAL_PROVENANCE_LIMITS",
+  "verified_at_utc": "2026-10-21T04:51:52.220251+00:00",
+  "release_version": "v0.1.1",
+  "scope": "Project 1 engineering and current teaching; portfolio size and personal mastery are not complete.",
+  "local_tests": {
+    "tests": 50,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "real_http_checks": 17,
+  "independent_checks": 15,
+  "runtime_and_model_unchanged_from_v0_1_0": true,
+  "model_sha256": "14874e07e00af8f4d9b4e94f51ebb0b368a6fdc5b98391697a4f6c846fb8b5ad",
+  "teaching_gate": {
+    "status": "PASS_WITH_DISCLOSED_LIMITS",
+    "ready_for_p1_release": true,
+    "audited_utc": "2026-10-21T04:51:35.508965+00:00",
+    "scope": "Teaching R10–R26 independent re-audit; no P2 work, no git commit",
+    "original_release": "v0.1.0",
+    "original_commit": "613df4c3ec3e59620066d507ef5e1eaa0fecc026",
+    "original_documents": [
+      {
+        "file": "个性化推荐与排序服务完整学习手册.docx",
+        "sha256": "81c08e69465bcb1cb0b5d76c989ad6d6486b127c8b63dc40184fb1bae8cdbdbe",
+        "size": 849366,
+        "current_sha256": "81c08e69465bcb1cb0b5d76c989ad6d6486b127c8b63dc40184fb1bae8cdbdbe",
+        "unchanged": true
+      },
+      {
+        "file": "个性化推荐与排序服务完整学习手册.pdf",
+        "sha256": "a422c2875d21b08795adfeaed7cfeb67e46d755a6c6710b9aa8573a184d3a27b",
+        "size": 1950482,
+        "current_sha256": "a422c2875d21b08795adfeaed7cfeb67e46d755a6c6710b9aa8573a184d3a27b",
+        "unchanged": true
+      },
+      {
+        "file": "代码逐行阅读指南.docx",
+        "sha256": "11dd54a4cb8fa4aa8d999fae1a425625fe46cb62f582e43c7a6594472cdbb6ff",
+        "size": 95679,
+        "current_sha256": "11dd54a4cb8fa4aa8d999fae1a425625fe46cb62f582e43c7a6594472cdbb6ff",
+        "unchanged": true
+      },
+      {
+        "file": "代码逐行阅读指南.pdf",
+        "sha256": "aa6dc1819955b52f8e70a4e8f3b57eea10f3ac61be6a21fecb6b213a4f9093bc",
+        "size": 1007071,
+        "current_sha256": "aa6dc1819955b52f8e70a4e8f3b57eea10f3ac61be6a21fecb6b213a4f9093bc",
+        "unchanged": true
+      }
+    ],
+    "original_page_hashes_rechecked": 77,
+    "old_source_alignment": "source_alignment.json",
+    "supplement": {
+      "pages": 29,
+      "visual_reviewed_pages": 29,
+      "native_equations": 3,
+      "prediction_hat_accents": 2,
+      "real_replay_images": 2,
+      "code_lines_exact_in_docx": 286,
+      "page_reviews": [
+        {
+          "page": 1,
+          "sha256": "47cb9237c36bd3790067082f0dceb1e9d4361f833e1436b22cd7f7d725a81703",
+          "reviewer": "root",
+          "status": "PASS",
+          "evidence": "Root actually viewed v1 pages 1–9 and confirmed final hash identity in task messages"
+        },
+        {
+          "page": 2,
+          "sha256": "c79ff05757062477ad65c955ff15e650608b0978a4b07630a911e43ff6866954",
+          "reviewer": "root",
+          "status": "PASS",
+          "evidence": "Root actually viewed v1 pages 1–9 and confirmed final hash identity in task messages"
+        },
+        {
+          "page": 3,
+          "sha256": "0563625b49bcac92d5870d5f313974d007566ec124549491100eb12ac2bb0794",
+          "reviewer": "root",
+          "status": "PASS",
+          "evidence": "Root actually viewed v1 pages 1–9 and confirmed final hash identity in task messages"
+        },
+        {
+          "page": 4,
+          "sha256": "e1b0635fa8a1f7401e7c86c887ed715c27d995ed2fb7417f43a01fe88bc7c250",
+          "reviewer": "root",
+          "status": "PASS",
+          "evidence": "Root actually viewed v1 pages 1–9 and confirmed final hash identity in task messages"
+        },
+        {
+          "page": 5,
+          "sha256": "063310349ff427d675faa252b2559f74921946c9c9fce8138cc64dc5f9adc4e3",
+          "reviewer": "root",
+          "status": "PASS",
+          "evidence": "Root actually viewed v1 pages 1–9 and confirmed final hash identity in task messages"
+        },
+        {
+          "page": 6,
+          "sha256": "b5ddc1ec52a851bb1b665285dffa0a4fad314ae20496cb105dd392d63be28c29",
+          "reviewer": "root",
+          "status": "PASS",
+          "evidence": "Root actually viewed v1 pages 1–9 and confirmed final hash identity in task messages"
+        },
+        {
+          "page": 7,
+          "sha256": "d1bce9832c2225b1f5c80bf779969c9195add7dcc32030fc323a207ba4cbac6e",
+          "reviewer": "root",
+          "status": "PASS",
+          "evidence": "Root actually viewed v1 pages 1–9 and confirmed final hash identity in task messages"
+        },
+        {
+          "page": 8,
+          "sha256": "598faf0c6004990d9fb109daa9a55947c9830b92e8f693d48a60d7f96d0ec5bb",
+          "reviewer": "root",
+          "status": "PASS",
+          "evidence": "Root actually viewed v1 pages 1–9 and confirmed final hash identity in task messages"
+        },
+        {
+          "page": 9,
+          "sha256": "4c5075919693810f39031649d08897094e524a1602c2e6b49ebed9fab9373e7a",
+          "reviewer": "root",
+          "status": "PASS",
+          "evidence": "Root actually viewed v1 pages 1–9 and confirmed final hash identity in task messages"
+        },
+        {
+          "page": 10,
+          "sha256": "4f849a8b34a8621a1d243594a98839322510f5a5357b2fbd915695fe5008e295",
+          "reviewer": "p1_teaching",
+          "status": "PASS",
+          "evidence": "Viewed 10–12 in v1 (same bytes); viewed release 13–14 after code-block pagination fix"
+        },
+        {
+          "page": 11,
+          "sha256": "d0b1a6efe55d0ee814d64121b9cea9631aaaefafe3dc1f7de76cb1e15f2fc5f7",
+          "reviewer": "p1_teaching",
+          "status": "PASS",
+          "evidence": "Viewed 10–12 in v1 (same bytes); viewed release 13–14 after code-block pagination fix"
+        },
+        {
+          "page": 12,
+          "sha256": "41017dc9186c17765cfbec9236e8d5965f5c50e879ea3949efa3f1bcd7a94621",
+          "reviewer": "p1_teaching",
+          "status": "PASS",
+          "evidence": "Viewed 10–12 in v1 (same bytes); viewed release 13–14 after code-block pagination fix"
+        },
+        {
+          "page": 13,
+          "sha256": "a4a006115650370e2d577fe6d9185fadf911a422b887cfcacbdebd0c80e5714a",
+          "reviewer": "p1_teaching",
+          "status": "PASS",
+          "evidence": "Viewed 10–12 in v1 (same bytes); viewed release 13–14 after code-block pagination fix"
+        },
+        {
+          "page": 14,
+          "sha256": "a1c8a67bf20fe1d5b596f53802dc420b6c81343e6a9ced1240732952a689b12f",
+          "reviewer": "p1_teaching",
+          "status": "PASS",
+          "evidence": "Viewed 10–12 in v1 (same bytes); viewed release 13–14 after code-block pagination fix"
+        },
+        {
+          "page": 15,
+          "sha256": "d4a95af258aa58685b264ee5952784e9be4e56946a2acc153223a49e1f4f4c89",
+          "reviewer": "p1_baseline",
+          "status": "PASS",
+          "evidence": "supplement_review_baseline_final.json"
+        },
+        {
+          "page": 16,
+          "sha256": "c6c4c4b6dce635916b0c7dca6a8f5bb2e4157916fa226fa4a1af7887355b030c",
+          "reviewer": "p1_baseline",
+          "status": "PASS",
+          "evidence": "supplement_review_baseline_final.json"
+        },
+        {
+          "page": 17,
+          "sha256": "c90e3bb454a16b0a24961c26c514454f51b77c5fc3fbd361866b54f122dadebb",
+          "reviewer": "p1_baseline",
+          "status": "PASS",
+          "evidence": "supplement_review_baseline_final.json"
+        },
+        {
+          "page": 18,
+          "sha256": "20a8e952bd172965259fa7a08d911d153347c6f22c45b5db313f1a0717e91b8f",
+          "reviewer": "p1_baseline",
+          "status": "PASS",
+          "evidence": "supplement_review_baseline_final.json"
+        },
+        {
+          "page": 19,
+          "sha256": "402a7da49054dcde97e3e93064553b5fdd10e58683f3ef173c92e850465a106a",
+          "reviewer": "p1_baseline",
+          "status": "PASS",
+          "evidence": "supplement_review_baseline_final.json"
+        },
+        {
+          "page": 20,
+          "sha256": "eb263609aceebc0fb5ecda45d4fcd46221694256fd53a8d2814da3c9222c2a4b",
+          "reviewer": "p1_baseline",
+          "status": "PASS",
+          "evidence": "supplement_review_baseline_final.json"
+        },
+        {
+          "page": 21,
+          "sha256": "8baa492c91245529f05bdc16c928eafba2636dcb9274b80012230517009ea86d",
+          "reviewer": "p1_baseline",
+          "status": "PASS",
+          "evidence": "supplement_review_baseline_final.json"
+        },
+        {
+          "page": 22,
+          "sha256": "d20cb1d634a7309c2eec85777cfb915e16c1def6dfc6e08cf6b1ef2e639b5f4f",
+          "reviewer": "p1_modeling",
+          "status": "PASS",
+          "evidence": "supplement_review_modeling.json final_review"
+        },
+        {
+          "page": 23,
+          "sha256": "af1b0635f8b764a864ce03bb8b85b4a2ab112f9c83f8f2c2ed367002ea3302f7",
+          "reviewer": "p1_modeling",
+          "status": "PASS",
+          "evidence": "supplement_review_modeling.json final_review"
+        },
+        {
+          "page": 24,
+          "sha256": "00738732a6960ef35595cb1de983eb39d668ce0558568505734781b6471ab72e",
+          "reviewer": "p1_modeling",
+          "status": "PASS",
+          "evidence": "supplement_review_modeling.json final_review"
+        },
+        {
+          "page": 25,
+          "sha256": "218979539bca7e6033a2a7686c635df2aa2a2f32467322b37c0af4b34b6fdf9d",
+          "reviewer": "p1_modeling",
+          "status": "PASS",
+          "evidence": "supplement_review_modeling.json final_review"
+        },
+        {
+          "page": 26,
+          "sha256": "d47082afc0f4e95d20db8dd30a9004476911d537c45a9ddda9b0dffbe774d46a",
+          "reviewer": "p1_modeling",
+          "status": "PASS",
+          "evidence": "supplement_review_modeling.json final_review"
+        },
+        {
+          "page": 27,
+          "sha256": "4d26a4a24c4a14bdd940127b2549544c2f9dd02d4558b9a707f1985d22c77801",
+          "reviewer": "p1_modeling",
+          "status": "PASS",
+          "evidence": "supplement_review_modeling.json final_review"
+        },
+        {
+          "page": 28,
+          "sha256": "25d66c089318919c7f1b70afb56359db4b532c91c0800b859d3acea5834cbfbc",
+          "reviewer": "p1_modeling",
+          "status": "PASS",
+          "evidence": "supplement_review_modeling.json final_review"
+        },
+        {
+          "page": 29,
+          "sha256": "91dd9086006438f4ee7a7f71c65374670646c7fb2883649f936ede4c5c52ce65",
+          "reviewer": "p1_modeling",
+          "status": "PASS",
+          "evidence": "supplement_review_modeling.json final_review"
+        }
+      ]
+    },
+    "source_coverage": {
+      "existing_files": 29,
+      "existing_lines": 2185,
+      "current_hashes_match": true,
+      "fresh_range_check_files": 20,
+      "fresh_range_check": "fresh_line_coverage.json",
+      "configuration_explanations": "chapters_code_service.md config sections plus chapters_code_baseline.md dependency sections",
+      "upstream_original_cells": 26,
+      "upstream_original_lines": 206,
+      "helper_cells": 4,
+      "helper_lines": 47,
+      "cache_inserted_lines": 2,
+      "new_total_code_lines": 255,
+      "notebook_structural_review": "../notebook_companion_coverage.json"
+    },
+    "screenshots": {
+      "historical_count": 8,
+      "historical_bytes_unchanged": true,
+      "new_contemporaneous_count": 2,
+      "metadata_preservation_regression": "metadata_regeneration_test.json"
+    },
+    "runtime_verification": {
+      "local_tests": 50,
+      "test_failures": 0,
+      "http_checks": 17,
+      "http_all_passed": true,
+      "fresh_install_performed": false
+    },
+    "html": "PASS_STATIC_ONLY",
+    "artifacts": [
+      {
+        "file": "teaching/环境搭建与上游代码补充手册.docx",
+        "sha256": "7b8a8d13346178bbe7949543ec7ccbf8f9fdebdeadeacac387dfcf1d9bc6e5f6",
+        "bytes": 929319
+      },
+      {
+        "file": "teaching/环境搭建与上游代码补充手册.pdf",
+        "sha256": "51c8a97407ff5a4a253da8eecd357262b2c17450f4f1c5757c8d252e9f3bbb3e",
+        "bytes": 976222
+      },
+      {
+        "file": "teaching/环境搭建与上游代码补充手册_源稿.md",
+        "sha256": "615875e95ad75defa01c52e1558c925d76832a6e90413580d25559e50510bacb",
+        "bytes": 69489
+      },
+      {
+        "file": "teaching/supplement_equations.tex",
+        "sha256": "5d6c6e5b184d1752a6fd006558b867fe394dd8e0f63ab038747c5fd7282ceec2",
+        "bytes": 273
+      },
+      {
+        "file": "teaching/上游Notebook逐行伴读.html",
+        "sha256": "20fb2e1fcedcc4e0a665de8192ea575c9182763b2573fa06ddff604e4a189faa",
+        "bytes": 112631
+      },
+      {
+        "file": "teaching/notebook_sources/source_manifest.json",
+        "sha256": "8848356bfefd3bc9991bea2d66b1ed235c7b9d0bc98c82f76a14624d1e99fd09",
+        "bytes": 134358
+      },
+      {
+        "file": "teaching/screenshots/index.csv",
+        "sha256": "9aa7794e52d0f4cb12ddad4aacd91fa2008446cf689ba967e3e7194d77537a8a",
+        "bytes": 6229
+      },
+      {
+        "file": "teaching/screenshots/reaudit_20261021/capture_manifest.json",
+        "sha256": "0d9eb2b019435ca3d8ff4b49e138c26ffadff8ed666067bc63f4ff907c8b9b2b",
+        "bytes": 2024
+      }
+    ],
+    "limitations": [
+      "Original eight screenshots lack exact capture timestamps and IAB engine/tool build; unknown is retained, filesystem times are not capture times.",
+      "Two new screenshots have contemporaneous capture intervals and application commit/model version; browser build is not exposed by the documented API.",
+      "Fresh installation is official documented guidance, not a clean-machine installation performed in this audit. Existing environments and command contracts were checked.",
+      "HTML was statically checked only. A previous file-navigation safety denial was respected; no alternate browser route was attempted.",
+      "Isolated punctuation wrapping remains on supplement pages 25 and 29; content and code are readable and not clipped.",
+      "Source/chapter text of the old main manual differs only by one blank line; all nonempty text matches and the complete saved source matches native DOCX prose/math nodes."
+    ],
+    "repairs": [
+      "Added executable environment and tool instructions with observed-versus-expected labels",
+      "Added implementation-specific complexity including full lexsort and iterative bootstrap",
+      "Added all 26 upstream code cells, four helper cells and two cache lines with original/executed location mapping",
+      "Enriched honest screenshot provenance and protected it from generator overwrites",
+      "Added two real replay screenshots with contemporaneous events",
+      "Fixed ready endpoint field description and SAR-versus-BPR helper-data semantics",
+      "Kept short code blocks together and bound cell headings to context"
+    ]
+  },
+  "upstream_source_coverage": {
+    "original_code_cells": 26,
+    "original_code_lines_including_blank_and_comment": 206,
+    "helper_code_cells": 4,
+    "helper_code_lines": 47,
+    "cache_parameter_lines": 2,
+    "unexplained_lines": 0
+  },
+  "repairs": {
+    "R12": "PASS",
+    "R14": "PASS",
+    "R15": "PASS_CURRENT_ENVIRONMENT_AND_SOURCED_INSTALL_GUIDANCE",
+    "R23": "PASS_WITH_LIMITS_HISTORICAL_CAPTURE_METADATA_UNKNOWN",
+    "R36": "PASS_WITH_LIMITS_HISTORICAL_TRANSFER_TIMES_UNKNOWN"
+  },
+  "limitations": [
+    "Historical capture times/tool builds and transfer times were not recorded and remain unknown; new timed UI replays are separate events.",
+    "First-time install instructions are sourced; a clean Windows reinstall was not performed.",
+    "Existing local load and failure recovery evidence was reviewed, not newly executed in this audit.",
+    "No cloud deployment, active GitHub Actions, online business uplift, or verified independent learner mastery.",
+    "HTML files passed static checks; browser interaction was not verified because file navigation was denied.",
+    "Project 2 and optional Project 3 are separate work; Project 1 does not satisfy the two-project count."
+  ],
+  "evidence_files": [
+    {
+      "path": "reports/release/reaudit_20261021_baseline.json",
+      "bytes": 23698,
+      "sha256": "70fb7750a84b295e0be3107e41a3020948ba2096e5d1fda03340e3ee01b15fa0"
+    },
+    {
+      "path": "reports/release/reaudit_20261021_http.json",
+      "bytes": 760,
+      "sha256": "2973fdaee8cb534b439013618ae5723e3f5d2da71effa7bdf49ddeb9edbd80e0"
+    },
+    {
+      "path": "reports/release/reaudit_20261021_tests.xml",
+      "bytes": 5644,
+      "sha256": "964a4ce02cdf633f91231b2c189069991900569302adb4fc5c004c23b740a0b3"
+    },
+    {
+      "path": "teaching/qa/reaudit_20261021/document_acceptance.json",
+      "bytes": 13987,
+      "sha256": "f602d169a43547ab9c7c84105c6e5be38a37b2aa58b664c61e4ec271e6f421e5"
+    },
+    {
+      "path": "teaching/notebook_sources/source_manifest.json",
+      "bytes": 134358,
+      "sha256": "8848356bfefd3bc9991bea2d66b1ed235c7b9d0bc98c82f76a14624d1e99fd09"
+    }
+  ],
+  "hash_scope": "Exact local file bytes at verification. Git applies .gitattributes text newline normalization; clone bytes can differ while the source text is unchanged.",
+  "whitespace_review": "12 trailing-space findings are four original upstream source lines retained in three teaching copies; all other staged files pass git diff --check. Original source is deliberately preserved."
+}

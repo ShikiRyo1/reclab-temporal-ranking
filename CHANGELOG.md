@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.1 — 2026-10-21
+
+- Re-audited the 40 portfolio requirements and found five documentation/provenance gaps that the earlier all-pass wording missed. Added first-time setup guidance, implementation-specific complexity analysis and a direct line guide for the original upstream notebook cells.
+- Preserved the original manuals and experiments. Re-ran 50 local tests and 17 real HTTP checks, and independently recomputed the temporal cohorts, four rankers, validation selection and paired bootstrap from raw data and frozen model arrays.
+- Extended screenshot provenance and transfer records, explicitly retaining unknown historical capture/transfer times. Added contemporaneously timed browser replays. The companion builder now preserves extended screenshot metadata and refuses silent image-hash changes.
+- This is a documentation and audit patch. Training code, trained artifact and the running 0.1.0 Docker image are unchanged; no additional training, cloud deployment or online uplift is claimed.
+
 ## 0.1.0 — 2026-10-21
 
 - Reproduced the pinned upstream SAR and BPR notebooks on MovieLens 100K; all eight saved ranking metrics matched. Preserved upstream code and attribution.

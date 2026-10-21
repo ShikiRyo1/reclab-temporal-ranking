@@ -1,7 +1,7 @@
 {
-  "status": "PASS_LOCAL_DELIVERY",
-  "verified_at_utc": "2026-10-21T04:17:50.118916+00:00",
-  "release_version": "v0.1.0",
+  "status": "PASS_LOCAL_DELIVERY_WITH_HISTORICAL_PROVENANCE_LIMITS",
+  "verified_at_utc": "2026-10-21T04:51:52.220251+00:00",
+  "release_version": "v0.1.1",
   "upstream_ranking_metrics_exactly_matched": 8,
   "upstream_original_code_cells_executed": 26,
   "repeated_temporal_evaluation_exact": true,
@@ -44,7 +44,7 @@
     "all_77_rendered_pages_reviewed": true,
     "source_files": 29,
     "source_lines": 2185,
-    "real_screenshots": 8,
+    "real_screenshots": 10,
     "editable_word_equations_main": 33,
     "editable_word_equations_companion": 55,
     "document_artifacts": [
@@ -90,15 +90,34 @@
       },
       {
         "file": "screenshots/index.csv",
-        "bytes": 1532,
-        "sha256": "0c9b954d9f4466c4651a50c77a40414a07287d0ebb12afdcee5ccc18680e2a43"
+        "bytes": 6229,
+        "sha256": "9aa7794e52d0f4cb12ddad4aacd91fa2008446cf689ba967e3e7194d77537a8a"
+      },
+      {
+        "file": "环境搭建与上游代码补充手册.docx",
+        "bytes": 929319,
+        "sha256": "7b8a8d13346178bbe7949543ec7ccbf8f9fdebdeadeacac387dfcf1d9bc6e5f6"
+      },
+      {
+        "file": "环境搭建与上游代码补充手册.pdf",
+        "bytes": 976222,
+        "sha256": "51c8a97407ff5a4a253da8eecd357262b2c17450f4f1c5757c8d252e9f3bbb3e"
+      },
+      {
+        "file": "环境搭建与上游代码补充手册_源稿.md",
+        "bytes": 69489,
+        "sha256": "615875e95ad75defa01c52e1558c925d76832a6e90413580d25559e50510bacb"
       }
     ],
     "html_static": "PASS_STATIC_ONLY",
-    "html_interaction_verified": false
+    "html_interaction_verified": false,
+    "supplement_pages": 29,
+    "supplement_visual_gate": "teaching/qa/reaudit_20261021/document_acceptance.json",
+    "total_reviewed_document_pages": 106,
+    "upstream_code_lines_added": 255
   },
   "model_snapshot": "reports/release/local_model_snapshot.json",
-  "version_resolution": "Resolve Git tag v0.1.0 for the source revision; final remote verification recorded in the local portfolio state.",
+  "version_resolution": "Resolve v0.1.1 for documentation/audit; trained model and runtime source remain v0.1.0. Remote verification is in local portfolio_state.json.",
   "scope_limits": [
     "Local Docker deployment only; no public cloud service",
     "GitHub Actions inactive: OAuth workflow scope unavailable",
@@ -106,6 +125,9 @@
     "No online A/B trial or measured revenue impact",
     "Single training seed and chronological split; bootstrap covers user resampling only",
     "User independent mastery exercises not verified",
-    "Project 2 and Project 3 not implemented"
-  ]
+    "Project 2 and Project 3 not implemented",
+    "Historical capture times/tool builds and transfer times were not recorded and remain unknown; new timed UI replays are separate events.",
+    "First-time install instructions are sourced; a clean Windows reinstall was not performed."
+  ],
+  "reaudit": "reports/release/reaudit_20261021.json"
 }

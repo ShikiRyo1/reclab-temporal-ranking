@@ -1,0 +1,210 @@
+# Copyright (c) Recommenders contributors. MIT License; commit aa8332189cd495be6ffaa7e1c8054f1c180b5ef3.
+# Reading export only: use the Notebook kernel for IPython magic commands.
+
+# SAR original cell 4; executed cell 5
+
+import sys
+import logging
+import numpy as np
+import pandas as pd
+from sklearn.preprocessing import minmax_scale
+
+from recommenders.utils.timer import Timer
+from recommenders.datasets import movielens
+from recommenders.utils.python_utils import binarize
+from recommenders.datasets.python_splitters import python_stratified_split
+from recommenders.models.sar import SAR
+from recommenders.evaluation.python_evaluation import (
+    map_at_k,
+    ndcg_at_k,
+    precision_at_k,
+    recall_at_k,
+    rmse,
+    mae,
+    logloss,
+    rsquared,
+    exp_var
+)
+from recommenders.utils.notebook_utils import store_metadata
+
+%load_ext autoreload
+%autoreload 2
+
+print(f"System version: {sys.version}")
+print(f"NumPy version: {np.__version__}")
+print(f"Pandas version: {pd.__version__}")
+
+# SAR original cell 6; executed cell 7
+
+# top k items to recommend
+TOP_K = 10
+
+# Select MovieLens data size: 100k, 1m, 10m, or 20m
+MOVIELENS_DATA_SIZE = "100k"
+
+# SAR original cell 8; executed cell 9
+
+data = movielens.load_pandas_df(
+    size=MOVIELENS_DATA_SIZE
+)
+
+# Convert the float precision to 32-bit in order to reduce memory consumption 
+data["rating"] = data["rating"].astype(np.float32)
+
+data.head()
+
+# SAR original cell 10; executed cell 11
+
+train, test = python_stratified_split(data, ratio=0.75, col_user="userID", col_item="itemID", seed=42)
+
+# SAR original cell 11; executed cell 12
+
+print("""
+Train:
+Total Ratings: {train_total}
+Unique Users: {train_users}
+Unique Items: {train_items}
+
+Test:
+Total Ratings: {test_total}
+Unique Users: {test_users}
+Unique Items: {test_items}
+""".format(
+    train_total=len(train),
+    train_users=len(train['userID'].unique()),
+    train_items=len(train['itemID'].unique()),
+    test_total=len(test),
+    test_users=len(test['userID'].unique()),
+    test_items=len(test['itemID'].unique()),
+))
+
+# SAR original cell 14; executed cell 15
+
+logging.basicConfig(level=logging.DEBUG, 
+                    format='%(asctime)s %(levelname)-8s %(message)s')
+
+model = SAR(
+    col_user="userID",
+    col_item="itemID",
+    col_rating="rating",
+    col_timestamp="timestamp",
+    similarity_type="jaccard", 
+    time_decay_coefficient=30, 
+    timedecay_formula=True,
+    normalize=True
+)
+
+# SAR original cell 16; executed cell 17
+
+with Timer() as train_time:
+    model.fit(train)
+
+print("Took {} seconds for training.".format(train_time.interval))
+
+# SAR original cell 17; executed cell 18
+
+with Timer() as test_time:
+    top_k = model.recommend_k_items(test, top_k=TOP_K, remove_seen=True)
+
+print("Took {} seconds for prediction.".format(test_time.interval))
+
+# SAR original cell 18; executed cell 19
+
+top_k.head()
+
+# SAR original cell 20; executed cell 21
+
+# Ranking metrics
+eval_map = map_at_k(test, top_k, col_user="userID", col_item="itemID", col_rating="rating", k=TOP_K)
+eval_ndcg = ndcg_at_k(test, top_k, col_user="userID", col_item="itemID", col_rating="rating", k=TOP_K)
+eval_precision = precision_at_k(test, top_k, col_user="userID", col_item="itemID", col_rating="rating", k=TOP_K)
+eval_recall = recall_at_k(test, top_k, col_user="userID", col_item="itemID", col_rating="rating", k=TOP_K)
+
+# SAR original cell 21; executed cell 22
+
+# Rating metrics
+eval_rmse = rmse(test, top_k, col_user="userID", col_item="itemID", col_rating="rating")
+eval_mae = mae(test, top_k, col_user="userID", col_item="itemID", col_rating="rating")
+eval_rsquared = rsquared(test, top_k, col_user="userID", col_item="itemID", col_rating="rating")
+eval_exp_var = exp_var(test, top_k, col_user="userID", col_item="itemID", col_rating="rating")
+
+# SAR original cell 22; executed cell 23
+
+positivity_threshold = 2
+test_bin = test.copy()
+test_bin["rating"] = binarize(test_bin["rating"], positivity_threshold)
+
+top_k_prob = top_k.copy()
+top_k_prob["prediction"] = minmax_scale(top_k_prob["prediction"].astype(float))
+
+eval_logloss = logloss(
+    test_bin, top_k_prob, col_user="userID", col_item="itemID", col_rating="rating"
+)
+
+# SAR original cell 23; executed cell 24
+
+print("Model:\t",
+      "Top K:\t%d" % TOP_K,
+      "MAP@K:\t%f" % eval_map,
+      "NDCG@K:\t%f" % eval_ndcg,
+      "Precision@K:\t%f" % eval_precision,
+      "Recall@K:\t%f" % eval_recall,
+      "RMSE:\t%f" % eval_rmse,
+      "MAE:\t%f" % eval_mae,
+      "R2:\t%f" % eval_rsquared,
+      "Exp var:\t%f" % eval_exp_var,
+      "Logloss:\t%f" % eval_logloss,
+      sep='\n')
+
+# SAR original cell 24; executed cell 25
+
+# Now let's look at the results for a specific user
+user_id = 54
+
+ground_truth = test[test["userID"] == user_id].sort_values(
+    by="rating", ascending=False
+)[:TOP_K]
+prediction = model.recommend_k_items(
+    pd.DataFrame(dict(userID=[user_id])), remove_seen=True
+)
+df = pd.merge(ground_truth, prediction, on=["userID", "itemID"], how="left")
+df.head(10)
+
+# SAR original cell 26; executed cell 27
+
+# Record results for tests - ignore this cell
+store_metadata("map", eval_map)
+store_metadata("ndcg", eval_ndcg)
+store_metadata("precision", eval_precision)
+store_metadata("recall", eval_recall)
+store_metadata("train_time", train_time.interval)
+store_metadata("test_time", test_time.interval)
+
+# Local helper preamble; executed cell 1
+import sys
+sys.path.insert(0, 'H:\\Career_AI_Portfolio\\external\\recommenders')
+print('Pinned source commit: aa8332189cd495be6ffaa7e1c8054f1c180b5ef3')
+
+# Local helper capture; executed cell 28
+import json, hashlib
+from pathlib import Path
+def frame_hash(frame):
+    return hashlib.sha256(frame.to_csv(index=False, lineterminator='\n').encode()).hexdigest()
+details = {
+ 'train_rows': len(train), 'test_rows': len(test),
+ 'train_users': int(train.userID.nunique()), 'test_users': int(test.userID.nunique()),
+ 'train_items': int(train.itemID.nunique()), 'test_items': int(test.itemID.nunique()),
+ 'common_train_test_users': len(set(train.userID) & set(test.userID)),
+ 'test_only_users': len(set(test.userID) - set(train.userID)),
+ 'test_rows_item_absent_from_train': int((~test.itemID.isin(train.itemID)).sum()),
+ 'train_sha256': frame_hash(train), 'test_sha256': frame_hash(test),
+ 'data_rows': len(data), 'seed': 42,
+ 'metrics': {'map': float(eval_map), 'ndcg': float(eval_ndcg),
+             'precision': float(eval_precision), 'recall': float(eval_recall)}
+}
+details['rating_metrics'] = {key: float(value) for key,value in {'rmse':eval_rmse,'mae':eval_mae,'r2':eval_rsquared,'explained_variance':eval_exp_var,'logloss':eval_logloss}.items()}
+details['train_seconds'] = train_time.interval
+details['prediction_seconds'] = test_time.interval
+details['prediction_rows'] = len(top_k)
+Path('H:\\Career_AI_Portfolio\\projects\\01_recommendation_service\\reports\\baseline\\sar_run_details.json').write_text(json.dumps(details, indent=2), encoding='utf-8')
+print(details)
