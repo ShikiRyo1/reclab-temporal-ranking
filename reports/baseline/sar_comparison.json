@@ -1,0 +1,42 @@
+{
+  "model": "sar",
+  "status": "ALL_ORIGINAL_CELLS_EXECUTED",
+  "upstream_commit": "aa8332189cd495be6ffaa7e1c8054f1c180b5ef3",
+  "upstream_file": "examples/00_quick_start/sar_movielens.ipynb",
+  "upstream_notebook_sha256": "ec93b1fb81864b7ae9ce22a7ba46b53947f2c3cfe5fce982c31c4b7594569547",
+  "elapsed_seconds": 12.763662300014403,
+  "original_code_cells": 15,
+  "executed_code_cells": 17,
+  "adaptations": [
+    "Prepended sys.path for pinned source checkout.",
+    "Added only local_cache_path to load_pandas_df; dataset bytes unchanged.",
+    "Appended evidence export cell; no model/split/evaluator changes."
+  ],
+  "saved_upstream_metrics": {
+    "map": 0.24472205306261383,
+    "ndcg": 0.3795334514937595,
+    "precision": 0.3310710498409332,
+    "recall": 0.17683684715427114,
+    "train_time": 0.7444443240019609,
+    "test_time": 0.3940767570020398
+  },
+  "observed_metrics": {
+    "map": 0.24472205306261383,
+    "ndcg": 0.3795334514937595,
+    "precision": 0.3310710498409332,
+    "recall": 0.17683684715427114,
+    "train_time": 0.32053459994494915,
+    "test_time": 0.24919060000684112
+  },
+  "metric_absolute_differences": {
+    "map": 0.0,
+    "ndcg": 0.0,
+    "precision": 0.0,
+    "recall": 0.0
+  },
+  "exact_metric_tolerance": 1e-06,
+  "numeric_match_at_tolerance": true,
+  "notebook": "H:\\Career_AI_Portfolio\\projects\\01_recommendation_service\\reports\\baseline\\sar_executed.ipynb",
+  "html": "H:\\Career_AI_Portfolio\\projects\\01_recommendation_service\\reports\\baseline\\sar_executed.html",
+  "important": "Notebook/HTML contains source dataset sample records: keep local, do not publish."
+}

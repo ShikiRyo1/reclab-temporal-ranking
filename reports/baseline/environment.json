@@ -1,0 +1,8 @@
+{
+  "python": "3.12.4 (tags/v3.12.4:8e8a4ba, Jun  6 2024, 19:30:16) [MSC v.1940 64 bit (AMD64)]",
+  "executable": "H:\\Career_AI_Portfolio\\projects\\01_recommendation_service\\baseline\\.venv\\Scripts\\python.exe",
+  "platform": "Windows-10-10.0.19045-SP0",
+  "numpy_constraint": "<2 required by upstream",
+  "cornac_note": "2.3.0 uses numpy<2/scipy<=1.13.1; newer 2.3.5 requires numpy>2.",
+  "requirements_lock": "baseline/requirements-lock.txt"
+}

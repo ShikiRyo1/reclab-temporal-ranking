@@ -1,0 +1,8 @@
+{
+  "source": "https://files.grouplens.org/datasets/movielens/ml-100k.zip",
+  "local_archive": "H:\\Career_AI_Portfolio\\data\\movielens\\ml-100k.zip",
+  "bytes": 4924029,
+  "sha256": "50d2a982c66986937beb9ffb3aa76efe955bf3d5c6b761f4e3a7cd717c6a3229",
+  "dataset": "MovieLens 100K",
+  "redistribution": "Do not publish raw data or sample records; see provider README."
+}

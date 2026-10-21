@@ -1,0 +1,38 @@
+{
+  "model": "bpr",
+  "status": "ALL_ORIGINAL_CELLS_EXECUTED",
+  "upstream_commit": "aa8332189cd495be6ffaa7e1c8054f1c180b5ef3",
+  "upstream_file": "examples/02_model_collaborative_filtering/cornac_bpr_deep_dive.ipynb",
+  "upstream_notebook_sha256": "354f97cf72d8a7d4c110fc024206a9f14c0a79a5c41e9531bd4a2f3f51c09abc",
+  "elapsed_seconds": 17.986559299984947,
+  "original_code_cells": 11,
+  "executed_code_cells": 13,
+  "adaptations": [
+    "Prepended sys.path for pinned source checkout.",
+    "Added only local_cache_path to load_pandas_df; dataset bytes unchanged.",
+    "Appended evidence export cell; no model/split/evaluator changes."
+  ],
+  "saved_upstream_metrics": {
+    "map": 0.180367644269974,
+    "ndcg": 0.3051899536864835,
+    "precision": 0.23903225806451614,
+    "recall": 0.20866044380376064
+  },
+  "observed_metrics": {
+    "map": 0.180367644269974,
+    "ndcg": 0.3051899536864835,
+    "precision": 0.23903225806451614,
+    "recall": 0.20866044380376064
+  },
+  "metric_absolute_differences": {
+    "map": 0.0,
+    "ndcg": 0.0,
+    "precision": 0.0,
+    "recall": 0.0
+  },
+  "exact_metric_tolerance": 1e-06,
+  "numeric_match_at_tolerance": true,
+  "notebook": "H:\\Career_AI_Portfolio\\projects\\01_recommendation_service\\reports\\baseline\\bpr_executed.ipynb",
+  "html": "H:\\Career_AI_Portfolio\\projects\\01_recommendation_service\\reports\\baseline\\bpr_executed.html",
+  "important": "Notebook/HTML contains source dataset sample records: keep local, do not publish."
+}

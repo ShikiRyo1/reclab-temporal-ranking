@@ -1,0 +1,19 @@
+{
+  "train_rows": 41531,
+  "test_rows": 13844,
+  "train_users": 942,
+  "test_users": 930,
+  "train_items": 1395,
+  "test_items": 1160,
+  "train_sha256": "cdd627c990a1dad7e2e0e916e07b3dddfe6f892e81f1d1abeada648e0119997b",
+  "test_sha256": "95b92ee66b84dc76d6fea9bf019ca27f4ba5fe7c50bec2363d59b3ba2711af21",
+  "data_rows": 55375,
+  "seed": 42,
+  "metrics": {
+    "map": 0.180367644269974,
+    "ndcg": 0.3051899536864835,
+    "precision": 0.23903225806451614,
+    "recall": 0.20866044380376064
+  },
+  "prediction_rows": 1272559
+}
