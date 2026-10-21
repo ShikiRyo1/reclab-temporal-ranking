@@ -4,5 +4,9 @@
   "bytes": 4924029,
   "sha256": "50d2a982c66986937beb9ffb3aa76efe955bf3d5c6b761f4e3a7cd717c6a3229",
   "dataset": "MovieLens 100K",
+  "extracted_file_sha256": {
+    "u.data": "06416e597f82b7342361e41163890c81036900f418ad91315590814211dca490",
+    "u.item": "553841ebc7de3a0fd0d6b62a204ea30c1e651aacfb2814c7a6584ac52f2c5701"
+  },
   "redistribution": "Do not publish raw data or sample records; see provider README."
 }

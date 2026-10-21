@@ -1,0 +1,232 @@
+{
+  "guide": "teaching\\chapters_code_baseline.md",
+  "source_files": {
+    "baseline/run_upstream.py": {
+      "lines": 205,
+      "sha256": "71c8feb0c3cf651f80e19897ab6f3e9436f795dc2b2e565549a64bfd1610d4d5",
+      "coverage_mode": "Every nonempty source line belongs to an explained line range.",
+      "uncovered_nonempty_lines": [],
+      "explained_ranges": [
+        [
+          1,
+          12
+        ],
+        [
+          14,
+          23
+        ],
+        [
+          25,
+          29
+        ],
+        [
+          31,
+          38
+        ],
+        [
+          40,
+          45
+        ],
+        [
+          46,
+          50
+        ],
+        [
+          51,
+          58
+        ],
+        [
+          59,
+          65
+        ],
+        [
+          66,
+          75
+        ],
+        [
+          76,
+          82
+        ],
+        [
+          83,
+          90
+        ],
+        [
+          91,
+          95
+        ],
+        [
+          97,
+          103
+        ],
+        [
+          104,
+          110
+        ],
+        [
+          111,
+          121
+        ],
+        [
+          122,
+          128
+        ],
+        [
+          129,
+          137
+        ],
+        [
+          138,
+          141
+        ],
+        [
+          142,
+          151
+        ],
+        [
+          152,
+          153
+        ],
+        [
+          154,
+          160
+        ],
+        [
+          161,
+          164
+        ],
+        [
+          165,
+          172
+        ],
+        [
+          173,
+          179
+        ],
+        [
+          180,
+          182
+        ],
+        [
+          184,
+          188
+        ],
+        [
+          189,
+          196
+        ],
+        [
+          197,
+          201
+        ],
+        [
+          203,
+          205
+        ]
+      ]
+    },
+    "baseline/check_bpr_math.py": {
+      "lines": 65,
+      "sha256": "1ceb604c034a90dbb71e3bf364f1eb7046699f45f6cb93f2fa129031c4883f45",
+      "coverage_mode": "Every nonempty source line belongs to an explained line range.",
+      "uncovered_nonempty_lines": [],
+      "explained_ranges": [
+        [
+          1,
+          12
+        ],
+        [
+          14,
+          18
+        ],
+        [
+          20,
+          25
+        ],
+        [
+          27,
+          30
+        ],
+        [
+          31,
+          37
+        ],
+        [
+          38,
+          43
+        ],
+        [
+          44,
+          46
+        ],
+        [
+          47,
+          54
+        ],
+        [
+          55,
+          58
+        ],
+        [
+          59,
+          62
+        ],
+        [
+          64,
+          65
+        ]
+      ]
+    },
+    "baseline/setup.ps1": {
+      "lines": 43,
+      "sha256": "7cda13b9026c813c8f10cfe9d0302135565430c2cb05307f907567b7acae1b44",
+      "coverage_mode": "Every nonempty source line belongs to an explained line range.",
+      "uncovered_nonempty_lines": [],
+      "explained_ranges": [
+        [
+          1,
+          4
+        ],
+        [
+          5,
+          8
+        ],
+        [
+          9,
+          12
+        ],
+        [
+          13,
+          16
+        ],
+        [
+          17,
+          23
+        ],
+        [
+          24,
+          27
+        ],
+        [
+          28,
+          33
+        ],
+        [
+          34,
+          39
+        ],
+        [
+          40,
+          43
+        ]
+      ]
+    },
+    "baseline/requirements-lock.txt": {
+      "lines": 76,
+      "sha256": "58cb19f7837a65bc3a9233fc55b7b567e1c1333e54663d74fe0543a8a6fc0359",
+      "coverage_mode": "Dependency-group explanation in section F; key direct dependencies have actual line references; remaining pinned transitive dependencies explained as environment support, not claimed individually imported."
+    }
+  },
+  "status": "PASS_LINE_REFERENCE_COVERAGE",
+  "scope": "Checks coverage and line validity, not semantic correctness of prose; prose reviewed separately."
+}

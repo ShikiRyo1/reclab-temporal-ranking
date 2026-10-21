@@ -5,6 +5,9 @@
   "test_users": 943,
   "train_items": 1653,
   "test_items": 1444,
+  "common_train_test_users": 943,
+  "test_only_users": 0,
+  "test_rows_item_absent_from_train": 35,
   "train_sha256": "65f080ee1622582892ff64229906dccc0c015bd7930b30a8269f8c0e08f0e8a9",
   "test_sha256": "95359558742cb7c2b4a3a500f6b5764b77e93493c4cd5ab9ed197c2bd6f8e3d6",
   "data_rows": 100000,
@@ -22,7 +25,7 @@
     "explained_variance": 0.0984935612370964,
     "logloss": 0.5691526604461454
   },
-  "train_seconds": 0.32053459994494915,
-  "prediction_seconds": 0.24919060000684112,
+  "train_seconds": 0.30996119999326766,
+  "prediction_seconds": 0.29156080004759133,
   "prediction_rows": 9430
 }

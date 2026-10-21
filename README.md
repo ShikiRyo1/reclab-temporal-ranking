@@ -58,7 +58,7 @@ The response contains version, effective strategy/weight, latency, movie IDs, me
 
 ## Deployment and evidence
 
-The Docker image pins its Python base by digest, runs as UID 10001, binds only to loopback, and mounts the local model read-only. Training dependencies are excluded from the serving environment. Deployment is **verified on local Docker Desktop**, not a public cloud endpoint. See [operations guide](docs/operations.md) and `reports/operations/` for real HTTP checks, latency measurement and failure/recovery evidence. Single-process rolling counters are demonstration monitoring, not a distributed observability platform or production SLO.
+The Docker image pins its Python base by digest, runs as UID 10001, binds only to loopback, and mounts the local model read-only. Training dependencies are excluded from the serving environment. Deployment is **verified on local Docker Desktop**, not a public cloud endpoint. See [operations guide](docs/operations.md) and `reports/operations/` for real HTTP checks, latency measurement and failure/recovery evidence. Single-process rolling counters are demonstration monitoring, not a distributed observability platform or production SLO. GitHub Actions is **not enabled**: the current GitHub OAuth token lacks workflow scope. The proposed test/build workflow is retained as [an inactive template](docs/ci-template.yml); all reported tests and Docker checks ran locally.
 
 ```text
 official data → integrity audit → chronological split → train-only baselines

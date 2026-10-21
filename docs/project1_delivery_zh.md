@@ -1,0 +1,44 @@
+# 项目1交付说明：推荐与排序服务
+
+项目把数据科学、模型评测和模型部署连成一个可演示的作品。输入是公开的电影历史评分；输出是可重跑的实验、带版本的模型、可调用的推荐API和配套教案。主要面向 Data Scientist、Machine Learning Engineer 与负责模型落地的 AI Engineer。
+
+## 完成了什么
+
+1. 固定 Recommenders 提交 `aa8332189cd495be6ffaa7e1c8054f1c180b5ef3`，完整执行官方 SAR 与 BPR notebook。8项排序指标与上游保存值一致。复现的是这两个示例的规定数据和参数，并不代表复现整个开源库。
+2. 另用 MovieLens 1M 的1,000,209条评分建立统一的时间评测。训练、验证、测试按全局时间排列，同时间戳不拆开；统计量和物品目录只用训练窗口。完整实验重复两次，冻结设置下结果一致。
+3. 比较热门推荐、自写Jaccard SAR-style、BPR与长尾重排。在922名可评估暖用户中，BPR的NDCG@10为0.2441，热门推荐为0.2078。563名可评估冷用户另报，避免掩盖覆盖问题。
+4. 在验证集的相关性损失预算内选择重排权重0.2。测试长尾推荐占比由1.8438%升至2.2777%，新增40个长尾位置；代价是NDCG相对下降1.3083%。这是有证据的取舍，不是精度或营收提升。
+5. 用FastAPI和Docker交付实际服务：冷启动、类别过滤、输入验证、模型版本、就绪状态、基础监控与网页演示。50项本地测试和17项真实HTTP核验通过；500次本地闭环请求无错误，P95约31毫秒。压测使用8个并发客户端、一个已知用户与冷用户混合，不代表生产容量。
+6. 独立检查并修复模型元数据、报告对应关系和训练配置边界。还发现上游BPR说明公式中的符号错误；核对实际Cornac代码并用有限差分校验教学梯度，最大绝对误差约1.10×10^-10。
+
+## 从哪里开始使用
+
+- 已有本机服务：浏览器打开 `http://127.0.0.1:8011`，输入用户1161；空用户演示冷启动。`/docs`提供可执行API文档。
+- 重启：在项目目录运行 `docker compose up -d`。关闭：`docker compose stop`。原始模型保留在本地 `artifacts/model.joblib`。
+- 第一次学习：按教学主手册顺序阅读，遇到具体代码再查逐行伴读。文件与阅读路线见 [教学入口](../teaching/README.md)。
+- 面试准备：[简历、30秒与90秒介绍](career_story.md)；[分阶段输入输出](milestones.md)；[部署操作](operations.md)。
+- 公开源代码：[reclab-temporal-ranking](https://github.com/ShikiRyo1/reclab-temporal-ranking)。版本为 `baseline-v1` 与 `v0.1.0`，最终发布证据见验收记录。
+
+## 求职时怎样讲
+
+“我从公开评分数据搭建了一个可调用的推荐服务，先复现经典方法，再设计时间评测，检验长尾曝光与排序精度之间的取舍，最后完成容器部署和故障核验。”
+
+这句话能引出数据泄漏、BPR数学、指标分母、验证选参、API契约和故障定位。招聘者可以顺着仓库检查证据；项目不能保证录用，也不能替代你独立完成手册练习。
+
+英文简历可以选用：
+
+> Built and containerized a FastAPI recommendation service; evaluated rankers on 1.0M MovieLens ratings with chronological full-catalog ranking, and increased held-out long-tail exposure from 1.84% to 2.28% at a 1.31% relative NDCG cost.
+
+这条应在你能够重跑并解释项目后使用。开发使用了AI辅助，算法与上游来源已经标明。
+
+## 文件与账号操作
+
+项目保存在 `H:\Career_AI_Portfolio\projects\01_recommendation_service`。上游源码保存在 `H:\Career_AI_Portfolio\external\recommenders`；官方100K与1M数据保存在 `H:\Career_AI_Portfolio\data\movielens`，两个zip分别约4.9MB和5.9MB。安装了独立Python依赖环境并构建了本地Docker镜像；没有下载预训练模型。
+
+GitHub上传内容为自有源码、配置、汇总报告、教学源稿和代码索引。原始评分、逐用户明细、训练模型与本地截图未公开上传。没有向Google Drive或Hugging Face上传，也没有创建付费资源。详细来源、hash与去向保存在作品集传输台账。
+
+## 当前边界与下一项目
+
+GitHub Actions尚未运行：现有OAuth凭据缺少workflow权限，工作流保留为未启用模板。部署已在本机Docker验证，没有公共云地址。单一时间窗口和训练seed尚不足以证明跨时期稳定性，bootstrap也不涵盖训练随机性；没有线上A/B测试或真实商业收益结论。
+
+下一项是有证据引用与工具校验的业务分析Agent。它会接着训练工具调用、SQL与指标验证、状态恢复、评测与成本控制，补充Agent能力。本项交付后再推进，项目2与选做的项目3目前均未实施。

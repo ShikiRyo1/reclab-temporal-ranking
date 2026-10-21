@@ -85,6 +85,11 @@ def run(data_dir: Path, config_path: Path, output: Path, artifact_path: Path) ->
     """Freeze the weight selection on disk before evaluating the test window."""
     started = time.perf_counter()
     config = json.loads(config_path.read_text(encoding="utf-8"))
+    if config.get("k") != 10 or config.get("positive_threshold") != 4:
+        raise ValueError(
+            "This protocol supports only k=10 and positive_threshold=4. "
+            "Extend the metric implementation and protocol together before changing them."
+        )
     output.mkdir(parents=True, exist_ok=True)
     private = output / "private"
     private.mkdir(exist_ok=True)

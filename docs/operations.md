@@ -25,7 +25,9 @@ Copy-Item -LiteralPath artifacts\model.joblib -Destination artifacts\releases\v0
 Get-FileHash -Algorithm SHA256 artifacts\releases\v0.1.0-model.joblib
 ```
 
-To roll back a later model, stop this project's service, copy the known-good local artifact to `artifacts/model.joblib`, start it and run `scripts/verify_live.py`. Do not overwrite or delete the candidate: retain it under a separate versioned path for diagnosis. This project verifies missing-model failure and recovery in an isolated second container; that is not a claim of a multi-version zero-downtime rollout.
+The delivered release already has a local snapshot in `artifacts/releases/v0.1.0/`: model, matching aggregate summary, training configuration and selected configuration. Hashes are recorded in `reports/release/local_model_snapshot.json`. The snippet above shows a separate manual backup, which is optional.
+
+To roll back a later model, retain the candidate under a separate versioned path, stop this project's service, restore the known-good artifact to `artifacts/model.joblib` **and its matching summary to `reports/experiment/summary.json`**, start it and run `scripts/verify_live.py`. Restoring only the artifact can correctly trigger `/evidence` HTTP 409 if the summary describes another model. This project verifies missing-model failure and recovery in an isolated second container; that is not a claim of a multi-version zero-downtime rollout.
 
 ## Endpoint contract
 
@@ -37,9 +39,13 @@ To roll back a later model, stop this project's service, copy the known-good loc
 | `/genres` | Accepted candidate category values |
 | `/recommendations` | Bounded input, known-user BPR or cold fallback |
 | `/metrics` | Per-process request/5xx counts and up to 10,000 recent durations |
-| `/evidence` | Aggregate offline evaluation, separate from live serving |
+| `/evidence` | Aggregate offline evaluation; HTTP 409 if its artifact hash differs from the loaded model |
 
 Do not load another person's joblib/pickle file: loading it can execute code. The artifact is trusted because this project creates it locally. Shape/finite checks detect corruption but are not a sandbox for malicious artifacts. No secrets are needed for this local project. The dataset and model contain historical user interactions and are excluded from public source distribution.
+
+The initial review found two failure paths and fixed them before release: malformed title/genre metadata is rejected before readiness, and `/evidence` is bound to the loaded artifact's SHA-256 instead of blindly serving a stale report. Regression tests exercise both cases.
+
+GitHub Actions remains inactive because the authenticated OAuth token lacks the required workflow scope. `docs/ci-template.yml` is reviewable source only; no GitHub CI success is claimed. This does not affect the local executed tests, Docker image or API.
 
 ## Interpreting load results
 

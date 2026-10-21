@@ -13,7 +13,7 @@ import time
 
 COMMIT = "aa8332189cd495be6ffaa7e1c8054f1c180b5ef3"
 ROOT = Path(__file__).resolve().parents[1]
-WORKSPACE = ROOT.parents[1]
+WORKSPACE = Path(os.environ.get("P1_WORKSPACE", str(ROOT.parents[1])))
 UPSTREAM = WORKSPACE / "external" / "recommenders"
 DATA = WORKSPACE / "data" / "movielens"
 REPORT = ROOT / "reports" / "baseline"
@@ -46,6 +46,8 @@ def setup():
     actual = subprocess.check_output(["git", "-C", str(UPSTREAM), "rev-parse", "HEAD"], text=True).strip()
     if actual != COMMIT:
         raise RuntimeError(f"Upstream commit differs: {actual}")
+    subprocess.run(["git", "-C", str(UPSTREAM), "diff", "--exit-code", COMMIT,
+                    "--", "recommenders", *NOTEBOOKS.values()], check=True)
     archive = DATA / "ml-100k.zip"
     url = "https://files.grouplens.org/datasets/movielens/ml-100k.zip"
     if not archive.exists():
@@ -54,14 +56,27 @@ def setup():
         temporary = archive.with_suffix(".zip.part")
         temporary.write_bytes(response.content)
         temporary.replace(archive)
+    expected_sha = "50d2a982c66986937beb9ffb3aa76efe955bf3d5c6b761f4e3a7cd717c6a3229"
+    if sha(archive) != expected_sha:
+        raise RuntimeError("MovieLens archive differs from the recorded reproduction input.")
     import zipfile
     with zipfile.ZipFile(archive) as zipped:
         if zipped.testzip() is not None:
             raise RuntimeError("MovieLens ZIP integrity check failed")
         (REPORT / "MovieLens_100K_TERMS.txt").write_bytes(zipped.read("ml-100k/README"))
+        extracted_hashes = {}
+        for filename in ("u.data", "u.item"):
+            expected_bytes = zipped.read(f"ml-100k/{filename}")
+            cached = DATA / filename
+            if cached.exists() and cached.read_bytes() != expected_bytes:
+                raise RuntimeError(f"Cached {filename} differs from the immutable archive.")
+            if not cached.exists():
+                cached.write_bytes(expected_bytes)
+            extracted_hashes[filename] = sha(cached)
     write_json(REPORT / "data_manifest.json", {
         "source": url, "local_archive": str(archive), "bytes": archive.stat().st_size,
         "sha256": sha(archive), "dataset": "MovieLens 100K",
+        "extracted_file_sha256": extracted_hashes,
         "redistribution": "Do not publish raw data or sample records; see provider README.",
     })
     shutil.copyfile(UPSTREAM / "LICENSE", ROOT / "baseline" / "UPSTREAM_LICENSE")
@@ -105,7 +120,7 @@ def run(name: str):
                 )
                 changes.append("Added only local_cache_path to load_pandas_df; dataset bytes unchanged.")
     summary_path = REPORT / f"{name}_run_details.json"
-    # Add evidence capture after every original cell. Do not alter original model/evaluation logic.
+    # Append evidence capture after all original cells; preserve their model/evaluation logic.
     capture = (
         "import json, hashlib\n"
         "from pathlib import Path\n"
@@ -115,6 +130,9 @@ def run(name: str):
         " 'train_rows': len(train), 'test_rows': len(test),\n"
         " 'train_users': int(train.userID.nunique()), 'test_users': int(test.userID.nunique()),\n"
         " 'train_items': int(train.itemID.nunique()), 'test_items': int(test.itemID.nunique()),\n"
+        " 'common_train_test_users': len(set(train.userID) & set(test.userID)),\n"
+        " 'test_only_users': len(set(test.userID) - set(train.userID)),\n"
+        " 'test_rows_item_absent_from_train': int((~test.itemID.isin(train.itemID)).sum()),\n"
         " 'train_sha256': frame_hash(train), 'test_sha256': frame_hash(test),\n"
         " 'data_rows': len(data), 'seed': 42,\n"
         " 'metrics': {'map': float(eval_map), 'ndcg': float(eval_ndcg),\n"
@@ -179,6 +197,8 @@ def main():
     names = NOTEBOOKS if args.model == "all" else [args.model]
     results = [run(name) for name in names]
     write_json(REPORT / "baseline_execution_summary.json", results)
+    if not all(result["numeric_match_at_tolerance"] for result in results):
+        raise RuntimeError("Observed metrics differ from the pinned notebook outputs; inspect comparison JSON.")
 
 if __name__ == "__main__":
     main()

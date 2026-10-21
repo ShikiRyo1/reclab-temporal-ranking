@@ -4,7 +4,7 @@
   "upstream_commit": "aa8332189cd495be6ffaa7e1c8054f1c180b5ef3",
   "upstream_file": "examples/02_model_collaborative_filtering/cornac_bpr_deep_dive.ipynb",
   "upstream_notebook_sha256": "354f97cf72d8a7d4c110fc024206a9f14c0a79a5c41e9531bd4a2f3f51c09abc",
-  "elapsed_seconds": 17.986559299984947,
+  "elapsed_seconds": 16.60817279998446,
   "original_code_cells": 11,
   "executed_code_cells": 13,
   "adaptations": [

@@ -1,0 +1,27 @@
+{
+  "data": {
+    "lines": 111,
+    "uncovered_nonempty_lines": [],
+    "sha256": "34d5467050a4f53e3581ffb81691769344e8618c63e75a7023636d6efc238de3"
+  },
+  "models": {
+    "lines": 158,
+    "uncovered_nonempty_lines": [],
+    "sha256": "7f4c3a92d9ee0042254170df6b5c8090ae36855bca57625dac1f4a5e7e5dd599"
+  },
+  "rerank": {
+    "lines": 40,
+    "uncovered_nonempty_lines": [],
+    "sha256": "387db7e4219a879c030c668aabb00b62645b1177ee1260881fd009a6cf7a96c6"
+  },
+  "metrics": {
+    "lines": 123,
+    "uncovered_nonempty_lines": [],
+    "sha256": "da9031301235121613a00c54f8e1ecc1a36ea56d26d001492a78847edcce24ca"
+  },
+  "train": {
+    "lines": 245,
+    "uncovered_nonempty_lines": [],
+    "sha256": "9d6cd8afab073dfa6481ecce91ac2ca4869cfb579ad57dd33fd98e97d4a065c3"
+  }
+}

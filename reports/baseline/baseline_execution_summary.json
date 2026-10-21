@@ -5,7 +5,7 @@
     "upstream_commit": "aa8332189cd495be6ffaa7e1c8054f1c180b5ef3",
     "upstream_file": "examples/00_quick_start/sar_movielens.ipynb",
     "upstream_notebook_sha256": "ec93b1fb81864b7ae9ce22a7ba46b53947f2c3cfe5fce982c31c4b7594569547",
-    "elapsed_seconds": 12.763662300014403,
+    "elapsed_seconds": 7.222512400010601,
     "original_code_cells": 15,
     "executed_code_cells": 17,
     "adaptations": [
@@ -26,8 +26,8 @@
       "ndcg": 0.3795334514937595,
       "precision": 0.3310710498409332,
       "recall": 0.17683684715427114,
-      "train_time": 0.32053459994494915,
-      "test_time": 0.24919060000684112
+      "train_time": 0.30996119999326766,
+      "test_time": 0.29156080004759133
     },
     "metric_absolute_differences": {
       "map": 0.0,
@@ -47,7 +47,7 @@
     "upstream_commit": "aa8332189cd495be6ffaa7e1c8054f1c180b5ef3",
     "upstream_file": "examples/02_model_collaborative_filtering/cornac_bpr_deep_dive.ipynb",
     "upstream_notebook_sha256": "354f97cf72d8a7d4c110fc024206a9f14c0a79a5c41e9531bd4a2f3f51c09abc",
-    "elapsed_seconds": 17.986559299984947,
+    "elapsed_seconds": 16.60817279998446,
     "original_code_cells": 11,
     "executed_code_cells": 13,
     "adaptations": [
