@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "reclab-portfolio"
-version = "0.1.0"
+version = "0.1.2"
 description = "Reproducible temporal ranking experiments and a versioned serving API"
 requires-python = ">=3.12,<3.13"
 dependencies = ["numpy", "pandas", "scipy", "joblib", "fastapi", "uvicorn"]

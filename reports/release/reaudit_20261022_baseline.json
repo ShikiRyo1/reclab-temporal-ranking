@@ -1,0 +1,200 @@
+{
+  "audited_at_utc": "2026-10-23T02:35:41.759214+00:00",
+  "audit_day_local": "2026-10-22 America/New_York",
+  "status": "EXPERIMENT_AND_REPRODUCTION_PASS_API_CONTRACT_FIX_RECOMMENDED",
+  "scope": "P1 read-only technical, upstream execution-evidence, frozen-model metrics and career-claim audit. No P2 inspection or writes. Teaching visual audit belongs to the teaching agent; this is not a full forty-requirement signoff.",
+  "audited_commit": "7278b2a870045c6b3f5d344c42a8674b00dd4aee",
+  "baseline_worktree_at_start": "clean",
+  "version": {
+    "local_head": "7278b2a870045c6b3f5d344c42a8674b00dd4aee",
+    "remote_main": "7278b2a870045c6b3f5d344c42a8674b00dd4aee",
+    "remote_v0_1_1_tag_object": "98f3ee9da9b4dbb6a988d7bf991fc3e0313703ef",
+    "remote_v0_1_1_peeled": "7278b2a870045c6b3f5d344c42a8674b00dd4aee",
+    "verification": "Fresh git ls-remote origin refs/heads/main refs/tags/v0.1.1 refs/tags/v0.1.1^{}"
+  },
+  "executed_checks": {
+    "existing_pytest": {
+      "tests": 50,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "warning": "StarletteDeprecationWarning: httpx testclient usage deprecated; not a test failure."
+    },
+    "existing_real_http": {
+      "checks": 17,
+      "passed": true,
+      "url": "http://127.0.0.1:8011"
+    },
+    "independent_checks": {
+      "count": 15,
+      "passed": 15,
+      "report": "reports/release/reaudit_20261022_baseline_checks.json"
+    },
+    "gradient": {
+      "max_absolute_error": 1.095174784193631e-10,
+      "tolerance": 1e-07,
+      "objective_increases": true
+    },
+    "focused_http_probes": 7
+  },
+  "reproduction_conclusion": {
+    "status": "PASS_FOR_THE_TWO_PINNED_NOTEBOOKS",
+    "commit": "aa8332189cd495be6ffaa7e1c8054f1c180b5ef3",
+    "sar_original_cells": 15,
+    "bpr_original_cells": 11,
+    "added_helper_cells": 4,
+    "ranking_metrics_matched": 8,
+    "absolute_metric_differences": 0,
+    "source_and_data_unchanged": true,
+    "execution_evidence": "Re-read every original and executed code cell plus saved outputs/execution counters; only documented source-path/cache/evidence-export adaptations. Immutable archive, extracted data, source notebook hashes and original package locks independently rechecked. No new training was needed.",
+    "not_claimed": [
+      "Reproduction of the entire Recommenders library",
+      "Match to every README summary table",
+      "Equal runtimes or original environment bytes",
+      "Validation of all rating-regression outputs on the entire test set"
+    ]
+  },
+  "extension_conclusion": {
+    "status": "VALID_OFFLINE_TRADEOFF_FOR_FIXED_SPLIT_AND_SEED",
+    "raw_rows": 1000209,
+    "train_catalog_items": 3444,
+    "test_users_total": 1512,
+    "eligible_positive_test_users": 1485,
+    "warm_users": 922,
+    "cold_users": 563,
+    "out_of_catalog_positive_test_rows": 151,
+    "base_bpr_ndcg_at_10": 0.24412915807976893,
+    "reranked_ndcg_at_10": 0.24093522861665656,
+    "base_tail_positions": 170,
+    "reranked_tail_positions": 210,
+    "all_warm_recommendation_positions": 9220,
+    "selected_weight": 0.2,
+    "validation_relevance_floor": 0.98,
+    "paired_bootstrap": {
+      "ndcg": {
+        "mean_difference": -0.003193929463112373,
+        "paired_95_percent_interval": [
+          -0.004971950933151107,
+          -0.0013352192153701147
+        ]
+      },
+      "recall": {
+        "mean_difference": -0.0004170563119672034,
+        "paired_95_percent_interval": [
+          -0.0014117888329655437,
+          0.0005564637878636236
+        ]
+      },
+      "tail_exposure": {
+        "mean_difference": 0.004338394793926247,
+        "paired_95_percent_interval": [
+          0.003036876355748373,
+          0.005642624728850324
+        ]
+      }
+    },
+    "independent_validation": "Rebuilt splits, positive catalog, count/tail definitions, user histories, SAR/BPR score arrays, four-model ranking, denominators and paired intervals directly from raw data/frozen arrays without importing project metric or reranking functions; tolerance 1e-12. Selection independently reproduced using validation only.",
+    "test_is_not_reopened_for_tuning": true,
+    "serving_history_vs_test": "Service filters t1 training history; offline test additionally filters validation observations through t2. Difference is explicitly documented and not a newly discovered leak.",
+    "contribution_boundary": "Jaccard SAR-style, BPR, novelty blending and bootstrap are established methods. This project contributes a coherent implementation, protocol, audit trail, evidence-bound serving and empirical tradeoff; no new ranking algorithm is demonstrated."
+  },
+  "findings": [
+    {
+      "id": "P1-20261022-01",
+      "priority": "P2",
+      "category": "API contract inconsistency",
+      "status": "OPEN_AT_AUDITED_COMMIT",
+      "file": "src/reclab/api.py",
+      "line": 28,
+      "title": "JSON booleans are silently converted into integer IDs/counts and float weights",
+      "evidence": "Real HTTP {k:true} returned200 with requested_k1; {user_id:true,k:1} became user1; {novelty_weight:true,k:1} became1.0. API RecommendationRequest uses coercive Pydantic fields. Core recommend explicitly rejects bool k, so the HTTP boundary bypasses that contract. Numeric strings are also silently accepted.",
+      "impact": "Invalid client payloads receive plausible but unintended recommendations, weakening typed-contract claims; current valid-input model metrics remain unaffected.",
+      "suggested_fix": "Use strict integer user_id/k and a finite non-boolean numeric weight contract, preserving valid JSON numeric values; add HTTP/Pydantic regression cases. Decide/document whether numeric strings and integral floats should be rejected. Rebuild/reverify the served image if runtime changes. No retraining required.",
+      "evidence_file": "reports/release/reaudit_20261022_probes.json"
+    },
+    {
+      "id": "P1-20261022-02",
+      "priority": "P3",
+      "category": "current-state documentation",
+      "status": "OPEN_AT_AUDITED_COMMIT",
+      "files": [
+        "docs/project1_delivery_zh.md:46",
+        "docs/milestones.md:3"
+      ],
+      "title": "P1 handoff paragraphs still say P2 has not started",
+      "evidence": "Root START_HERE and portfolio_state explicitly record P2 M00, while these P1 documents contain current-tense statements that project2 is unimplemented/not started.",
+      "impact": "No metric or code consequence; a reader can misread current portfolio status.",
+      "suggested_fix": "Label those paragraphs as the historical P1-delivery snapshot or link to the current portfolio pointer; do not rewrite historical timing as if P2 existed before P1 acceptance."
+    }
+  ],
+  "career_value": {
+    "judgment": "Usable portfolio evidence for DS/MLE/model-deployment applications once the candidate can independently rerun and explain it. Stronger as an engineering-and-experiment portfolio than as novel-algorithm research.",
+    "credible_proof": [
+      "Pinned complete upstream notebook execution and eight saved ranking matches",
+      "Chronological evaluation with catalog/history/denominator controls",
+      "Validation-only multiobjective selection with negative accuracy result retained",
+      "Model provenance, deterministic ranking, cold fallback, Docker readiness and real HTTP parity"
+    ],
+    "safe_resume_example": "Built and containerized a recommendation API; evaluated rankers on1.0M historical ratings using a chronological eligible-catalog benchmark, and quantified a novelty-reranking tradeoff: long-tail exposure1.84%→2.28% at1.31% relative NDCG cost across922 eligible warm test users.",
+    "avoid": [
+      "Invented or production-scale recommendation algorithm",
+      "Guaranteed hiring value or recruiter approval",
+      "Improved accuracy via novelty reranking",
+      "Causal user satisfaction/revenue gain",
+      "Claiming500localhost requests establish production capacity",
+      "Treating AI-assisted completion as verified personal mastery"
+    ]
+  },
+  "future_experiments_prioritized": [
+    {
+      "priority": 1,
+      "name": "Preregistered rolling-origin and multi-seed robustness",
+      "design": "Keep the current release and test summary immutable. Before running, specify several new chronological origins or a genuinely new dataset plus fixed seed set; recompute train-only catalog/counts/tail per origin and select each weight only on that origin validation. Report all planned windows/seeds, paired tradeoffs and failure windows.",
+      "why": "Tests whether the observed40extra tail slots and relevance loss persist beyond one seed/time split. Reusing already inspected windows is exploratory, not a new untouched confirmatory test.",
+      "claim_if_positive": "Robustness across prespecified windows/seeds, not online causal uplift."
+    },
+    {
+      "priority": 2,
+      "name": "Candidate-pool and novelty-objective ablation",
+      "design": "In a new preregistered evaluation, compare fixed pool sizes and pure relevance versus novelty blending using identical candidates and ranking metrics; include tail recall/hit quality and genre/intralist diversity rather than exposure alone. Do not choose new weights from the current test.",
+      "why": "The top100pool caps reachable novelty. More tail exposure can be irrelevant exposure; measuring relevant-tail retrieval distinguishes useful catalog discovery from merely moving unpopular items."
+    },
+    {
+      "priority": 3,
+      "name": "Activity-aware relevance budget as a proposed extension",
+      "design": "Treat a user-activity-dependent or uncertainty-aware reranking weight as a new hypothesis, predefine features from training only, compare against the existing global0.2 and0 controls on fresh validation/test, and report warm/cold and low/high-activity tradeoffs with serving cost.",
+      "why": "Global weight may hide heterogeneous user costs. This could add a distinct modeling contribution if it wins an honest comparison; currently unimplemented/unproven and must not appear as an achieved resume result."
+    }
+  ],
+  "known_limits_retained": [
+    "Single temporal split and training seed; user bootstrap excludes training randomness and broader temporal drift.",
+    "Historical explicit ratings and missing-not-at-random exposure; absent rating is not demonstrated dislike.",
+    "Primary warm results cover922of1485eligible positive users; cold563reported separately.",
+    "No cloud endpoint, active GitHub Actions, onlineA/B test or verified learner mastery.",
+    "Historical screenshot/transfer metadata and clean-machine setup limitations remain delegated to root/teaching audit."
+  ],
+  "frozen_model_sha256": "14874e07e00af8f4d9b4e94f51ebb0b368a6fdc5b98391697a4f6c846fb8b5ad",
+  "evidence": [
+    {
+      "file": "reports/release/reaudit_20261022_baseline_checks.json",
+      "sha256": "e589d2a49a437e27279cba27d76382e240541db7428706207fc1a78339d771d2"
+    },
+    {
+      "file": "reports/release/reaudit_20261022_http.json",
+      "sha256": "2973fdaee8cb534b439013618ae5723e3f5d2da71effa7bdf49ddeb9edbd80e0"
+    },
+    {
+      "file": "reports/release/reaudit_20261022_probes.json",
+      "sha256": "d423524ffc5c23d57c97bd101cb754411b0c48b4c6dd2032bbe0dcd8bc0cc5d7"
+    },
+    {
+      "file": "reports/release/reaudit_20261022_tests.xml",
+      "sha256": "04b014c8c16bf884dd7ce3ebbb06aa90fbad6f33ab5f9062963d42b343ba55b3"
+    },
+    {
+      "file": "reports/release/reaudit_20261022_pytest.log",
+      "sha256": "d1c4b9106912c5b10b6827b5c402f80a577ce71ba58ade3de595fd64140e2204"
+    }
+  ],
+  "actions": "No source/model/training/config edits, no git commit, no training, no restart, no new remote upload. Only new audit reports/logs and ordinary loopback requests."
+}

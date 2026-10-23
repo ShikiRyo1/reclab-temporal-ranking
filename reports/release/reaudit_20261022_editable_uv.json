@@ -1,0 +1,8 @@
+{
+  "started_at_utc": "2026-10-23T02:39:19.1018498Z",
+  "command": "uv pip install --python .venv/Scripts/python.exe --no-deps --verbose -e .",
+  "cache": "H:/Career_AI_Portfolio/cache/uv",
+  "previous_attempt": "pip --no-build-isolation failed: setuptools.build_meta not installed in runtime venv; preserved log reaudit_20261022_editable.log",
+  "ended_at_utc": "2026-10-23T02:39:26.5981367Z",
+  "exit_code": 0
+}

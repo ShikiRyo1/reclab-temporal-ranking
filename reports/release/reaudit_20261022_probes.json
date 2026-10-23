@@ -1,0 +1,174 @@
+{
+  "timestamp_utc": "2026-10-23T02:32:44.370919+00:00",
+  "api_input_probe": [
+    {
+      "input": {
+        "k": true
+      },
+      "http_status": 200,
+      "requested_k": 1,
+      "strategy": "cold_start_popularity",
+      "effective_weight": 0.0,
+      "parsed_model": {
+        "user_id": null,
+        "k": 1,
+        "preferred_genres": [],
+        "novelty_weight": null
+      }
+    },
+    {
+      "input": {
+        "k": "10"
+      },
+      "http_status": 200,
+      "requested_k": 10,
+      "strategy": "cold_start_popularity",
+      "effective_weight": 0.0,
+      "parsed_model": {
+        "user_id": null,
+        "k": 10,
+        "preferred_genres": [],
+        "novelty_weight": null
+      }
+    },
+    {
+      "input": {
+        "k": 10.0
+      },
+      "http_status": 200,
+      "requested_k": 10,
+      "strategy": "cold_start_popularity",
+      "effective_weight": 0.0,
+      "parsed_model": {
+        "user_id": null,
+        "k": 10,
+        "preferred_genres": [],
+        "novelty_weight": null
+      }
+    },
+    {
+      "input": {
+        "k": 10.5
+      },
+      "http_status": 422,
+      "requested_k": null,
+      "strategy": null,
+      "effective_weight": null,
+      "parsed_model": null
+    },
+    {
+      "input": {
+        "user_id": true,
+        "k": 1
+      },
+      "http_status": 200,
+      "requested_k": 1,
+      "strategy": "cold_start_popularity",
+      "effective_weight": 0.0,
+      "parsed_model": {
+        "user_id": 1,
+        "k": 1,
+        "preferred_genres": [],
+        "novelty_weight": null
+      }
+    },
+    {
+      "input": {
+        "user_id": "1161",
+        "k": 1
+      },
+      "http_status": 200,
+      "requested_k": 1,
+      "strategy": "personalized_bpr",
+      "effective_weight": 0.2,
+      "parsed_model": {
+        "user_id": 1161,
+        "k": 1,
+        "preferred_genres": [],
+        "novelty_weight": null
+      }
+    },
+    {
+      "input": {
+        "novelty_weight": true,
+        "k": 1
+      },
+      "http_status": 200,
+      "requested_k": 1,
+      "strategy": "cold_start_popularity",
+      "effective_weight": 0.0,
+      "parsed_model": {
+        "user_id": null,
+        "k": 1,
+        "preferred_genres": [],
+        "novelty_weight": 1.0
+      }
+    }
+  ],
+  "gradient_recheck": {
+    "max_absolute_error": 1.095174784193631e-10,
+    "tolerance": 1e-07,
+    "objective_increases": true
+  },
+  "denominators": {
+    "future_rows": 150032,
+    "future_users": 1512,
+    "positive_rows": 83152,
+    "positive_users": 1486,
+    "out_of_training_catalog_positive_rows": 151,
+    "already_seen_positive_rows": 0,
+    "eligible_positive_rows": 83001,
+    "eligible_positive_users": 1485,
+    "positive_users_without_eligible_target": 1
+  },
+  "warm": {
+    "users": 922,
+    "ndcg_at_10": 0.24412915807976893,
+    "recall_at_10": 0.07157649541401503,
+    "long_tail_exposure": 0.01843817787418655,
+    "catalog_coverage": 0.20063879210220673,
+    "unique_recommended_items": 691,
+    "mean_log_novelty": 9.019186972537424,
+    "ndcg_at_10_95_percent_interval": [
+      0.22711258022823297,
+      0.25962798831322614
+    ],
+    "recall_at_10_95_percent_interval": [
+      0.06392235409125735,
+      0.07889537837201126
+    ]
+  },
+  "cold": {
+    "users": 563,
+    "ndcg_at_10": 0.348062121146263,
+    "recall_at_10": 0.06081902724624871,
+    "long_tail_exposure": 0.0,
+    "catalog_coverage": 0.025261324041811847,
+    "unique_recommended_items": 87,
+    "mean_log_novelty": 7.970817591326698
+  },
+  "paired": {
+    "ndcg": {
+      "mean_difference": -0.003193929463112373,
+      "paired_95_percent_interval": [
+        -0.004971950933151107,
+        -0.0013352192153701147
+      ]
+    },
+    "recall": {
+      "mean_difference": -0.0004170563119672034,
+      "paired_95_percent_interval": [
+        -0.0014117888329655437,
+        0.0005564637878636236
+      ]
+    },
+    "tail_exposure": {
+      "mean_difference": 0.004338394793926247,
+      "paired_95_percent_interval": [
+        0.003036876355748373,
+        0.005642624728850324
+      ]
+    }
+  },
+  "scope": "No model fitting, no frozen evidence overwrite; only audit JSON and ordinary local HTTP requests."
+}

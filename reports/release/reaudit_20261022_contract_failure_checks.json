@@ -1,0 +1,11 @@
+{
+  "tested_at_utc": "2026-10-23T02:50:27.051257+00:00",
+  "checks": {
+    "running_written_before_verification": true,
+    "exception_records_failed_exit_1": true,
+    "existing_evidence_refused": true,
+    "existing_evidence_bytes_preserved": true
+  },
+  "passed": true,
+  "scope": "Injected verifier exception and existing-path protection; temporary files only, no service restart or model edits"
+}

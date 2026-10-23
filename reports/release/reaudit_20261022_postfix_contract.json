@@ -1,0 +1,165 @@
+{
+  "started_at_utc": "2026-10-23T02:44:59.431745+00:00",
+  "checks": [
+    {
+      "payload": {
+        "k": true
+      },
+      "status": 422,
+      "expected": "422 for the named field",
+      "passed": true
+    },
+    {
+      "payload": {
+        "k": false
+      },
+      "status": 422,
+      "expected": "422 for the named field",
+      "passed": true
+    },
+    {
+      "payload": {
+        "k": "10"
+      },
+      "status": 422,
+      "expected": "422 for the named field",
+      "passed": true
+    },
+    {
+      "payload": {
+        "k": 10.0
+      },
+      "status": 422,
+      "expected": "422 for the named field",
+      "passed": true
+    },
+    {
+      "payload": {
+        "user_id": true
+      },
+      "status": 422,
+      "expected": "422 for the named field",
+      "passed": true
+    },
+    {
+      "payload": {
+        "user_id": false
+      },
+      "status": 422,
+      "expected": "422 for the named field",
+      "passed": true
+    },
+    {
+      "payload": {
+        "user_id": "1161"
+      },
+      "status": 422,
+      "expected": "422 for the named field",
+      "passed": true
+    },
+    {
+      "payload": {
+        "user_id": 1161.0
+      },
+      "status": 422,
+      "expected": "422 for the named field",
+      "passed": true
+    },
+    {
+      "payload": {
+        "novelty_weight": true
+      },
+      "status": 422,
+      "expected": "422 for the named field",
+      "passed": true
+    },
+    {
+      "payload": {
+        "novelty_weight": false
+      },
+      "status": 422,
+      "expected": "422 for the named field",
+      "passed": true
+    },
+    {
+      "payload": {
+        "novelty_weight": "0.2"
+      },
+      "status": 422,
+      "expected": "422 for the named field",
+      "passed": true
+    },
+    {
+      "payload": {
+        "user_id": 1161,
+        "k": 10,
+        "novelty_weight": 0
+      },
+      "status": 200,
+      "expected_effective_weight": 0.0,
+      "passed": true
+    },
+    {
+      "payload": {
+        "user_id": 1161,
+        "k": 10,
+        "novelty_weight": 1
+      },
+      "status": 200,
+      "expected_effective_weight": 1.0,
+      "passed": true
+    },
+    {
+      "payload": {
+        "user_id": 1161,
+        "k": 10,
+        "novelty_weight": 0.2
+      },
+      "status": 200,
+      "expected_effective_weight": 0.2,
+      "passed": true
+    },
+    {
+      "payload": {
+        "user_id": 1161,
+        "k": 10,
+        "novelty_weight": null
+      },
+      "status": 200,
+      "expected_effective_weight": 0.2,
+      "passed": true
+    }
+  ],
+  "api_version": "0.1.2",
+  "ready": {
+    "status": "ready",
+    "model_version": "ml1m-bpr-506d64ca-30794fbd-w0.2",
+    "artifact_sha256": "14874e07e00af8f4d9b4e94f51ebb0b368a6fdc5b98391697a4f6c846fb8b5ad",
+    "schema_version": 1,
+    "n_users": 4865,
+    "n_items": 3444
+  },
+  "artifact_unchanged": true,
+  "model_version_unchanged": true,
+  "container_versions": {
+    "package": "0.1.2",
+    "distribution": "0.1.2"
+  },
+  "local_versions": {
+    "package": "0.1.2",
+    "distribution": "0.1.2"
+  },
+  "version_consistency": true,
+  "local_dependency_lock": {
+    "pinned_count": 50,
+    "mismatches": []
+  },
+  "pip_check": {
+    "returncode": 0,
+    "stdout": "No broken requirements found.\n",
+    "stderr": ""
+  },
+  "passed": true,
+  "ended_at_utc": "2026-10-23T02:45:01.692090+00:00",
+  "scope": "15 real HTTP numeric-contract cases plus runtime version, artifact and local dependency checks. No model training, notebook execution or load benchmark."
+}

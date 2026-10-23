@@ -1,0 +1,11 @@
+{
+  "started_at_utc": "2026-10-23T02:38:21.2303458Z",
+  "command": "docker compose --progress plain build recommender",
+  "target_image": "career-reclab:0.1.2",
+  "base": "python:3.12-slim@sha256:a6e34c598f2467ed0e9a8d349809fcd8b5c603269512df273a0bb1784edc11b1",
+  "original_image_id": "sha256:02de22c2688f1d49084daf8cc254b1c10db3cccd61df9a861be675dc4442fc25",
+  "ended_at_utc": "2026-10-23T02:38:30.6624812Z",
+  "exit_code": 0,
+  "new_image_id": "sha256:f915dbd294a08e9883b4a7b5ea6647461891df8a43c0757efe5f78c42bbc220c",
+  "original_image_id_after": "sha256:02de22c2688f1d49084daf8cc254b1c10db3cccd61df9a861be675dc4442fc25"
+}

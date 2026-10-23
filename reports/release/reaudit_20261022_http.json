@@ -1,0 +1,26 @@
+{
+  "base_url": "http://127.0.0.1:8011",
+  "model_version": "ml1m-bpr-506d64ca-30794fbd-w0.2",
+  "warm_user": 1161,
+  "checks": {
+    "ready": true,
+    "version_matches_artifact": true,
+    "artifact_bytes_match": true,
+    "home": true,
+    "openapi": true,
+    "evidence": true,
+    "evidence_artifact_matches": true,
+    "known_ranking_matches": true,
+    "known_unique": true,
+    "cold_ranking_matches": true,
+    "cold_unique": true,
+    "genre_ranking_matches": true,
+    "genre_unique": true,
+    "raw_bpr_ranking_matches": true,
+    "raw_bpr_unique": true,
+    "bad_request_422": true,
+    "metrics": true
+  },
+  "passed": true,
+  "scope": "Real HTTP requests to the local Docker service; ranking parity with native Python"
+}

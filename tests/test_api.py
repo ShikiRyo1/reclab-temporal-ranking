@@ -136,3 +136,25 @@ def test_evidence_is_bound_to_loaded_artifact(tmp_path, artifact, monkeypatch):
         report.write_text(json.dumps({"artifact": {"sha256": digest}}))
         assert c.get("/evidence").status_code == 200
         assert c.get("/ready").json()["artifact_sha256"] == digest
+
+
+@pytest.mark.parametrize("payload", [
+    {"k": True}, {"k": False}, {"k": "10"}, {"k": 10.0},
+    {"user_id": True}, {"user_id": False}, {"user_id": "1161"}, {"user_id": 1161.0},
+    {"novelty_weight": True}, {"novelty_weight": False}, {"novelty_weight": "0.2"},
+])
+def test_api_does_not_coerce_invalid_numeric_types(client, payload):
+    response = client.post("/recommendations", json=payload)
+    assert response.status_code == 422
+    assert response.json()["detail"][0]["loc"] == ["body", next(iter(payload))]
+
+
+@pytest.mark.parametrize("weight,effective", [(0, 0.0), (1, 1.0), (0.2, 0.2), (None, 0.0)])
+def test_numeric_weight_contract_preserves_valid_requests(client, weight, effective):
+    response = client.post("/recommendations", json={"user_id": 1, "k": 2, "novelty_weight": weight})
+    assert response.status_code == 200
+    body = response.json()
+    assert body["strategy"] == "personalized_bpr"
+    assert body["requested_k"] == 2 and body["returned_k"] == 2
+    assert body["novelty_weight"] == effective
+    assert body["requested_novelty_weight"] == effective

@@ -29,10 +29,10 @@ class RecommendationRequest(BaseModel):
     """Bound request size and reject silently misspelled input fields."""
     model_config = ConfigDict(extra="forbid", json_schema_extra={
         "examples": [{"user_id": 1161, "k": 10, "preferred_genres": [], "novelty_weight": None}]})
-    user_id: int | None = Field(default=None, ge=1)
-    k: int = Field(default=10, ge=1, le=50)
+    user_id: int | None = Field(default=None, ge=1, strict=True)
+    k: int = Field(default=10, ge=1, le=50, strict=True)
     preferred_genres: list[str] = Field(default_factory=list, max_length=5)
-    novelty_weight: float | None = Field(default=None, ge=0, le=1, allow_inf_nan=False)
+    novelty_weight: float | None = Field(default=None, ge=0, le=1, strict=True, allow_inf_nan=False)
 
 
 class RecommendedItem(BaseModel):
@@ -121,7 +121,7 @@ def create_app(model_path: str | Path | None = None) -> FastAPI:
             LOGGER.exception("Model loading failed; readiness will return HTTP 503")
         yield
 
-    app = FastAPI(title="Recommendation Lab", version="0.1.0", lifespan=lifespan,
+    app = FastAPI(title="Recommendation Lab", version="0.1.2", lifespan=lifespan,
                   description="Temporal recommendation research, cold-start fallback and controlled reranking.")
 
     @app.middleware("http")

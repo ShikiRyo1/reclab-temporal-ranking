@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.2 — 2026-10-22
+
+- Fixed implicit numeric coercion at the HTTP boundary: integer IDs/counts reject booleans, strings and integral floats; the optional finite weight rejects booleans/strings but accepts integer 0 and 1. Added 15 regression cases and passed the full 65-test suite.
+- Rebuilt the local Docker service with package, API and image version 0.1.2; passed the original 17 real HTTP checks and 15 additional numeric-contract requests. Preserved the original 0.1.0 image, trained artifact, model version, training code and frozen evaluation reports.
+- Independently rechecked data lineage, temporal evaluation and metric calculations from the existing model arrays. The eight upstream ranking matches were checked against historical executed notebooks and source hashes; this audit did not rerun notebook execution or model training. The historical 500-request load test was not repeated.
+- Corrected stale P2 handoff wording and documented the strict input contract, build provenance and remaining single-seed/time-window limits. Release Git/remote evidence is recorded separately by the release audit.
+
 ## 0.1.1 — 2026-10-21
 
 - Re-audited the 40 portfolio requirements and found five documentation/provenance gaps that the earlier all-pass wording missed. Added first-time setup guidance, implementation-specific complexity analysis and a direct line guide for the original upstream notebook cells.

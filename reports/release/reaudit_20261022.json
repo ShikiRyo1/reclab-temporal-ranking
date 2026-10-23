@@ -1,0 +1,277 @@
+{
+  "created_at_utc": "2026-10-23T02:49:06.615175+00:00",
+  "audit_day_local": "2026-10-22 America/New_York",
+  "status": "PASS_TECHNICAL_SCOPE_AFTER_API_FIX",
+  "scope": "P1 technical re-audit and local API patch verification only. Teaching visual acceptance and full forty-requirement signoff are separate; remote v0.1.2 publication is not asserted here.",
+  "source_parent_commit": "7278b2a870045c6b3f5d344c42a8674b00dd4aee",
+  "release_version": "0.1.2",
+  "findings_resolved": [
+    {
+      "priority": 2,
+      "problem": "Pydantic implicit bool/string/integral-float coercion at the API boundary",
+      "resolution": "Field strict=True for user_id/k/weight; finite weight with integer 0/1 supported; invalid types rejected with 422",
+      "source_lines": {
+        "src/reclab/api.py": [
+          32,
+          33,
+          35
+        ],
+        "tests/test_api.py": [
+          141,
+          146,
+          152,
+          153
+        ]
+      }
+    },
+    {
+      "priority": 3,
+      "problem": "Stale P1 handoff text says P2 has not started",
+      "resolution": "Dated current P2 M00 status and linked root state; historical P1 milestones preserved"
+    },
+    {
+      "priority": 3,
+      "problem": "Package __version__ previously lagged API/distribution/Compose version",
+      "resolution": "All four are 0.1.2; local and live-container package/distribution/API verified"
+    }
+  ],
+  "fresh_execution": {
+    "pytest": {
+      "tests": 65,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 10.116,
+      "warning": "Existing StarletteDeprecationWarning for httpx TestClient; not a failure"
+    },
+    "existing_real_http": {
+      "checks": 17,
+      "passed": true
+    },
+    "added_real_http_contract": {
+      "cases": 15,
+      "passed": true
+    },
+    "independent_frozen_model_checks": {
+      "checks": 15,
+      "passed": true,
+      "scope": "Raw data/protocol, fixed model arrays, scalar ranking/denominators, validation selection, paired bootstrap, notebook execution evidence and source hashes; no fitting"
+    },
+    "local_dependencies": {
+      "pinned_count": 50,
+      "mismatches": []
+    },
+    "local_pip_check": {
+      "returncode": 0,
+      "stdout": "No broken requirements found.\n",
+      "stderr": ""
+    },
+    "container_dependencies": {
+      "pinned_count": 22,
+      "mismatches": [],
+      "pip_check_returncode": 0,
+      "pip_check_stdout": "No broken requirements found.\n"
+    },
+    "versions": {
+      "api": "0.1.2",
+      "local": {
+        "package": "0.1.2",
+        "distribution": "0.1.2"
+      },
+      "container": {
+        "package": "0.1.2",
+        "distribution": "0.1.2"
+      }
+    }
+  },
+  "reproduction_scope": {
+    "upstream_commit": "aa8332189cd495be6ffaa7e1c8054f1c180b5ef3",
+    "original_cells": {
+      "SAR": 15,
+      "BPR": 11
+    },
+    "additional_helpers": 4,
+    "historical_ranking_metric_matches": 8,
+    "maximum_saved_metric_difference": 0.0,
+    "fresh_notebook_execution_this_round": false,
+    "fresh_training_this_round": false,
+    "statement": "This round verified historical executed notebook files, source/hash correspondence and eight saved ranking matches. Original complete notebook runs occurred before this audit; this is not a new training/reproduction run."
+  },
+  "frozen_experiment": {
+    "artifact_sha256": "14874e07e00af8f4d9b4e94f51ebb0b368a6fdc5b98391697a4f6c846fb8b5ad",
+    "model_version": "ml1m-bpr-506d64ca-30794fbd-w0.2",
+    "artifact_unchanged": true,
+    "tracked_training_and_experiment_files_unchanged": true,
+    "frozen_file_hashes": {
+      "src/reclab/data.py": "34d5467050a4f53e3581ffb81691769344e8618c63e75a7023636d6efc238de3",
+      "src/reclab/models.py": "7f4c3a92d9ee0042254170df6b5c8090ae36855bca57625dac1f4a5e7e5dd599",
+      "src/reclab/train.py": "9d6cd8afab073dfa6481ecce91ac2ca4869cfb579ad57dd33fd98e97d4a065c3",
+      "src/reclab/metrics.py": "da9031301235121613a00c54f8e1ecc1a36ea56d26d001492a78847edcce24ca",
+      "src/reclab/rerank.py": "387db7e4219a879c030c668aabb00b62645b1177ee1260881fd009a6cf7a96c6",
+      "reports/experiment/summary.json": "4c71931c31319b8a50bc5778ef2ea826d9c813c20a282a34de2450cf8885c431",
+      "reports/experiment/selected_config.json": "31226158b6e7c1e1af9224b53d56011a23976df8e2307c29488adca421fcec17",
+      "reports/experiment/protocol.md": "892698c430270e2232a1843945e1407dd22af33b6745f728d45adc49c3254080",
+      "requirements-lock.txt": "dae6ba9739ea9b3c1233b9e1d1bf1ae80f1757ec54be8b845b98f8be8b5db91b",
+      "requirements-api.txt": "e02542833b23f12f9f02b5f49a85d71cc4cd466475fd1adbd9cc1996aeb1d134"
+    }
+  },
+  "docker": {
+    "started_at_utc": "2026-10-23T02:43:17.0886256Z",
+    "command": "docker compose --progress plain build recommender",
+    "target_image": "career-reclab:0.1.2",
+    "base": "python:3.12-slim@sha256:a6e34c598f2467ed0e9a8d349809fcd8b5c603269512df273a0bb1784edc11b1",
+    "original_image_id": "sha256:02de22c2688f1d49084daf8cc254b1c10db3cccd61df9a861be675dc4442fc25",
+    "reason": "Final rebuild includes synchronized reclab.__version__=0.1.2",
+    "ended_at_utc": "2026-10-23T02:43:25.2810890Z",
+    "exit_code": 0,
+    "new_image_id": "sha256:3a7f7414c50e498de388b530470e44ed473e0846bef8b142a0e96147c29ef028",
+    "original_image_id_after": "sha256:02de22c2688f1d49084daf8cc254b1c10db3cccd61df9a861be675dc4442fc25",
+    "runtime_dependency_layer": "CACHED, build log step #9",
+    "project_wheel": {
+      "version": "0.1.2",
+      "bytes": 21679,
+      "sha256": "c907b84d25362bdb9bcc06ff9e3ad04d8f9bd5aee2c07dd212f2bc7b758ad6f2"
+    },
+    "network_provenance": "Docker resolved base metadata and installed isolated build dependencies. Exact external network bytes and isolated build dependency versions were not captured; do not infer zero download from cached runtime layers. Runtime requirements layer was reused. setuptools>=75 is not an exact build-tool lock, so byte-identical image reproducibility is not established.",
+    "old_image_preserved": true
+  },
+  "environment_update": {
+    "local_distribution": "Editable local project reinstalled as 0.1.2 with uv --no-deps; 50 locked runtime/training/test dependency versions unchanged",
+    "failed_attempt_retained": "pip --no-build-isolation could not import setuptools.build_meta; failure log retained, then isolated uv build succeeded",
+    "cache": "H:/Career_AI_Portfolio/cache/uv",
+    "precise_isolated_build_packages_and_network_bytes": null
+  },
+  "career_value": {
+    "judgment": "Usable portfolio evidence for DS/MLE/model-deployment applications once the candidate can independently rerun and explain it. Stronger as an engineering-and-experiment portfolio than as novel-algorithm research.",
+    "credible_proof": [
+      "Pinned complete upstream notebook execution and eight saved ranking matches",
+      "Chronological evaluation with catalog/history/denominator controls",
+      "Validation-only multiobjective selection with negative accuracy result retained",
+      "Model provenance, deterministic ranking, cold fallback, Docker readiness and real HTTP parity"
+    ],
+    "safe_resume_example": "Built and containerized a recommendation API; evaluated rankers on1.0M historical ratings using a chronological eligible-catalog benchmark, and quantified a novelty-reranking tradeoff: long-tail exposure1.84%→2.28% at1.31% relative NDCG cost across922 eligible warm test users.",
+    "avoid": [
+      "Invented or production-scale recommendation algorithm",
+      "Guaranteed hiring value or recruiter approval",
+      "Improved accuracy via novelty reranking",
+      "Causal user satisfaction/revenue gain",
+      "Claiming500localhost requests establish production capacity",
+      "Treating AI-assisted completion as verified personal mastery"
+    ]
+  },
+  "remaining_limits": [
+    "Single temporal split and training seed; user bootstrap excludes training randomness and broader temporal drift.",
+    "Historical explicit ratings and missing-not-at-random exposure; absent rating is not demonstrated dislike.",
+    "Primary warm results cover922of1485eligible positive users; cold563reported separately.",
+    "No cloud endpoint, active GitHub Actions, onlineA/B test or verified learner mastery.",
+    "Historical screenshot/transfer metadata and clean-machine setup limitations remain delegated to root/teaching audit.",
+    "The 500-request load test is historical runtime 0.1.0 evidence; not rerun for 0.1.2.",
+    "Build-tool transitive versions and wire transfer bytes are unknown; no byte-for-byte rebuild claim."
+  ],
+  "future_experiments": {
+    "status": "Proposals only; no weights tuned after viewing this test and no additional fitting",
+    "detail": "See original read-only audit future_experiments_prioritized and parent-maintained follow-up plan"
+  },
+  "source_hashes": {
+    "src/reclab/api.py": "12ab8a2bf2ed31d212f4a4c179f5b11fb99226c98f403a586d12f79dd02e43f7",
+    "src/reclab/__init__.py": "8a0ce68aba94fc945810aa92736afdcee0e0a6a39ba32155c1f3f593a9e42045",
+    "tests/test_api.py": "3415041b080862d8de37314d32a2e5b646b4bc921778e88d8885dbd3952011f1",
+    "pyproject.toml": "929463a4b082bda32d1b8f291aba1627d3a91fbf110d2098ebc857663be00feb",
+    "compose.yaml": "dd9ec8ba91cd8a8c7a57829201a3c5a247c7aecaa72d6c5f0cf00cc2ae090c36",
+    "README.md": "53550e394df4bc196525eed68dcd42fb449ad02c1497372dc51b38a5928149c8",
+    "CHANGELOG.md": "400f4eb7daeb46846865bc3947f34c536a7883d7a3cfd410ff98a7f1b0543104",
+    "docs/operations.md": "c0b896698ba9071e9c4e5de223c030cff99116717720c4daf333ea0b5793a6af",
+    "docs/milestones.md": "b16c28797e1e42cbb0d46827b50891acc91f1f5d3674a673bd793a325d72d527",
+    "docs/project1_delivery_zh.md": "7059f4d8c425fd89d59bf367b606c28180dc7d1a28d4b34f4c4b62eb0a4cb981",
+    "docs/api_contract_20261022.md": "a1ebbce7d38e810e03a43c6d20e4dd35c34d399378e4b4565748407f54c9c0f7",
+    "reports/release/verify_api_contract_20261022.py": "f849826101c4fc2ebfb8f20ae44222e82cd5af8852c9d15e138c3fc5ac276b7a"
+  },
+  "evidence": [
+    {
+      "file": "reports/release/reaudit_20261022_baseline.json",
+      "sha256": "ff77a584f24bd6b2ece028ac7ec3b5f18204daac93bcc996ae8cb2b85a844da1",
+      "local_only": false
+    },
+    {
+      "file": "reports/release/reaudit_20261022_baseline_checks.json",
+      "sha256": "e589d2a49a437e27279cba27d76382e240541db7428706207fc1a78339d771d2",
+      "local_only": false
+    },
+    {
+      "file": "reports/release/reaudit_20261022_final_tests.xml",
+      "sha256": "cebbc78ab4caf5bd0cf7d7e7c352ee2e4e475dc7a1e1fde61a38de6194dd16cd",
+      "local_only": true
+    },
+    {
+      "file": "reports/release/reaudit_20261022_final_pytest.log",
+      "sha256": "138aae53276f5fd55bdbd8aeb1f712d708f7b22a13bb9c42a213952af7ff01d6",
+      "local_only": true
+    },
+    {
+      "file": "reports/release/reaudit_20261022_postfix_http.json",
+      "sha256": "2973fdaee8cb534b439013618ae5723e3f5d2da71effa7bdf49ddeb9edbd80e0",
+      "local_only": false
+    },
+    {
+      "file": "reports/release/reaudit_20261022_postfix_contract.json",
+      "sha256": "00a4ace6bf4883157d98c86043e23e4c563805d144d720989335d62ee20c907a",
+      "local_only": false
+    },
+    {
+      "file": "reports/release/reaudit_20261022_docker_build_final.json",
+      "sha256": "df3df63407e57861e249b0a826e525cbe2c896bda5b7ba9767b9414ba5aca349",
+      "local_only": false
+    },
+    {
+      "file": "reports/release/reaudit_20261022_docker_build_final.log",
+      "sha256": "bc5d76cc52e896d8cb905325739b30f5109241e68b55b6b56fc35189d459d331",
+      "local_only": true
+    },
+    {
+      "file": "reports/release/reaudit_20261022_docker_start_final.json",
+      "sha256": "8595522568b578962a29fd26312743291bdb3851f27a21e51929c9aad2b45e31",
+      "local_only": false
+    },
+    {
+      "file": "reports/release/reaudit_20261022_editable_uv.json",
+      "sha256": "7ea249c859cbe56b5f476036364a7b1ad17349b7d5d8a3151e1cbd3b0400c448",
+      "local_only": false
+    },
+    {
+      "file": "reports/release/reaudit_20261022_editable_uv.log",
+      "sha256": "1fe2886c18d1a00901edaee046ae97a98e9b74c43207a5cb7103fa22a070ea1e",
+      "local_only": true
+    },
+    {
+      "file": "reports/release/reaudit_20261022_editable.log",
+      "sha256": "d5a0aa90d5ea1ae6eab37677b95f3b57593b4f76e65b153fb8c65c472e68c380",
+      "local_only": true
+    },
+    {
+      "file": "reports/release/reaudit_20261022_postfix_contract_final.json",
+      "sha256": "3cd2be6f6c07fb488d42f00b3948440aef67435653eda8c514427bae95a58582",
+      "local_only": false
+    },
+    {
+      "file": "reports/release/reaudit_20261022_contract_failure_checks.json",
+      "sha256": "33172fbbfd88d83732d616ddc938ef4c61f808270b291718d18de3a90c35face",
+      "local_only": false
+    }
+  ],
+  "publication": "No Git commit or push performed by this audit agent. Parent release workflow owns tag and upload verification. Original acceptance.json is preserved by this task.",
+  "audit_tool_reliability": {
+    "change": "New exclusive timestamped output; RUNNING marker before checks; FAILED record and exit 1 on verifier exception; released evidence cannot be overwritten",
+    "failure_checks": {
+      "tested_at_utc": "2026-10-23T02:50:27.051257+00:00",
+      "checks": {
+        "running_written_before_verification": true,
+        "exception_records_failed_exit_1": true,
+        "existing_evidence_refused": true,
+        "existing_evidence_bytes_preserved": true
+      },
+      "passed": true,
+      "scope": "Injected verifier exception and existing-path protection; temporary files only, no service restart or model edits"
+    },
+    "fresh_success": "reports/release/reaudit_20261022_postfix_contract_final.json"
+  }
+}

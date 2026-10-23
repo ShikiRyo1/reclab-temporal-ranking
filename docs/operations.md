@@ -41,6 +41,10 @@ To roll back a later model, retain the candidate under a separate versioned path
 | `/metrics` | Per-process request/5xx counts and up to 10,000 recent durations |
 | `/evidence` | Aggregate offline evaluation; HTTP 409 if its artifact hash differs from the loaded model |
 
+Runtime version 0.1.2 enforces strict JSON numeric types. `user_id` is an integer >= 1 or null, and `k` is an integer from 1 to 50. Both reject booleans, quoted numbers and floating-point values such as `10.0`. `novelty_weight` is null or a finite JSON number in [0, 1]; integer 0 and 1 remain valid, while booleans and quoted numbers return 422. Null uses the artifact's selected weight for known users; cold fallback still uses effective weight 0. See [contract examples and recheck commands](api_contract_20261022.md).
+
+API/package/image version 0.1.2 identifies this service patch. The model version remains `ml1m-bpr-506d64ca-30794fbd-w0.2`; artifact bytes and offline evaluation are unchanged. The original `career-reclab:0.1.0` image is preserved locally.
+
 Do not load another person's joblib/pickle file: loading it can execute code. The artifact is trusted because this project creates it locally. Shape/finite checks detect corruption but are not a sandbox for malicious artifacts. No secrets are needed for this local project. The dataset and model contain historical user interactions and are excluded from public source distribution.
 
 The initial review found two failure paths and fixed them before release: malformed title/genre metadata is rejected before readiness, and `/evidence` is bound to the loaded artifact's SHA-256 instead of blindly serving a stale report. Regression tests exercise both cases.
@@ -49,4 +53,4 @@ GitHub Actions remains inactive because the authenticated OAuth token lacks the 
 
 ## Interpreting load results
 
-The script excludes 10 warm-up requests and verifies the warm user actually returns the personalized strategy. The measured mix is 75% user 1161 and 25% cold requests, K=10, on a single localhost connection pool with 8 client workers. P95 is measured from client request to response and includes HTTP and Docker overhead. It is not the same as the API's model-only `latency_ms`. CPU contention, OS, Docker and other workloads affect it; 500 requests do not establish maximum throughput or a reliability SLO.
+The stored 500-request benchmark was run against runtime 0.1.0, not repeated for the 0.1.2 input-validation patch. The script excludes 10 warm-up requests and verifies the warm user actually returns the personalized strategy. The measured mix is 75% user 1161 and 25% cold requests, K=10, on a single localhost connection pool with 8 client workers. P95 is measured from client request to response and includes HTTP and Docker overhead. It is not the same as the API's model-only `latency_ms`. CPU contention, OS, Docker and other workloads affect it; 500 requests do not establish maximum throughput or a reliability SLO.
