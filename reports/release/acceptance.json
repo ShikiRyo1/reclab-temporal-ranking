@@ -1,133 +1,173 @@
 {
-  "status": "PASS_LOCAL_DELIVERY_WITH_HISTORICAL_PROVENANCE_LIMITS",
-  "verified_at_utc": "2026-10-21T04:51:52.220251+00:00",
-  "release_version": "v0.1.1",
-  "upstream_ranking_metrics_exactly_matched": 8,
-  "upstream_original_code_cells_executed": 26,
-  "repeated_temporal_evaluation_exact": true,
-  "local_test_suite": {
-    "tests": 50,
-    "failures": 0,
-    "errors": 0,
-    "skipped": 0
-  },
-  "real_http_checks": 17,
-  "failure_recovery_passed": true,
-  "bounded_local_load": {
-    "requests": 500,
-    "concurrency": 8,
-    "wall_seconds": 1.5433108999859542,
-    "throughput_requests_per_second": 323.9787913145372,
-    "p50_ms": 23.699100012890995,
-    "p95_ms": 30.99357500323094,
-    "p99_ms": 68.78006199840455,
-    "max_ms": 72.7449000114575,
-    "errors": 0,
-    "error_samples": [],
-    "model": {
-      "status": "ready",
-      "model_version": "ml1m-bpr-506d64ca-30794fbd-w0.2",
-      "artifact_sha256": "14874e07e00af8f4d9b4e94f51ebb0b368a6fdc5b98391697a4f6c846fb8b5ad",
-      "schema_version": 1,
-      "n_users": 4865,
-      "n_items": 3444
+  "status": "PASS_LOCAL_DELIVERY_WITH_DISCLOSED_LIMITS",
+  "verified_at_utc": "2026-10-23T03:11:11.535045+00:00",
+  "release_version": "v0.1.2",
+  "ready_for_release": true,
+  "technical_gate": "reports/release/reaudit_20261022.json",
+  "current_execution": {
+    "pytest": {
+      "tests": 65,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 10.116,
+      "warning": "Existing StarletteDeprecationWarning for httpx TestClient; not a failure"
     },
-    "known_requests": 375,
-    "cold_requests": 125,
-    "workload": "3 of each 4 requests use known user_id=1161; others cold; k=10; 10 warmups excluded",
-    "scope": "Localhost closed-loop client; not production SLO or maximum capacity",
-    "client_platform": "Windows-10-10.0.19045-SP0"
+    "existing_real_http": {
+      "checks": 17,
+      "passed": true
+    },
+    "added_real_http_contract": {
+      "cases": 15,
+      "passed": true
+    },
+    "independent_frozen_model_checks": {
+      "checks": 15,
+      "passed": true,
+      "scope": "Raw data/protocol, fixed model arrays, scalar ranking/denominators, validation selection, paired bootstrap, notebook execution evidence and source hashes; no fitting"
+    },
+    "local_dependencies": {
+      "pinned_count": 50,
+      "mismatches": []
+    },
+    "local_pip_check": {
+      "returncode": 0,
+      "stdout": "No broken requirements found.\n",
+      "stderr": ""
+    },
+    "container_dependencies": {
+      "pinned_count": 22,
+      "mismatches": [],
+      "pip_check_returncode": 0,
+      "pip_check_stdout": "No broken requirements found.\n"
+    },
+    "versions": {
+      "api": "0.1.2",
+      "local": {
+        "package": "0.1.2",
+        "distribution": "0.1.2"
+      },
+      "container": {
+        "package": "0.1.2",
+        "distribution": "0.1.2"
+      }
+    }
+  },
+  "new_http_verifier_failure_guards": {
+    "checks": 4,
+    "passed": true,
+    "evidence": "reports/release/reaudit_20261022_contract_failure_checks.json"
+  },
+  "reproduction": {
+    "upstream_commit": "aa8332189cd495be6ffaa7e1c8054f1c180b5ef3",
+    "original_cells": {
+      "SAR": 15,
+      "BPR": 11
+    },
+    "additional_helpers": 4,
+    "historical_ranking_metric_matches": 8,
+    "maximum_saved_metric_difference": 0.0,
+    "fresh_notebook_execution_this_round": false,
+    "fresh_training_this_round": false,
+    "statement": "This round verified historical executed notebook files, source/hash correspondence and eight saved ranking matches. Original complete notebook runs occurred before this audit; this is not a new training/reproduction run."
+  },
+  "model": {
+    "artifact_sha256": "14874e07e00af8f4d9b4e94f51ebb0b368a6fdc5b98391697a4f6c846fb8b5ad",
+    "model_version": "ml1m-bpr-506d64ca-30794fbd-w0.2",
+    "artifact_unchanged": true,
+    "tracked_training_and_experiment_files_unchanged": true,
+    "frozen_file_hashes": {
+      "src/reclab/data.py": "34d5467050a4f53e3581ffb81691769344e8618c63e75a7023636d6efc238de3",
+      "src/reclab/models.py": "7f4c3a92d9ee0042254170df6b5c8090ae36855bca57625dac1f4a5e7e5dd599",
+      "src/reclab/train.py": "9d6cd8afab073dfa6481ecce91ac2ca4869cfb579ad57dd33fd98e97d4a065c3",
+      "src/reclab/metrics.py": "da9031301235121613a00c54f8e1ecc1a36ea56d26d001492a78847edcce24ca",
+      "src/reclab/rerank.py": "387db7e4219a879c030c668aabb00b62645b1177ee1260881fd009a6cf7a96c6",
+      "reports/experiment/summary.json": "4c71931c31319b8a50bc5778ef2ea826d9c813c20a282a34de2450cf8885c431",
+      "reports/experiment/selected_config.json": "31226158b6e7c1e1af9224b53d56011a23976df8e2307c29488adca421fcec17",
+      "reports/experiment/protocol.md": "892698c430270e2232a1843945e1407dd22af33b6745f728d45adc49c3254080",
+      "requirements-lock.txt": "dae6ba9739ea9b3c1233b9e1d1bf1ae80f1757ec54be8b845b98f8be8b5db91b",
+      "requirements-api.txt": "e02542833b23f12f9f02b5f49a85d71cc4cd466475fd1adbd9cc1996aeb1d134"
+    }
+  },
+  "deployment": {
+    "scope": "Actual local Docker only",
+    "version": "0.1.2",
+    "image": "sha256:3a7f7414c50e498de388b530470e44ed473e0846bef8b142a0e96147c29ef028",
+    "old_image_preserved": true,
+    "base": "python:3.12-slim@sha256:a6e34c598f2467ed0e9a8d349809fcd8b5c603269512df273a0bb1784edc11b1",
+    "build_limit": "Docker resolved base metadata and installed isolated build dependencies. Exact external network bytes and isolated build dependency versions were not captured; do not infer zero download from cached runtime layers. Runtime requirements layer was reused. setuptools>=75 is not an exact build-tool lock, so byte-identical image reproducibility is not established."
+  },
+  "historical_performance": {
+    "report": "reports/release/acceptance_v0.1.1.json",
+    "scope": "500-request local load test ran on runtime 0.1.0; not rerun or promoted to 0.1.2 performance evidence"
   },
   "teaching": {
+    "gate": "teaching/qa/reaudit_20261022/document_acceptance.json",
     "main_pages": 42,
-    "companion_pages": 35,
-    "all_77_rendered_pages_reviewed": true,
-    "source_files": 29,
-    "source_lines": 2185,
-    "real_screenshots": 10,
-    "editable_word_equations_main": 33,
-    "editable_word_equations_companion": 55,
-    "document_artifacts": [
+    "code_pages": 37,
+    "supplement_pages": 29,
+    "total_pages": 108,
+    "new_pages_actually_reviewed": 37,
+    "unchanged_previously_reviewed_pages_hash_verified": 71,
+    "indexed_files": 30,
+    "indexed_lines": 2318,
+    "upstream_notebook_additional_lines": 255,
+    "native_equations": {
+      "main": 33,
+      "code": 55,
+      "supplement": 3
+    },
+    "real_screenshots": 12,
+    "new_this_audit": 2,
+    "code_scope": "Business, test, config, execution and audit-replay code covered in declared indexes; publication/QA builders supplied separately, not claimed as line-annotated business code.",
+    "html_browser_interaction": "NOT_VERIFIED",
+    "artifacts": [
       {
-        "file": "个性化推荐与排序服务完整学习手册.docx",
+        "file": "teaching/个性化推荐与排序服务完整学习手册.docx",
         "bytes": 849366,
         "sha256": "81c08e69465bcb1cb0b5d76c989ad6d6486b127c8b63dc40184fb1bae8cdbdbe"
       },
       {
-        "file": "个性化推荐与排序服务完整学习手册.pdf",
+        "file": "teaching/个性化推荐与排序服务完整学习手册.pdf",
         "bytes": 1950482,
         "sha256": "a422c2875d21b08795adfeaed7cfeb67e46d755a6c6710b9aa8573a184d3a27b"
       },
       {
-        "file": "代码逐行阅读指南.docx",
-        "bytes": 95679,
-        "sha256": "11dd54a4cb8fa4aa8d999fae1a425625fe46cb62f582e43c7a6594472cdbb6ff"
+        "file": "teaching/代码逐行阅读指南.docx",
+        "bytes": 168666,
+        "sha256": "84494f09dc16abd5710352dc3cbde869f40ea4ed0ab65e7312496a31cf0a58fb"
       },
       {
-        "file": "代码逐行阅读指南.pdf",
-        "bytes": 1007071,
-        "sha256": "aa6dc1819955b52f8e70a4e8f3b57eea10f3ac61be6a21fecb6b213a4f9093bc"
+        "file": "teaching/代码逐行阅读指南.pdf",
+        "bytes": 1140198,
+        "sha256": "18e94e288a1dd299e9510001e062466e78c8d76f915901f4b7667375c71d12dc"
       },
       {
-        "file": "代码逐行阅读指南.html",
-        "bytes": 448292,
-        "sha256": "da8d2ba10c44c4667977449dd7cd53e4a101797d14e5058879f9dd5d66f51b8e"
-      },
-      {
-        "file": "完整学习手册_源稿.md",
-        "bytes": 88866,
-        "sha256": "ef35c4589f75475269a15f3d4b6092cbfe81ba9fcdf17b79069c66f94436f865"
-      },
-      {
-        "file": "代码逐行阅读指南_源稿.md",
-        "bytes": 101558,
-        "sha256": "c016088ca8f9d5bca1042435b30ab829adc3cec47755760861c4037e9c731faf"
-      },
-      {
-        "file": "equations.tex",
-        "bytes": 2193,
-        "sha256": "6e27f2d77bab2cf9f501b83f38797ca5ac433347f9168f57f2e421e857c95c77"
-      },
-      {
-        "file": "screenshots/index.csv",
-        "bytes": 6229,
-        "sha256": "9aa7794e52d0f4cb12ddad4aacd91fa2008446cf689ba967e3e7194d77537a8a"
-      },
-      {
-        "file": "环境搭建与上游代码补充手册.docx",
+        "file": "teaching/环境搭建与上游代码补充手册.docx",
         "bytes": 929319,
         "sha256": "7b8a8d13346178bbe7949543ec7ccbf8f9fdebdeadeacac387dfcf1d9bc6e5f6"
       },
       {
-        "file": "环境搭建与上游代码补充手册.pdf",
+        "file": "teaching/环境搭建与上游代码补充手册.pdf",
         "bytes": 976222,
         "sha256": "51c8a97407ff5a4a253da8eecd357262b2c17450f4f1c5757c8d252e9f3bbb3e"
-      },
-      {
-        "file": "环境搭建与上游代码补充手册_源稿.md",
-        "bytes": 69489,
-        "sha256": "615875e95ad75defa01c52e1558c925d76832a6e90413580d25559e50510bacb"
       }
-    ],
-    "html_static": "PASS_STATIC_ONLY",
-    "html_interaction_verified": false,
-    "supplement_pages": 29,
-    "supplement_visual_gate": "teaching/qa/reaudit_20261021/document_acceptance.json",
-    "total_reviewed_document_pages": 106,
-    "upstream_code_lines_added": 255
+    ]
   },
-  "model_snapshot": "reports/release/local_model_snapshot.json",
-  "version_resolution": "Resolve v0.1.1 for documentation/audit; trained model and runtime source remain v0.1.0. Remote verification is in local portfolio_state.json.",
+  "publication": "Resolve annotated v0.1.2 tag; verified remote SHA/time in root portfolio_state.json. This file alone does not assert a successful push.",
+  "prior_acceptance": "reports/release/acceptance_v0.1.1.json",
   "scope_limits": [
-    "Local Docker deployment only; no public cloud service",
-    "GitHub Actions inactive: OAuth workflow scope unavailable",
-    "HTML browser interaction not tested: local file navigation denied by browser policy",
-    "No online A/B trial or measured revenue impact",
-    "Single training seed and chronological split; bootstrap covers user resampling only",
-    "User independent mastery exercises not verified",
-    "Project 2 and Project 3 not implemented",
-    "Historical capture times/tool builds and transfer times were not recorded and remain unknown; new timed UI replays are separate events.",
-    "First-time install instructions are sourced; a clean Windows reinstall was not performed."
-  ],
-  "reaudit": "reports/release/reaudit_20261021.json"
+    "Single temporal split and training seed; user bootstrap excludes training randomness and broader temporal drift.",
+    "Historical explicit ratings and missing-not-at-random exposure; absent rating is not demonstrated dislike.",
+    "Primary warm results cover922of1485eligible positive users; cold563reported separately.",
+    "No cloud endpoint, active GitHub Actions, onlineA/B test or verified learner mastery.",
+    "Historical screenshot/transfer metadata and clean-machine setup limitations remain delegated to root/teaching audit.",
+    "The 500-request load test is historical runtime 0.1.0 evidence; not rerun for 0.1.2.",
+    "Build-tool transitive versions and wire transfer bytes are unknown; no byte-for-byte rebuild claim.",
+    "Historical P1 screenshot capture/build fields remain unknown; new captures do not reconstruct past metadata.",
+    "First installation instructions were checked against official documentation, not executed on a clean machine.",
+    "HTML accepted through static source/DOM checks only; no browser-interaction claim.",
+    "No new training, online business-effect evidence, real Gemini/Search run or proof of learner mastery.",
+    "P2 has a verified local M00 milestone, not a complete Agent project; P3 has not started."
+  ]
 }

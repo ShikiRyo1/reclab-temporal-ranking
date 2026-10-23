@@ -260,7 +260,7 @@ $env:PYTHONPATH = 'H:\Career_AI_Portfolio\projects\01_recommendation_service\src
 .venv\Scripts\python.exe -m pytest tests/test_data.py tests/test_models.py tests/test_metrics.py tests/test_rerank.py -q
 ```
 
-此命令运行四组模型相关测试，已实际执行并通过 26 项，不包含 `test_train.py` 新增的 4 项协议保护测试。加入这 4 项后模型相关测试共 30 项；再加 20 项 API 测试，全套共 50 项通过。Docker 和负载测试另有运行证据，不计入上述单元／接口测试数量。
+此命令运行四组模型相关测试，已实际通过26项，不含 `test_train.py` 的4项协议保护；合计模型相关30项。原发布另有20项API测试，全套50项。2026-10-22再审增加15项API类型边界案例，当前全套65项；模型测试和实验结果未变。Docker和负载测试另记，不混入该计数。
 
 三个自检题及答案：
 

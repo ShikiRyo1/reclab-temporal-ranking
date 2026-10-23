@@ -1,0 +1,133 @@
+{
+  "status": "PASS_LOCAL_DELIVERY_WITH_HISTORICAL_PROVENANCE_LIMITS",
+  "verified_at_utc": "2026-10-21T04:51:52.220251+00:00",
+  "release_version": "v0.1.1",
+  "upstream_ranking_metrics_exactly_matched": 8,
+  "upstream_original_code_cells_executed": 26,
+  "repeated_temporal_evaluation_exact": true,
+  "local_test_suite": {
+    "tests": 50,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "real_http_checks": 17,
+  "failure_recovery_passed": true,
+  "bounded_local_load": {
+    "requests": 500,
+    "concurrency": 8,
+    "wall_seconds": 1.5433108999859542,
+    "throughput_requests_per_second": 323.9787913145372,
+    "p50_ms": 23.699100012890995,
+    "p95_ms": 30.99357500323094,
+    "p99_ms": 68.78006199840455,
+    "max_ms": 72.7449000114575,
+    "errors": 0,
+    "error_samples": [],
+    "model": {
+      "status": "ready",
+      "model_version": "ml1m-bpr-506d64ca-30794fbd-w0.2",
+      "artifact_sha256": "14874e07e00af8f4d9b4e94f51ebb0b368a6fdc5b98391697a4f6c846fb8b5ad",
+      "schema_version": 1,
+      "n_users": 4865,
+      "n_items": 3444
+    },
+    "known_requests": 375,
+    "cold_requests": 125,
+    "workload": "3 of each 4 requests use known user_id=1161; others cold; k=10; 10 warmups excluded",
+    "scope": "Localhost closed-loop client; not production SLO or maximum capacity",
+    "client_platform": "Windows-10-10.0.19045-SP0"
+  },
+  "teaching": {
+    "main_pages": 42,
+    "companion_pages": 35,
+    "all_77_rendered_pages_reviewed": true,
+    "source_files": 29,
+    "source_lines": 2185,
+    "real_screenshots": 10,
+    "editable_word_equations_main": 33,
+    "editable_word_equations_companion": 55,
+    "document_artifacts": [
+      {
+        "file": "个性化推荐与排序服务完整学习手册.docx",
+        "bytes": 849366,
+        "sha256": "81c08e69465bcb1cb0b5d76c989ad6d6486b127c8b63dc40184fb1bae8cdbdbe"
+      },
+      {
+        "file": "个性化推荐与排序服务完整学习手册.pdf",
+        "bytes": 1950482,
+        "sha256": "a422c2875d21b08795adfeaed7cfeb67e46d755a6c6710b9aa8573a184d3a27b"
+      },
+      {
+        "file": "代码逐行阅读指南.docx",
+        "bytes": 95679,
+        "sha256": "11dd54a4cb8fa4aa8d999fae1a425625fe46cb62f582e43c7a6594472cdbb6ff"
+      },
+      {
+        "file": "代码逐行阅读指南.pdf",
+        "bytes": 1007071,
+        "sha256": "aa6dc1819955b52f8e70a4e8f3b57eea10f3ac61be6a21fecb6b213a4f9093bc"
+      },
+      {
+        "file": "代码逐行阅读指南.html",
+        "bytes": 448292,
+        "sha256": "da8d2ba10c44c4667977449dd7cd53e4a101797d14e5058879f9dd5d66f51b8e"
+      },
+      {
+        "file": "完整学习手册_源稿.md",
+        "bytes": 88866,
+        "sha256": "ef35c4589f75475269a15f3d4b6092cbfe81ba9fcdf17b79069c66f94436f865"
+      },
+      {
+        "file": "代码逐行阅读指南_源稿.md",
+        "bytes": 101558,
+        "sha256": "c016088ca8f9d5bca1042435b30ab829adc3cec47755760861c4037e9c731faf"
+      },
+      {
+        "file": "equations.tex",
+        "bytes": 2193,
+        "sha256": "6e27f2d77bab2cf9f501b83f38797ca5ac433347f9168f57f2e421e857c95c77"
+      },
+      {
+        "file": "screenshots/index.csv",
+        "bytes": 6229,
+        "sha256": "9aa7794e52d0f4cb12ddad4aacd91fa2008446cf689ba967e3e7194d77537a8a"
+      },
+      {
+        "file": "环境搭建与上游代码补充手册.docx",
+        "bytes": 929319,
+        "sha256": "7b8a8d13346178bbe7949543ec7ccbf8f9fdebdeadeacac387dfcf1d9bc6e5f6"
+      },
+      {
+        "file": "环境搭建与上游代码补充手册.pdf",
+        "bytes": 976222,
+        "sha256": "51c8a97407ff5a4a253da8eecd357262b2c17450f4f1c5757c8d252e9f3bbb3e"
+      },
+      {
+        "file": "环境搭建与上游代码补充手册_源稿.md",
+        "bytes": 69489,
+        "sha256": "615875e95ad75defa01c52e1558c925d76832a6e90413580d25559e50510bacb"
+      }
+    ],
+    "html_static": "PASS_STATIC_ONLY",
+    "html_interaction_verified": false,
+    "supplement_pages": 29,
+    "supplement_visual_gate": "teaching/qa/reaudit_20261021/document_acceptance.json",
+    "total_reviewed_document_pages": 106,
+    "upstream_code_lines_added": 255
+  },
+  "model_snapshot": "reports/release/local_model_snapshot.json",
+  "version_resolution": "Resolve v0.1.1 for documentation/audit; trained model and runtime source remain v0.1.0. Remote verification is in local portfolio_state.json.",
+  "scope_limits": [
+    "Local Docker deployment only; no public cloud service",
+    "GitHub Actions inactive: OAuth workflow scope unavailable",
+    "HTML browser interaction not tested: local file navigation denied by browser policy",
+    "No online A/B trial or measured revenue impact",
+    "Single training seed and chronological split; bootstrap covers user resampling only",
+    "User independent mastery exercises not verified",
+    "Project 2 and Project 3 not implemented",
+    "Historical capture times/tool builds and transfer times were not recorded and remain unknown; new timed UI replays are separate events.",
+    "First-time install instructions are sourced; a clean Windows reinstall was not performed."
+  ],
+  "reaudit": "reports/release/reaudit_20261021.json"
+}
